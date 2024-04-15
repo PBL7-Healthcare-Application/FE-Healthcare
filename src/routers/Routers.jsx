@@ -6,13 +6,17 @@ const routers = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+
+  },
+  {
+    path: "/auth",
     children: [
       {
         path: "sign-in",
         element: <SignIn />,
       },
     ],
-  },
+  }
 ]);
 
 export default routers;
