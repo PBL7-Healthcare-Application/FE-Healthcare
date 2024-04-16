@@ -1,0 +1,28 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.left__content {
+  column-gap: 50px;
+
+  &-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 144px;
+    height: 166px;
+
+    &-img {
+      width: 144px;
+      height: 144px;
+      border: 1px solid $text-color;
+      border-radius: 20px;
+    }
+
+    &-name {
+      font-family: $font-main;
+      font-weight: 600;
+      font-style: normal;
+      color: $text-color;
+    }
+  }
+}

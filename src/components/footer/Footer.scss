@@ -1,0 +1,24 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+.footer {
+  font-size: 16px;
+  font-family: $font-main;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px;
+  background: linear-gradient(#d2e4fa, #fff);
+}
+.title {
+  font-size: 35px;
+  font-family: "Playfair Display", serif;
+  font-weight: bold;
+  color: $text-primary-color;
+  font-style: italic;
+  margin-left: -18px;
+}
+.sub_title {
+  font-family: $font-main;
+  font-weight: 400;
+}

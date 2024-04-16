@@ -1,0 +1,74 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.content {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 40px;
+  background-color: $background-secondary;
+  display: flex;
+  justify-content: center;
+}
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+
+  &_title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0px;
+    &--first {
+      font-family: $font-main;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 70px;
+      color: $text-color;
+    }
+    &--second {
+      font-family: $font-main;
+      font-weight: 700;
+      font-style: normal;
+      font-size: 70px;
+      color: $text-color;
+      margin-top: -25px;
+    }
+
+    &--sub {
+      font-family: $font-main;
+      font-weight: 600;
+      font-style: normal;
+      font-size: 40px;
+      color: $text-color;
+      margin-top: -20px;
+    }
+  }
+}
+.search {
+  margin-top: 20px;
+  width: 900px;
+  height: 100px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 10px 30px;
+  position: relative;
+}
+.search__select {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.search__find {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.search__button {
+  position: absolute;
+  right: 0;
+}

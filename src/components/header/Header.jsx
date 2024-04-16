@@ -8,6 +8,7 @@ import { useState } from "react";
 import SignInBtn from "./SignInBtn";
 export const Header = () => {
   const { pathname } = useLocation();
+  // eslint-disable-next-line no-unused-vars
   const { isLogin, setIsLogin } = useState(false);
   const links = [
     {
@@ -32,11 +33,12 @@ export const Header = () => {
     return (
       <div key={index} className="nav__item ">
         <Link
-          className={`nav__item-content ${pathname.split("/").filter(Boolean)[0] ===
+          className={`nav__item-content ${
+            pathname.split("/").filter(Boolean)[0] ===
             item.href.split("/").filter(Boolean)[0]
-            ? "active"
-            : ""
-            } `}
+              ? "active"
+              : ""
+          } `}
           to={item.href}
         >
           {item.label}
@@ -46,17 +48,11 @@ export const Header = () => {
   });
   return (
     <Space className={`menu`}>
-
       <Space className="logo">
         <Image src={logo} preview={false} width={80} loading="lazy"></Image>
         <Typography className="title">Enclinic</Typography>
-
-
-
       </Space>
-      <Space className="nav">
-        {navItems}
-      </Space>
+      <Space className="nav">{navItems}</Space>
       {isLogin ? <Avt /> : <SignInBtn />}
     </Space>
   );

@@ -1,10 +1,16 @@
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  LockOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Button, Form, Input, Space, Typography } from "antd";
+
 import { Link } from "react-router-dom";
 
-import "./SignIn.scss";
+import "./SignUp.scss";
 import Feature from "../../components/feature/Feature";
-const SignIn = () => {
+const SignUp = () => {
   return (
     <Space className="main">
       <Space className="left">
@@ -26,10 +32,29 @@ const SignIn = () => {
             remember: true,
           }}
         >
-          <Typography className="right__title--main">Welcome Back</Typography>
-          <Typography className="right__title--sub">
-            Please enter your details below to continue
+          <Typography className="right__title--main">
+            Create an Account
           </Typography>
+          <Typography className="right__title--sub">
+            Create account today and start using Enclinic
+          </Typography>
+
+          <Typography className="label">Name</Typography>
+          <Form.Item
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Name!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Name"
+              className="input__username input"
+            />
+          </Form.Item>
 
           <Typography className="label">Email</Typography>
           <Form.Item
@@ -46,7 +71,7 @@ const SignIn = () => {
             ]}
           >
             <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
+              prefix={<MailOutlined className="site-form-item-icon" />}
               placeholder="Username"
               className="input__username input"
             />
@@ -68,24 +93,55 @@ const SignIn = () => {
               placeholder="Password"
             />
           </Form.Item>
+
+          <Typography className="label">Confirm Password</Typography>
+          <Form.Item
+            name="confirmPassword"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Confirm password!",
+              },
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              className="input__password input"
+              type="password"
+              placeholder="confirm Password"
+            />
+          </Form.Item>
+
+          <Typography className="label">Phone Number</Typography>
+          <Form.Item
+            name="phoneNumber"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Phone number!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<PhoneOutlined className="site-form-item-icon" />}
+              className="input__password input"
+              type="text"
+              placeholder="Phone Number"
+            />
+          </Form.Item>
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
               className="login-form-button"
             >
-              Sign in
+              Sign up
             </Button>
-          </Form.Item>
-          <Form.Item className="login-form-forgot ">
-            <Typography className="label">
-              <Link>Forgot password ?</Link>
-            </Typography>
           </Form.Item>
           <Form.Item className="login-form-forgot">
             <Typography className="label">
-              Don’t have an account?{" "}
-              <Link to={"/auth/sign-up"}>Sign up here.</Link>
+              Already have an account?{" "}
+              <Link to={"/auth/sign-in"}>Sign in here.</Link>
             </Typography>
           </Form.Item>
         </Form>
@@ -94,4 +150,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
