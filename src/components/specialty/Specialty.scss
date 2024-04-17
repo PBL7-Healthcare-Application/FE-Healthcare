@@ -1,1 +1,31 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+.my-select {
+  .ant-select-selector {
+    // Style the selector (input field) here
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    flex: 1;
+    width: 150px !important; // Adjust the width here
+    // Adjust the height here
 
+    padding: 15px 5px !important;
+    font-family: $font-main;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  .ant-select-arrow {
+    // Style the arrow icon here
+    color: $text-third-color;
+  }
+
+  .ant-select-item {
+    // Style the dropdown items here
+    background-color: #f5f5f5;
+    &:hover {
+      background-color: #e5e5e5;
+    }
+  }
+}
