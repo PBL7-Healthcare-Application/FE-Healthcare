@@ -1,0 +1,35 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.card-content {
+    &__main {
+        width: 267px;
+        height: 424px;
+        background-color: #e3f2ff;
+        padding: 16px 16px 24px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__title {
+        font-family: $font-main;
+        font-weight: 600;
+        font-style: normal;
+        font-size: 17px;
+        color: $text-primary-color;
+        text-align: center;
+    }
+
+    &__content {
+        font-family: $font-main;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 15px;
+        color: $text-secondary-color;
+        text-align: center;
+
+    }
+}

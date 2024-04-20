@@ -1,0 +1,13 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.avt {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+
+    &-notify {
+        font-size: 35px;
+        color: $text-secondary-color ;
+    }
+}

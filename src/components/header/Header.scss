@@ -1,0 +1,148 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.menu {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 120px;
+  background-color: #fff;
+  font-family: $font;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.3s;
+  transition-property: all;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 1066px) {
+    padding: 10px 20px;
+  }
+
+  &__scrolled {
+    position: static;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.3s;
+    transition-property: all;
+  }
+
+  &-icon {
+    font-size: 35px;
+    display: none;
+    color: $text-secondary-color;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    @media (max-width: 1066px) {
+      display: block;
+    }
+  }
+}
+
+.nav {
+  justify-content: space-between;
+
+  @media (max-width: 1066px) {
+    display: none;
+  }
+}
+
+.menu-selector {
+  position: absolute;
+  left: 0;
+  top: 70px;
+  width: 100%;
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  z-index: 1000;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  // display: block;
+
+
+  @media (min-width: 1067px) {
+    display: none;
+  }
+
+  &__item {
+    font-size: 15px;
+    font-family: $font-main;
+    color: $text-primary-color;
+    font-weight: 500;
+  }
+
+  &.open {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.nav__item {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 26px;
+  margin-left: 24px;
+  font-family: $font-main;
+
+  &-content {
+    color: $text-primary-color;
+    transition: border-color 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+
+  &:hover &-content {
+    color: $text-secondary-color !important;
+    border-bottom: 3px solid $text-secondary-color;
+  }
+}
+
+.active {
+  color: $text-secondary-color !important;
+}
+
+.login {
+  font-family: "Quicksand", Helvetica, sans-serif;
+  line-height: 24px;
+  font-weight: 600;
+  font-size: 16px;
+  color: $text-primary-color;
+  cursor: pointer;
+}
+
+.image-title {
+  margin-left: -50px;
+
+  @media (max-width: 978px) {
+    display: none;
+  }
+}
+
+
+
+
+.border--bottom {
+  border-bottom: 1px solid #ccc;
+}
+
+.active {
+  color: $text-secondary-color !important;
+  border-bottom: 3px solid $text-secondary-color;
+}
+
+.logo {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.title {
+  font-size: 35px;
+  font-family: "Playfair Display", serif;
+  font-weight: bold;
+  color: $text-primary-color;
+  font-style: italic;
+  margin-left: -18px;
+}
