@@ -1,48 +1,51 @@
-import { Divider, Select } from "antd";
+import { Divider, Image, Select, Space, Typography } from "antd";
 import "./Specialty.scss";
-import Icon from "@ant-design/icons/lib/components/Icon";
-const onChange = (value) => {
-  console.log(`selected ${value}`);
-};
-const onSearch = (value) => {
-  console.log("search:", value);
-};
+import { specialty } from "../../api/fetchAPI.js";
+import { useState } from "react";
 
+
+
+const Item = ({ img, name }) => (
+  <Space className="select-item">
+    <Image src={img} width={30} />
+    <Typography className="select-name">{name}</Typography>
+
+  </Space>
+)
 // Filter `option.label` match the user type `input`
 const filterOption = (input, option) =>
-  (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-const Specialty = () => (
-  <Select
-    className="my-select"
-    dropdownRender={(menu) => (
-      <div>
-        {menu}
-        <Divider style={{ margin: "4px 0" }} />
-        <div style={{ padding: "8px", cursor: "pointer" }}>
-          <Icon type="plus" /> Add item
-        </div>
-      </div>
-    )}
-    showSearch
-    placeholder="All specialties"
-    optionFilterProp="children"
-    onChange={onChange}
-    onSearch={onSearch}
-    filterOption={filterOption}
-    options={[
-      {
-        value: "jack",
-        label: "Jack",
-      },
-      {
-        value: "lucy",
-        label: "Lucy",
-      },
-      {
-        value: "tom",
-        label: "Tom",
-      },
-    ]}
-  />
-);
+  (option?.value ?? "").toLowerCase().includes(input.toLowerCase());
+
+const Specialty = () => {
+  const [selectValue, setSelectValue] = useState("");
+
+  const onChange = (value) => {
+
+    setSelectValue(value.value);
+  };
+  return (
+
+    <Select
+      className="my-select"
+      showSearch
+      placement="bottomLeft"
+      placeholder="All specialties"
+      optionFilterProp="children"
+      dropdownStyle={{ width: 230 }}
+      onChange={onChange}
+      optionLabelProp="label2"
+      filterOption={filterOption}
+      value={selectValue}
+      options={specialty.map((item) => ({
+        value: item.value,
+        label2: item.value,
+        label: (
+          <Item img={item.image} name={item.value} />
+        ),
+      }))}
+      labelInValue
+
+    />
+  )
+};
 export default Specialty;

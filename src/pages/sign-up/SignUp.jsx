@@ -12,19 +12,19 @@ import "./SignUp.scss";
 import Feature from "../../components/feature/Feature";
 const SignUp = () => {
   return (
-    <Space className="main">
-      <Space className="left">
-        <Space className="left_title">
-          <Typography className="left_title--main">
+    <Space className="up-main">
+      <Space className="up-left">
+        <Space className="up-left_title">
+          <Typography className="up-left_title--main">
             The Next Generation
           </Typography>
-          <Typography className="left_title--sub">
+          <Typography className="up-left_title--sub">
             Of Any Health Concern
           </Typography>
         </Space>
         <Feature />
       </Space>
-      <Space className="right">
+      <Space className="up-right">
         <Form
           name="normal_login"
           className="login-form"
@@ -32,10 +32,10 @@ const SignUp = () => {
             remember: true,
           }}
         >
-          <Typography className="right__title--main">
+          <Typography className="up-right__title--main">
             Create an Account
           </Typography>
-          <Typography className="right__title--sub">
+          <Typography className="up-right__title--sub">
             Create account today and start using Enclinic
           </Typography>
 
@@ -109,24 +109,6 @@ const SignUp = () => {
               className="input__password input"
               type="password"
               placeholder="confirm Password"
-            />
-          </Form.Item>
-
-          <Typography className="label">Phone Number</Typography>
-          <Form.Item
-            name="phoneNumber"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Phone number!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<PhoneOutlined className="site-form-item-icon" />}
-              className="input__password input"
-              type="text"
-              placeholder="Phone Number"
             />
           </Form.Item>
           <Form.Item>

@@ -6,19 +6,19 @@ import "./SignIn.scss";
 import Feature from "../../components/feature/Feature";
 const SignIn = () => {
   return (
-    <Space className="main">
-      <Space className="left">
-        <Space className="left_title">
-          <Typography className="left_title--main">
+    <Space className="in-main">
+      <Space className="in-left">
+        <Space className="in-left_title">
+          <Typography className="in-left_title--main">
             The Next Generation
           </Typography>
-          <Typography className="left_title--sub">
+          <Typography className="in-left_title--sub">
             Of Any Health Concern
           </Typography>
         </Space>
         <Feature />
       </Space>
-      <Space className="right">
+      <Space className="in-right">
         <Form
           name="normal_login"
           className="login-form"
@@ -26,8 +26,8 @@ const SignIn = () => {
             remember: true,
           }}
         >
-          <Typography className="right__title--main">Welcome Back</Typography>
-          <Typography className="right__title--sub">
+          <Typography className="in-right__title--main">Welcome Back</Typography>
+          <Typography className="in-right__title--sub">
             Please enter your details below to continue
           </Typography>
 

@@ -1,7 +1,7 @@
 import { Button, Image, Space, Typography } from "antd";
 import "./cardDoctor.scss";
 import { EnvironmentOutlined } from "@ant-design/icons";
-export const CardDoctor = () => {
+export const CardDoctor = ({ value }) => {
   return (
     <div className="cardDoctor">
       <Image
@@ -9,7 +9,7 @@ export const CardDoctor = () => {
         width={80}
         className="cardDoctor_img"
       ></Image>
-      <Space className="cardDoctor_name">Dr Nguyen Lan Viet</Space>
+      <Space className="cardDoctor_name">Dr Nguyen Lan Viet {value}</Space>
       <Space className="cardDoctor_item">
         <svg
           width="22"

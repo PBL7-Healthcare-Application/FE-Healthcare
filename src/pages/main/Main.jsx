@@ -7,47 +7,52 @@ import { SearchOutlined } from "@ant-design/icons";
 import { CardDoctor } from "../../components/cardDoctor/CardDoctor";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { CardContent } from "../../components/cardContent/CardContent";
+import content1 from "../../assets/images/content_1.webp";
+import content2 from "../../assets/images/content_2.webp";
+import content3 from "../../assets/images/content_3.webp";
+import content4 from "../../assets/images/content_4.webp";
 export const Main = () => {
   const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const responsive = {
-    superLargeDesktop: {
-      // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
+      breakpoint: { max: 3000, min: 1350 },
       items: 4,
+      slidesToSlide: 4 // optional, default to 1.
     },
     tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
+      breakpoint: { max: 1350, min: 988 },
+      items: 3,
+      slidesToSlide: 3 // optional, default to 1.
     },
     mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
+      breakpoint: { max: 988, min: 698 },
+      items: 2,
+      slidesToSlide: 1 // optional, default to 1.
     },
+    xl: {
+      breakpoint: { max: 698, min: 0 },
+      items: 1,
+      slidesToSlide: 1 // optional, default to 1.
+    }
   };
-  const CustomDot = ({ onClick, active }) => {
+  const CustomDot = ({ onClick, active, index, carouselState }) => {
+    const { currentSlide } = carouselState;
     return (
-      <button
-        onClick={onClick}
-        style={{ background: "none", border: "none", padding: 0 }}
-      >
-        <div
-          style={{
-            width: "100%", // Change this to 100% to make the bar full-width
-            height: "10px",
-            backgroundColor: active ? "blue" : "gray",
-          }}
-        />
-      </button>
+      <li style={{ background: active ? '#185FA0' : '#ccc', width: 20, height: 5, marginLeft: 2, }}>
+        <button
+          style={{ background: 'transparent', border: 'none' }}
+          onClick={() => onClick()}
+        >
+
+        </button>
+      </li>
     );
   };
   return (
     <>
-      <Space className="content">
-        <Space className="left">
+      <div className="content">
+        <div className="left">
           <Space className="left_title">
             <Typography className="left_title--first">Consult Top</Typography>
             <Typography className="left_title--second">
@@ -76,43 +81,52 @@ export const Main = () => {
               <Button className="search__button">Search For Result</Button>
             </div>
           </div>
-        </Space>
+        </div>
         <Space className="right">
           <Image
             src={person}
             preview={false}
-            width="100%"
-            height="100%"
+            // width="100%"
+            // height="100%"
             loading="lazy"
           ></Image>
         </Space>
-      </Space>
+      </div>
       <div className="doctor">
         <Typography className="left_title--sub doctor-title">
           Top Outstanding Doctors
         </Typography>
         <div className="doctor-slide">
-          <Carousel
-            className="my-carousel "
-            arrows={false}
-            showDots={true}
-            centerMode={true}
-            draggable={true}
-            responsive={responsive}
-            slidesToSlide={1}
-            autoPlaySpeed={3000}
-            shouldResetAutoplay={true}
-            infinite={true}
-            // showDots // ref={slide}
-            keyBoardControl={false}
-            autoPlay={true}
-            transitionDuration={6}
-            customDot={<CustomDot />}
-          >
-            {listGameItem.map((item, index) => {
-              return <CardDoctor key={index} />;
-            })}
-          </Carousel>
+          <div className="parent">
+            <Carousel
+              responsive={responsive}
+              autoPlay={true}
+              swipeable={true}
+              draggable={true}
+              showDots={true}
+              infinite={true}
+              partialVisible={false}
+              customDot={<CustomDot />}
+              arrows={false}
+              autoPlaySpeed={3000}
+
+            >
+              {listGameItem.map((item, index) => {
+                return <CardDoctor key={index} value={index} />;
+              })}
+            </Carousel>
+          </div>
+        </div>
+      </div>
+      <div className="doctor" style={{ marginBottom: "60px" }}>
+        <Typography className="left_title--sub doctor-title">
+          Enclinic brings you the health information you need.
+        </Typography>
+        <div className="card-content">
+          <CardContent img={content1} title="Based on verified information" content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations" />
+          <CardContent img={content2} title="Based on verified information" content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations" />
+          <CardContent img={content3} title="Based on verified information" content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations" />
+          <CardContent img={content4} title="Based on verified information" content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations" />
         </div>
       </div>
     </>
