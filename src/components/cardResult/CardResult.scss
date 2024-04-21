@@ -1,0 +1,79 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.result {
+
+    width: 100%;
+    padding: 16px 16px 10px;
+    margin-bottom: 24px;
+    border: 1px solid #dbdfe5;
+    border-radius: 10px;
+    display: flex;
+
+    &-first {
+        flex: 1;
+
+        &__img {
+            border-radius: 3px;
+        }
+
+        &__title {
+            margin-top: 5px;
+            background-color: $background-secondary;
+            padding: 5px 10px;
+            width: 100%;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &-text {
+                font-family: $font-main;
+                font-weight: 500;
+                font-style: normal;
+                font-size: 14px;
+                color: $background-primary;
+                text-align: center;
+            }
+        }
+
+    }
+
+    &-second {
+        flex: 3;
+        padding: 0 10px;
+
+        &__name {
+            font-family: $font-main;
+            font-weight: 500;
+            font-style: normal;
+            font-size: 19px;
+            color: $background-primary;
+        }
+
+        &__specialty {
+            font-family: $font-main;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 15px;
+            color: $text-secondary-color;
+
+        }
+
+        &__address {
+            margin-top: 10px;
+
+            &-icon {
+                font-size: 20px;
+                color: $text-secondary-color ;
+            }
+        }
+    }
+
+    &-third {
+        flex: 1;
+        padding: 0 10px;
+
+        &__rate {}
+    }
+}

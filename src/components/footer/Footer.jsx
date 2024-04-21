@@ -9,7 +9,7 @@ export const Footer = () => {
         <Typography className="title">Enclinic</Typography>
       </Space>
       <Typography className="sub_title">
-        Copyright © 2023, Enclinics. All rights reserved.
+        Copyright © 2023, Enclinic. All rights reserved.
       </Typography>
     </Space>
   );

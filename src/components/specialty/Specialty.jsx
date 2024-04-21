@@ -16,12 +16,13 @@ const Item = ({ img, name }) => (
 const filterOption = (input, option) =>
   (option?.value ?? "").toLowerCase().includes(input.toLowerCase());
 
-const Specialty = () => {
-  const [selectValue, setSelectValue] = useState("");
+const Specialty = ({ onChange }) => {
+  const [selectValue, setSelectValue] = useState("All specialties");
 
-  const onChange = (value) => {
+  const handleChange = (value) => {
 
-    setSelectValue(value.value);
+    onChange(value.value);
+    setSelectValue(value.value)
   };
   return (
 
@@ -32,7 +33,7 @@ const Specialty = () => {
       placeholder="All specialties"
       optionFilterProp="children"
       dropdownStyle={{ width: 230 }}
-      onChange={onChange}
+      onChange={handleChange}
       optionLabelProp="label2"
       filterOption={filterOption}
       value={selectValue}

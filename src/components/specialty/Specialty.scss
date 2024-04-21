@@ -2,12 +2,14 @@
 @import "../../assets/scss/variable.scss";
 
 .my-select {
+  width: 100%;
+
   .ant-select-selector {
     // Style the selector (input field) here
     background-color: #f5f5f5;
     border-radius: 5px;
     flex: 1;
-    width: 150px !important; // Adjust the width here
+    width: 100% !important; // Adjust the width here
     // Adjust the height here
 
     padding: 15px 5px !important;

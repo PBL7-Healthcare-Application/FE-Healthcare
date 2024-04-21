@@ -12,8 +12,13 @@ import content1 from "../../assets/images/content_1.webp";
 import content2 from "../../assets/images/content_2.webp";
 import content3 from "../../assets/images/content_3.webp";
 import content4 from "../../assets/images/content_4.webp";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 export const Main = () => {
+  const [name, setName] = useState("");
+  const [specialty, setSpecialty] = useState("All Specialties");
   const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const navigate = useNavigate();
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1350 },
@@ -49,6 +54,12 @@ export const Main = () => {
       </li>
     );
   };
+  const handleChange = (value) => {
+    setSpecialty(value);
+  }
+  const handleClick = () => {
+    navigate(`/search?name=${name}&specialty=${specialty}`);
+  }
   return (
     <>
       <div className="content">
@@ -66,7 +77,7 @@ export const Main = () => {
           <div className="search">
             <div className="search__select">
               <Typography className="search__label">Specialty</Typography>
-              <Specialty />
+              <Specialty onChange={handleChange} />
             </div>
             <div className="divide"></div>
             <div className="search__find">
@@ -76,9 +87,10 @@ export const Main = () => {
                   type="text"
                   className="search__input-text"
                   placeholder="Search for a doctor..."
+                  onChange={(e) => { setName(e.target.value) }}
                 />
               </div>
-              <Button className="search__button">Search For Result</Button>
+              <Button className="search__button" onClick={handleClick}>Search For Result</Button>
             </div>
           </div>
         </div>

@@ -10,7 +10,9 @@ import { Link } from "react-router-dom";
 
 import "./SignUp.scss";
 import Feature from "../../components/feature/Feature";
+import { useState } from "react";
 const SignUp = () => {
+  const [name, setName] = useState("");
   return (
     <Space className="up-main">
       <Space className="up-left">
@@ -48,11 +50,14 @@ const SignUp = () => {
                 message: "Please input your Name!",
               },
             ]}
+            initialValue={name}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Name"
               className="input__username input"
+              onKeyDown={(e) => { if (e.keyCode === 32 && name.length === 0) { e.preventDefault(); } }}
+              onChange={(e) => setName(e.target.value)}
             />
           </Form.Item>
 
@@ -69,6 +74,7 @@ const SignUp = () => {
                 message: "Please input your E-mail!",
               },
             ]}
+            normalize={(value) => value.trim()}
           >
             <Input
               prefix={<MailOutlined className="site-form-item-icon" />}
@@ -85,6 +91,7 @@ const SignUp = () => {
                 message: "Please input your Password!",
               },
             ]}
+            normalize={(value) => value.trim()}
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
