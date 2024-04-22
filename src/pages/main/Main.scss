@@ -16,6 +16,8 @@
   @media (max-width: 917px) {
     padding-left: 0;
     padding-right: 0;
+    height: auto;
+    padding-bottom: 20px;
   }
 }
 
@@ -90,7 +92,6 @@
   @media (max-width: 917px) {
     flex-direction: column;
   }
-
 
   &__select {
     display: flex;
@@ -170,10 +171,8 @@
 }
 
 .divide {
-
   width: 2px;
   border: 0.5px solid #ccc;
-
 }
 
 .search_icon {

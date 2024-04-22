@@ -8,6 +8,7 @@ export const CardDoctor = ({ value }) => {
         src="https://cdn-healthcare.hellohealthgroup.com/2024/01/1704954266_659f899a308898.23855932.jpg"
         width={80}
         className="cardDoctor_img"
+        preview={false}
       ></Image>
       <Space className="cardDoctor_name">Dr Nguyen Lan Viet {value}</Space>
       <Space className="cardDoctor_item">
