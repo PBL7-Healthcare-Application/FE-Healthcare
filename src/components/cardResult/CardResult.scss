@@ -79,6 +79,10 @@
       align-items: center;
       justify-content: center;
 
+      @media (max-width: 1172px) {
+        flex-direction: column;
+      }
+
       &-icon {
         color: rgb(255, 181, 33);
       }

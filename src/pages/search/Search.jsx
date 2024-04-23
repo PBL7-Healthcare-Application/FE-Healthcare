@@ -2,13 +2,22 @@ import Typography from "antd/es/typography/Typography";
 import "./Search.scss";
 import Specialty from "../../components/specialty/Specialty";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Divider, Input, Radio, Slider, Space } from "antd";
+import {
+  Button,
+  Divider,
+  Radio,
+  Input,
+  Slider,
+  Space,
+  Rate,
+  Pagination,
+} from "antd";
 import CardResult from "../../components/cardResult/CardResult";
 import { useState } from "react";
 const Search = () => {
-  const [inputValue, setInputValue] = useState(1);
+  const [years, setYears] = useState(1);
   const onChange = (newValue) => {
-    setInputValue(newValue);
+    setYears(newValue);
   };
   return (
     <div className="search-main">
@@ -61,7 +70,7 @@ const Search = () => {
                     Available
                   </Typography>
                 </Space>
-                <Space style={{ marginTop: 20 }}>
+                <Space style={{ marginTop: 5 }}>
                   <Radio.Group className="search-result__filter-box-radio">
                     <Radio
                       value={1}
@@ -87,6 +96,7 @@ const Search = () => {
                   style={{
                     backgroundColor: "rgb(228, 232, 236)",
                     width: "100%",
+                    marginBottom: 8,
                   }}
                 />
 
@@ -102,21 +112,105 @@ const Search = () => {
                   </Typography>
                 </Space>
 
-                <Slider defaultValue={30} />
-                <Space direction="vertical">
-                  <Typography>Years' experience</Typography>
-                  <Input />
+                <Slider defaultValue={30} onChange={onChange} tooltip={false} />
+                <Space
+                  direction="vertical"
+                  className="search-result__filter__experience"
+                >
+                  <Typography className="search-result__filter__experience--label">
+                    Years' experience
+                  </Typography>
+                  <input
+                    value={years}
+                    className="search-result__filter__experience--input"
+                  />
                 </Space>
                 <Divider
                   style={{
                     backgroundColor: "rgb(228, 232, 236)",
                     width: "100%",
+                    marginBottom: 8,
                   }}
                 />
+
+                {/*  */}
+
+                <Space>
+                  <Divider
+                    type="vertical"
+                    style={{ backgroundColor: "#2d87f3", width: 2 }}
+                  />
+                  <Typography className="search-result__filter-box-label">
+                    Fees
+                  </Typography>
+                </Space>
+                <Slider
+                  range={{
+                    draggableTrack: true,
+                  }}
+                  defaultValue={[20, 50]}
+                />
+                <div
+                  direction="horizontal"
+                  className="search-result__filter__price"
+                >
+                  <Space className="search-result__filter__price--input">
+                    <Typography className="search-result__filter__experience--label">
+                      Min
+                    </Typography>
+                    <input
+                      value={years}
+                      className="search-result__filter__experience--input"
+                      style={{ width: "100%" }}
+                    />
+                  </Space>
+                  <Space className="search-result__filter__price--input">
+                    <Typography className="search-result__filter__experience--label">
+                      Max
+                    </Typography>
+                    <input
+                      value={years}
+                      className="search-result__filter__experience--input"
+                      style={{ width: "100%" }}
+                    />
+                  </Space>
+                </div>
+
+                <Divider
+                  style={{
+                    backgroundColor: "rgb(228, 232, 236)",
+                    width: "100%",
+                    marginBottom: 8,
+                  }}
+                />
+
+                {/*  */}
+                <Space>
+                  <Space direction="vertical">
+                    <Space>
+                      <Divider
+                        type="vertical"
+                        style={{ backgroundColor: "#2d87f3", width: 2 }}
+                      />
+                      <Typography className="search-result__filter-box-label">
+                        Rate
+                      </Typography>
+                    </Space>
+                    <Rate />
+                  </Space>
+                </Space>
               </Space>
             </div>
           </div>
         </div>
+      </div>
+      <div className="search-pagination">
+        <Pagination
+          defaultCurrent={3}
+          total={500}
+          showTotal={false}
+          showSizeChanger={false}
+        />
       </div>
     </div>
   );
