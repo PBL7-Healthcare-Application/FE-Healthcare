@@ -1,6 +1,10 @@
 
 export const specialty = [
     {
+        value: "All specialties",
+        image: "https://res.cloudinary.com/dbtam9pnc/image/upload/v1713669571/Doctor/cfpvhhgnhbagpcwhwsxl.png"
+    },
+    {
         value: "General medicine",
         image: "https://res.cloudinary.com/dbtam9pnc/image/upload/v1713413379/Doctor/gigu9hqbvlrdth4y77pv.webp"
     },

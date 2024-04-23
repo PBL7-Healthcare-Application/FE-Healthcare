@@ -12,42 +12,58 @@ import content1 from "../../assets/images/content_1.webp";
 import content2 from "../../assets/images/content_2.webp";
 import content3 from "../../assets/images/content_3.webp";
 import content4 from "../../assets/images/content_4.webp";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 export const Main = () => {
+  const [name, setName] = useState("");
+  const [specialty, setSpecialty] = useState("All Specialties");
   const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const navigate = useNavigate();
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1350 },
       items: 4,
-      slidesToSlide: 4 // optional, default to 1.
+      slidesToSlide: 4, // optional, default to 1.
     },
     tablet: {
       breakpoint: { max: 1350, min: 988 },
       items: 3,
-      slidesToSlide: 3 // optional, default to 1.
+      slidesToSlide: 3, // optional, default to 1.
     },
     mobile: {
       breakpoint: { max: 988, min: 698 },
       items: 2,
-      slidesToSlide: 1 // optional, default to 1.
+      slidesToSlide: 1, // optional, default to 1.
     },
     xl: {
       breakpoint: { max: 698, min: 0 },
       items: 1,
-      slidesToSlide: 1 // optional, default to 1.
-    }
+      slidesToSlide: 1, // optional, default to 1.
+    },
   };
   const CustomDot = ({ onClick, active, index, carouselState }) => {
     const { currentSlide } = carouselState;
     return (
-      <li style={{ background: active ? '#185FA0' : '#ccc', width: 20, height: 5, marginLeft: 2, }}>
+      <li
+        style={{
+          background: active ? "#185FA0" : "#ccc",
+          width: 20,
+          height: 5,
+          marginLeft: 2,
+        }}
+      >
         <button
-          style={{ background: 'transparent', border: 'none' }}
+          style={{ background: "transparent", border: "none" }}
           onClick={() => onClick()}
-        >
-
-        </button>
+        ></button>
       </li>
     );
+  };
+  const handleChange = (value) => {
+    setSpecialty(value);
+  };
+  const handleClick = () => {
+    navigate(`/search?name=${name}&specialty=${specialty}`);
   };
   return (
     <>
@@ -66,19 +82,24 @@ export const Main = () => {
           <div className="search">
             <div className="search__select">
               <Typography className="search__label">Specialty</Typography>
-              <Specialty />
+              <Specialty onChange={handleChange} />
             </div>
             <div className="divide"></div>
             <div className="search__find">
               <div className="search__input">
-                <SearchOutlined className="search_icon" />
+                <SearchOutlined className="search_icon" style={{ zIndex: 1 }} />
                 <Input
                   type="text"
                   className="search__input-text"
                   placeholder="Search for a doctor..."
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
                 />
               </div>
-              <Button className="search__button">Search For Result</Button>
+              <Button className="search__button" onClick={handleClick}>
+                Search For Result
+              </Button>
             </div>
           </div>
         </div>
@@ -109,7 +130,6 @@ export const Main = () => {
               customDot={<CustomDot />}
               arrows={false}
               autoPlaySpeed={3000}
-
             >
               {listGameItem.map((item, index) => {
                 return <CardDoctor key={index} value={index} />;
@@ -123,10 +143,26 @@ export const Main = () => {
           Enclinic brings you the health information you need.
         </Typography>
         <div className="card-content">
-          <CardContent img={content1} title="Based on verified information" content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations" />
-          <CardContent img={content2} title="Based on verified information" content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations" />
-          <CardContent img={content3} title="Based on verified information" content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations" />
-          <CardContent img={content4} title="Based on verified information" content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations" />
+          <CardContent
+            img={content1}
+            title="Based on verified information"
+            content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations"
+          />
+          <CardContent
+            img={content2}
+            title="Based on verified information"
+            content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations"
+          />
+          <CardContent
+            img={content3}
+            title="Based on verified information"
+            content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations"
+          />
+          <CardContent
+            img={content4}
+            title="Based on verified information"
+            content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations"
+          />
         </div>
       </div>
     </>

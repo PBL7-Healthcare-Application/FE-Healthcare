@@ -43,12 +43,15 @@ const SignIn = () => {
                 required: true,
                 message: "Please input your E-mail!",
               },
+
             ]}
+            normalize={(value) => value.trim()}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Username"
               className="input__username input"
+              onChange={(e) => { e.target.value = e.target.value.trim(); }}
             />
           </Form.Item>
           <Typography className="label">Password</Typography>

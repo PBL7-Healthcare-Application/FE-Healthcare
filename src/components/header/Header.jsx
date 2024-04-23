@@ -2,7 +2,6 @@ import { Image, Menu, Space } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import title from "../../assets/images/title.png";
-import { Typography } from "antd";
 import "./Header.scss";
 import Avt from "./Avt";
 import { useState } from "react";
@@ -16,7 +15,7 @@ export const Header = () => {
   const links = [
     {
       label: "Appointment",
-      href: "/",
+      href: "/b",
     },
     {
       label: "Chatbox",
