@@ -12,7 +12,7 @@ import {
   Rate,
   Pagination,
 } from "antd";
-import CardResult from "../../components/cardResult/CardResult";
+import CardResult from "../../components/Doctor/cardResult/CardResult";
 import { useState } from "react";
 const Search = () => {
   const [years, setYears] = useState(1);

@@ -49,7 +49,7 @@ const SignIn = () => {
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="Email"
               className="input__username input"
               onChange={(e) => { e.target.value = e.target.value.trim(); }}
             />

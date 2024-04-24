@@ -1,0 +1,15 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+.cardTime {
+    padding: 5px 5px;
+    border-radius: 5px;
+    border: 1px solid #dbdfe5;
+
+    &__text {
+        letter-spacing: 1px;
+        font-family: $font-main;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}

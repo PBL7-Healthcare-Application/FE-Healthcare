@@ -1,5 +1,4 @@
 import { Avatar, Badge, Popover, Space } from "antd";
-import React from "react";
 import "./Avt.scss";
 import { BellOutlined, MessageOutlined } from "@ant-design/icons";
 
@@ -13,8 +12,8 @@ const Avt = () => {
 
         <Popover placement="bottom" trigger="click" >
             <Space className="avt" >
-                <Badge count={5}>
-                    <MessageOutlined className="avt-notify" />
+                <Badge count={3}>
+                    <MessageOutlined className="avt-notify" style={{ width: 30 }} />
                 </Badge>
                 <Badge count={5}>
                     <BellOutlined className="avt-notify" />
