@@ -4,7 +4,7 @@ import person from "../../assets/images/person.png";
 import "./Main.scss";
 import Specialty from "../../components/specialty/Specialty";
 import { SearchOutlined } from "@ant-design/icons";
-import { CardDoctor } from "../../components/cardDoctor/CardDoctor";
+import { CardDoctor } from "../../components/Doctor/cardDoctor/CardDoctor";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { CardContent } from "../../components/cardContent/CardContent";
@@ -63,7 +63,7 @@ export const Main = () => {
     setSpecialty(value);
   };
   const handleClick = () => {
-    navigate(`/search?name=${name}&specialty=${specialty}`);
+    navigate(`/search/doctor?name=${name}&specialty=${specialty}`);
   };
   return (
     <>

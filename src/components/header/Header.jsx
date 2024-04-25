@@ -18,7 +18,7 @@ export const Header = () => {
       href: "/b",
     },
     {
-      label: "Chatbox",
+      label: "Chatbot",
       href: "/a",
     },
 

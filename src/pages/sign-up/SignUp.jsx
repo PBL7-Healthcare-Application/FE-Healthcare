@@ -1,7 +1,6 @@
 import {
   LockOutlined,
   MailOutlined,
-  PhoneOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Button, Form, Input, Space, Typography } from "antd";
@@ -78,7 +77,7 @@ const SignUp = () => {
           >
             <Input
               prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="Email"
               className="input__username input"
             />
           </Form.Item>
@@ -107,7 +106,7 @@ const SignUp = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your Confirm password!",
+                message: "Please input your Confirm Password!",
               },
             ]}
           >
@@ -115,7 +114,7 @@ const SignUp = () => {
               prefix={<LockOutlined className="site-form-item-icon" />}
               className="input__password input"
               type="password"
-              placeholder="confirm Password"
+              placeholder="Confirm Password"
             />
           </Form.Item>
           <Form.Item>

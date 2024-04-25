@@ -1,0 +1,253 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+
+.detailDr {
+    &-main {
+        width: 100%;
+        padding: 40px 20px;
+    }
+
+    &-divider {
+        position: absolute;
+        top: 6px;
+        left: 0;
+        width: 2;
+        height: 15px;
+        border: 1px solid #185FA0
+    }
+
+    &-content {
+        @media (min-width: 1024px) {
+            max-width: 1170px;
+        }
+
+
+        margin: 0px auto;
+        display: flex;
+        gap: 40px;
+
+        &__left {
+            flex: 7;
+
+            &-profile {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                background-color: #F5FAFF;
+                border: 1px solid #E3F0FF;
+                border-radius: 10px;
+                padding: 20px;
+                gap: 20px;
+
+                &--infor {
+                    display: flex;
+                    width: 100%;
+                    flex-direction: row;
+                    justify-content: space-between;
+
+                    &__name {
+                        font-family: $font-main;
+                        font-weight: 500;
+                        font-style: normal;
+                        font-size: 24px;
+                        color: $background-primary;
+
+                    }
+
+                    &__specialty {
+                        font-family: $font-main;
+                        font-weight: 400;
+                        font-style: normal;
+                        font-size: 15px;
+                        color: $text-secondary-color;
+                    }
+                }
+            }
+
+            &-information {
+                &__profile {
+                    margin-top: 30px;
+                    position: relative;
+
+                    &:first-child {
+                        margin-top: 12px;
+                    }
+
+                    &-title {
+                        font-family: $font-main;
+                        font-weight: 500;
+                        font-style: normal;
+                        font-size: 18px;
+                        color: $background-primary;
+                        margin-left: 12px;
+                        margin-bottom: 18 px;
+                    }
+
+                    &-content {
+
+                        font-family: $font-main;
+                        font-weight: 400;
+                        font-style: normal;
+                        font-size: 15px;
+                        color: rgb(64, 64, 64);
+
+                    }
+
+
+                }
+
+                &__box {
+                    display: flex;
+                    gap: 4px;
+
+                    &::before {
+                        content: "";
+                        display: block;
+                        background: $text-secondary-color;
+                        ;
+                        border-radius: 50%;
+                        width: 6px;
+                        height: 6px;
+                        margin: 10px 8px;
+                        flex-shrink: -1;
+                    }
+
+                    &:first-child {
+                        margin-top: 10px;
+                    }
+
+                    &:not(:last-child) {
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+
+        &__right {
+            flex: 3;
+            height: auto;
+
+            &-appointment {
+                border-radius: 10px;
+                border: 1px solid #dbdfe5;
+                padding: 16px;
+
+                &--titleType {
+                    font-family: $font-main;
+                    font-weight: 500;
+                    font-style: normal;
+                    font-size: 15px;
+                    color: $background-primary;
+                    margin-bottom: 10px;
+                }
+
+                &--box {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 10px;
+                    width: 100%;
+
+                    &__type {
+                        border-radius: 6px;
+                        padding: 10px;
+                        background-color: #D2E4FA;
+                        flex: 1;
+                        border: 1px solid $background-secondary;
+
+                        &-item {
+                            display: flex;
+                            flex-direction: row;
+                        }
+
+                        &-label {
+                            font-family: $font-main;
+                            font-weight: 400;
+                            font-style: normal;
+                            font-size: 14px;
+                            color: rgb(64, 64, 64);
+                        }
+                    }
+                }
+
+                &__time {
+                    display: flex;
+                    width: 100%;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    align-items: center;
+                    justify-content: center;
+
+                }
+
+                &__button {
+                    font-family: "Poppins", sans-serif;
+                    font-weight: 600;
+                    color: #fff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px 0;
+                    border-radius: 10px;
+                    background-color: #185fa0;
+                    width: 100%;
+                    margin-top: 40px;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+.item {
+    width: 100% !important;
+    height: 70px !important;
+    margin: 0 10px !important;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    color: #185FA0 !important;
+}
+
+.t-tabs-nav-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100% !important;
+}
+
+.t-tabs-tab {
+    width: 302px;
+    justify-content: center;
+
+}
+
+.t-label {
+    font-size: 15;
+    font-weight: 600;
+    padding: 0 10px;
+    color: #8c8c8c;
+}
+
+.ant-tabs-tab-btn {
+    font-size: 16;
+    font-weight: 500;
+    color: #8c8c8c;
+    font-family: $font-main;
+    padding: 0 8px;
+
+
+}
+
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: $background-primary;
+    text-shadow: 0 0 0.25px $background-primary;
+}
+
+.ant-tabs-ink-bar {
+    background-color: $background-primary !important;
+}
