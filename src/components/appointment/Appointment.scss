@@ -1,0 +1,44 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.appointment {
+  &-main {
+    width: 100%;
+    padding: 40px 20px;
+  }
+  &-content {
+    @media (min-width: 1024px) {
+      max-width: 1170px;
+    }
+
+    margin: 0px auto;
+
+    display: flex;
+    gap: 40px;
+  }
+  &-left {
+    flex: 3;
+  }
+  &-right {
+    flex: 7;
+  }
+  &-box {
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid #dbdfe5;
+    flex-direction: column;
+    gap: 16px;
+  }
+  &-noti {
+    background-color: rgb(255, 248, 226);
+    border: 1px solid rgb(255, 236, 182);
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+  }
+  &-font {
+    font-family: $font-main;
+    color: #404040;
+  }
+}
