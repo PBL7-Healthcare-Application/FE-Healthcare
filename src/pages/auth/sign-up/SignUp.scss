@@ -1,5 +1,5 @@
-@import "../../assets/scss/font.scss";
-@import "../../assets/scss/variable.scss";
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
 
 .input {
   font-family: $font-main;
@@ -13,7 +13,7 @@
 
 .login-form {
   background-color: #fff;
-  padding: 40px;
+  padding: 10px 40px;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   width: 426px;
@@ -37,17 +37,16 @@
   }
 }
 
-.in-main {
+.up-main {
   background-color: $background-secondary;
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 80px;
   padding: 40px 0px;
 
-  @media (max-width: 1294px) {
+  @media (max-width: 1252px) {
     padding: 20px 0px;
     flex-direction: column;
     height: 100%;
@@ -67,7 +66,7 @@
   color: #68718b;
 }
 
-.in-right {
+.up-right {
   &__title {
     &--main {
       font-family: $font-main;
@@ -90,7 +89,7 @@
   }
 }
 
-.in-left {
+.up-left {
   display: flex;
   flex-direction: column;
   gap: 30px;

@@ -1,14 +1,10 @@
-import {
-  LockOutlined,
-  MailOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space, Typography } from "antd";
 
 import { Link } from "react-router-dom";
 
 import "./SignUp.scss";
-import Feature from "../../components/feature/Feature";
+import Feature from "../../../components/feature/Feature";
 import { useState } from "react";
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -55,7 +51,11 @@ const SignUp = () => {
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Name"
               className="input__username input"
-              onKeyDown={(e) => { if (e.keyCode === 32 && name.length === 0) { e.preventDefault(); } }}
+              onKeyDown={(e) => {
+                if (e.keyCode === 32 && name.length === 0) {
+                  e.preventDefault();
+                }
+              }}
               onChange={(e) => setName(e.target.value)}
             />
           </Form.Item>

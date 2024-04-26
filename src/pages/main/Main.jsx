@@ -1,4 +1,4 @@
-import { Button, Image, Input, Space, Typography, Progress } from "antd";
+import { Button, Image, Input, Space, Typography } from "antd";
 import Feature from "../../components/feature/Feature";
 import person from "../../assets/images/person.png";
 import "./Main.scss";
@@ -12,8 +12,9 @@ import content1 from "../../assets/images/content_1.webp";
 import content2 from "../../assets/images/content_2.webp";
 import content3 from "../../assets/images/content_3.webp";
 import content4 from "../../assets/images/content_4.webp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { logInUser } from "../../api/auth.api";
 export const Main = () => {
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState("All Specialties");
@@ -41,7 +42,9 @@ export const Main = () => {
       slidesToSlide: 1, // optional, default to 1.
     },
   };
+  // eslint-disable-next-line react/prop-types, no-unused-vars
   const CustomDot = ({ onClick, active, index, carouselState }) => {
+    // eslint-disable-next-line react/prop-types, no-unused-vars
     const { currentSlide } = carouselState;
     return (
       <li
@@ -65,6 +68,15 @@ export const Main = () => {
   const handleClick = () => {
     navigate(`/search/doctor?name=${name}&specialty=${specialty}`);
   };
+
+  useEffect(() => {
+    const test = async () => {
+      const res = await logInUser({});
+      console.log(res);
+    };
+
+    test();
+  }, []);
   return (
     <>
       <div className="content">

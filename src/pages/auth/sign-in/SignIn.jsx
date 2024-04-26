@@ -3,7 +3,7 @@ import { Button, Form, Input, Space, Typography } from "antd";
 import { Link } from "react-router-dom";
 
 import "./SignIn.scss";
-import Feature from "../../components/feature/Feature";
+import Feature from "../../../components/feature/Feature";
 const SignIn = () => {
   return (
     <Space className="in-main">
@@ -26,7 +26,9 @@ const SignIn = () => {
             remember: true,
           }}
         >
-          <Typography className="in-right__title--main">Welcome Back</Typography>
+          <Typography className="in-right__title--main">
+            Welcome Back
+          </Typography>
           <Typography className="in-right__title--sub">
             Please enter your details below to continue
           </Typography>
@@ -43,7 +45,6 @@ const SignIn = () => {
                 required: true,
                 message: "Please input your E-mail!",
               },
-
             ]}
             normalize={(value) => value.trim()}
           >
@@ -51,7 +52,9 @@ const SignIn = () => {
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Email"
               className="input__username input"
-              onChange={(e) => { e.target.value = e.target.value.trim(); }}
+              onChange={(e) => {
+                e.target.value = e.target.value.trim();
+              }}
             />
           </Form.Item>
           <Typography className="label">Password</Typography>
