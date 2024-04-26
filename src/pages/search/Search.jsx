@@ -108,7 +108,7 @@ const Search = () => {
                     style={{ backgroundColor: "#2d87f3", width: 2 }}
                   />
                   <Typography className="search-result__filter-box-label">
-                    Years' experience
+                    Years&apos; experience
                   </Typography>
                 </Space>
 
@@ -118,7 +118,7 @@ const Search = () => {
                   className="search-result__filter__experience"
                 >
                   <Typography className="search-result__filter__experience--label">
-                    Years' experience
+                    Years&apos; experience
                   </Typography>
                   <input
                     value={years}

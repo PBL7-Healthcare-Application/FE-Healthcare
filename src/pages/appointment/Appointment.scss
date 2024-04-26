@@ -1,0 +1,155 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.appointment {
+  &-main {
+    width: 100%;
+    padding: 40px 20px;
+
+  }
+
+  &-content {
+    @media (min-width: 1024px) {
+      max-width: 1170px;
+    }
+
+    margin: 0px auto;
+
+    display: flex;
+    gap: 40px;
+  }
+
+  &-left {
+    flex: 3;
+
+    &__title {
+      font-size: 18px;
+      font-weight: 600;
+      color: $background-primary;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+
+      &::before {
+        content: "";
+        display: block;
+        width: 2px;
+        height: 15px;
+        background-color: $background-primary;
+        flex-shrink: 0;
+      }
+    }
+
+    &__infor {
+      background-color: #F5FAFF;
+      border-radius: 10px;
+      padding: 10px;
+
+
+      border: 1px solid #E3F0FF;
+
+      &--box {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      &--phone {
+        display: flex;
+        flex-direction: row;
+        padding: 10px 15px;
+        gap: 10px;
+      }
+
+      &--img {
+        border-radius: 50px;
+      }
+
+      &--left {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+
+      }
+    }
+  }
+
+  &-right {
+    flex: 7;
+
+    &__box {
+
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      margin-top: 20px;
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      margin-bottom: 15px;
+      align-items: center;
+
+      &-icon {
+
+        color: #626d7c;
+      }
+    }
+
+    &__payment {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &-left {
+        display: flex;
+        gap: 20px;
+      }
+    }
+
+    &__button {
+      font-family: "Poppins", sans-serif;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      background-color: #185fa0;
+      padding: 20px 50px;
+
+    }
+  }
+
+  &-box {
+    padding: 20px 16px;
+    border-radius: 10px;
+    border: 1px solid #dbdfe5;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &-noti {
+    background-color: rgb(255, 248, 226);
+    border: 1px solid rgb(255, 236, 182);
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+  }
+
+  &-font {
+    font-family: $font-main;
+    color: #404040;
+  }
+}
+
+.textArea {
+  min-height: 200px !important;
+  max-height: 200px !important;
+}
