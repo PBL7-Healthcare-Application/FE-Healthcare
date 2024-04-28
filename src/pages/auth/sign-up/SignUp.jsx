@@ -1,15 +1,57 @@
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Space, Typography } from "antd";
+import { Button, Form, Input, Space, Typography, message } from "antd";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./SignUp.scss";
 import Feature from "../../../components/feature/Feature";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { passwordRegex } from "../../../constant/regex";
+import { useDispatch, useSelector } from "react-redux";
+import { signUpUser } from "../../../stores/auth/AuthThunk";
+import { SetError } from "../../../stores/auth/AuthSlice";
 const SignUp = () => {
   const [name, setName] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+  const { user, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    console.log(`SignUp::`, user);
+    // if (user) {
+    //   navigate("/");
+    // }
+    // if (error) {
+    //   messageApi.open({
+    //     type: "error",
+    //     content: error,
+    //     duration: 2,
+    //   });
+    // }
+    if (user) {
+      localStorage.setItem("profile", JSON.stringify(user));
+      navigate("/auth/verify");
+    }
+    if (error) {
+      messageApi.open({
+        type: "error",
+        content: error,
+        duration: 2,
+      });
+      dispatch(SetError());
+    }
+    return () => { };
+  }, [user, error, navigate, messageApi, dispatch]);
+  const onFinish = (values) => {
+
+    dispatch(signUpUser(values));
+    // console.log(values)
+  };
   return (
+
     <Space className="up-main">
+
       <Space className="up-left">
         <Space className="up-left_title">
           <Typography className="up-left_title--main">
@@ -28,7 +70,9 @@ const SignUp = () => {
           initialValues={{
             remember: true,
           }}
+          onFinish={onFinish}
         >
+          {contextHolder}
           <Typography className="up-right__title--main">
             Create an Account
           </Typography>
@@ -89,6 +133,10 @@ const SignUp = () => {
                 required: true,
                 message: "Please input your Password!",
               },
+              {
+                pattern: passwordRegex,
+                message: "Password must have at least 8 characters and 1 uppercase letter and 1 special character.",
+              }
             ]}
             normalize={(value) => value.trim()}
           >
@@ -108,7 +156,16 @@ const SignUp = () => {
                 required: true,
                 message: "Please input your Confirm Password!",
               },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Passwords do not match!'));
+                },
+              }),
             ]}
+            normalize={(value) => value.trim()}
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
@@ -122,6 +179,7 @@ const SignUp = () => {
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              style={{ marginTop: 10 }}
             >
               Sign up
             </Button>

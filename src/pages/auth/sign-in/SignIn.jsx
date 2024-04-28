@@ -1,10 +1,42 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Space, Typography } from "antd";
-import { Link } from "react-router-dom";
-
+import { Button, Form, Input, Space, Typography, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import "./SignIn.scss";
 import Feature from "../../../components/feature/Feature";
+import { passwordRegex } from "../../../constant/regex";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { signInUser } from "../../../stores/auth/AuthThunk";
+import { SetError } from "../../../stores/auth/AuthSlice";
 const SignIn = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+  const { user, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    console.log(`User::`, user);
+    if (user) {
+      if (user.role === "User") {
+        navigate("/");
+      }
+    }
+    if (error) {
+      messageApi.open({
+        type: "error",
+        content: error,
+        duration: 2,
+      });
+      dispatch(SetError());
+    }
+    return () => { };
+  }, [user, error, navigate, messageApi, dispatch]);
+
+  const onFinish = (values) => {
+    dispatch(signInUser(values));
+  };
+
+
   return (
     <Space className="in-main">
       <Space className="in-left">
@@ -25,7 +57,9 @@ const SignIn = () => {
           initialValues={{
             remember: true,
           }}
+          onFinish={onFinish}
         >
+          {contextHolder}
           <Typography className="in-right__title--main">
             Welcome Back
           </Typography>
@@ -65,6 +99,10 @@ const SignIn = () => {
                 required: true,
                 message: "Please input your Password!",
               },
+              {
+                pattern: passwordRegex,
+                message: "Password must have at least 8 characters and 1 uppercase letter and 1 special character.",
+              }
             ]}
           >
             <Input.Password
@@ -79,6 +117,7 @@ const SignIn = () => {
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              style={{ marginTop: 10 }}
             >
               Sign in
             </Button>

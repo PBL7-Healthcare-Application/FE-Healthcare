@@ -1,17 +1,21 @@
 import { Image, Menu, Space } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import title from "../../assets/images/title.png";
 import "./Header.scss";
 import Avt from "./Avt";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SignInBtn from "./SignInBtn";
 import { MenuOutlined } from "@ant-design/icons";
+import getToken from "../../helpers/getToken";
 export const Header = () => {
   const { pathname } = useLocation();
   // eslint-disable-next-line no-unused-vars
-  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+
+  const token = getToken();
   const links = [
     {
       label: "Appointment",
@@ -34,6 +38,13 @@ export const Header = () => {
   const handleMenuClick = () => {
     setOpenMenu(!openMenu);
   };
+
+  useEffect(() => {
+    if (token) {
+      setIsLogin(true);
+    }
+    return () => { };
+  }, [token])
   const navItems = links.map((item, index) => {
     return (
       <div key={index} className="nav__item ">
@@ -63,7 +74,7 @@ export const Header = () => {
 
   return (
     <Space className={`menu`}>
-      <Space className="logo">
+      <Space className="logo" onClick={() => navigate("/")}>
         <MenuOutlined className="menu-icon" onClick={handleMenuClick} />
         <Menu className={`menu-selector ${openMenu ? 'open' : ''}`} items={menuItems} />
         <Image src={logo} preview={false} width={80} loading="lazy"></Image>

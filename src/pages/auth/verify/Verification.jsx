@@ -1,13 +1,22 @@
-import { Button, Form, Input, Space, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { Button, Form, Input, Space, Typography, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./Verification.scss";
 import Feature from "../../../components/feature/Feature";
-import { createRef, useState } from "react";
+import { createRef, useEffect, useState } from "react";
+import { SetError } from "../../../stores/auth/AuthSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { VerifyEmail } from "../../../stores/auth/AuthThunk";
 const otpFields = new Array(6).fill(0);
 const Verification = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+  const { user, error } = useSelector((state) => state.auth);
   const [otpValues, setOtpValues] = useState(Array(6).fill(""));
   const otpRefs = Array.from({ length: 6 }, () => createRef());
+  const [seconds, setSeconds] = useState(120);
+  const [reSend, setResend] = useState(false);
   const handleInputChange = (e, index) => {
     const newOtpValues = [...otpValues];
     newOtpValues[index] = e.target.value;
@@ -17,6 +26,47 @@ const Verification = () => {
       otpRefs[index + 1].current.focus();
     }
   };
+  useEffect(() => {
+    if (seconds > 0) {
+      const timerId = setTimeout(() => {
+        setSeconds(seconds - 1);
+      }, 1000);
+      return () => clearTimeout(timerId); // Clear the timer if the component is unmounted
+    }
+    if (seconds === 0) {
+      setResend(true);
+    }
+  }, [seconds]);
+
+  useEffect(() => {
+    console.log(`UserVer::`, user);
+    if (user) {
+      if (user.role === "User") {
+        navigate("/");
+      }
+    }
+    if (error) {
+      messageApi.open({
+        type: "error",
+        content: error,
+        duration: 2,
+      });
+      dispatch(SetError());
+    }
+    return () => { };
+  }, [user, error, navigate, messageApi, dispatch]);
+
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  const onFinish = (values) => {
+    const otp = Object.values(values).join('');
+    const email = localStorage.getItem("profile");
+    dispatch(VerifyEmail({ email: JSON.parse(email).email, otp: otp }))
+  };
+
+
   return (
     <Space className="in-main">
       <Space className="in-left">
@@ -37,7 +87,9 @@ const Verification = () => {
           initialValues={{
             remember: true,
           }}
+          onFinish={onFinish}
         >
+          {contextHolder}
           <Typography className="in-right__title--main">
             Verification Code
           </Typography>
@@ -47,7 +99,8 @@ const Verification = () => {
 
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {otpFields.map((_, index) => (
-              <Form.Item key={index}>
+              <Form.Item key={index} name={`verify${index}`}>
+
                 <Input
                   maxLength={1}
                   className="input__otp input"
@@ -60,8 +113,23 @@ const Verification = () => {
                   }}
                   autoComplete="off"
                   value={otpValues[index]}
-                  onChange={(e) => handleInputChange(e, index)}
+                  onChange={(e) => {
+                    if (!isNaN(e.target.value)) {
+                      handleInputChange(e, index);
+                    }
+                  }}
                   ref={otpRefs[index]}
+                  inputMode="numeric"
+                  onKeyDown={(e) => {
+                    if (e.key === "Backspace" && otpValues[index] === "") {
+                      // If the Backspace key is pressed and the current field is empty,
+                      // move the focus to the previous field
+                      const previousField = otpRefs[index - 1];
+                      if (previousField) {
+                        previousField.current.focus();
+                      }
+                    }
+                  }}
                 />
               </Form.Item>
             ))}
@@ -79,12 +147,13 @@ const Verification = () => {
           </Form.Item>
           <Form.Item className="login-form-forgot">
             <Typography className="label">
-              Request new OTP in <Link to={"/auth/sign-up"}>Resend OTP.</Link>
+              Request new OTP in {reSend ? <Link to={"/auth/sign-up"}>Resend OTP.</Link> : <>{minutes}:{remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}</>}
+
             </Typography>
           </Form.Item>
         </Form>
       </Space>
-    </Space>
+    </Space >
   );
 };
 

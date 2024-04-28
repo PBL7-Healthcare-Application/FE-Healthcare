@@ -1,4 +1,4 @@
-import { Divider, Image, Select, Space, Typography } from "antd";
+import { Image, Select, Space, Typography } from "antd";
 import "./Specialty.scss";
 import { specialty } from "../../api/fetchAPI.js";
 import { useState } from "react";
@@ -44,7 +44,7 @@ const Specialty = ({ onChange }) => {
           <Item img={item.image} name={item.value} />
         ),
       }))}
-      labelInValue
+
 
     />
   )

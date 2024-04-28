@@ -13,35 +13,14 @@ import content2 from "../../assets/images/content_2.webp";
 import content3 from "../../assets/images/content_3.webp";
 import content4 from "../../assets/images/content_4.webp";
 import { useEffect, useState } from "react";
+import { responsive } from "../../constant/responsiveCarousel";
 import { useNavigate } from "react-router-dom";
-import { logInUser } from "../../api/auth.api";
 export const Main = () => {
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState("All Specialties");
   const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const navigate = useNavigate();
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1350 },
-      items: 4,
-      slidesToSlide: 4, // optional, default to 1.
-    },
-    tablet: {
-      breakpoint: { max: 1350, min: 988 },
-      items: 3,
-      slidesToSlide: 3, // optional, default to 1.
-    },
-    mobile: {
-      breakpoint: { max: 988, min: 698 },
-      items: 2,
-      slidesToSlide: 1, // optional, default to 1.
-    },
-    xl: {
-      breakpoint: { max: 698, min: 0 },
-      items: 1,
-      slidesToSlide: 1, // optional, default to 1.
-    },
-  };
+
   // eslint-disable-next-line react/prop-types, no-unused-vars
   const CustomDot = ({ onClick, active, index, carouselState }) => {
     // eslint-disable-next-line react/prop-types, no-unused-vars
@@ -69,14 +48,14 @@ export const Main = () => {
     navigate(`/search/doctor?name=${name}&specialty=${specialty}`);
   };
 
-  useEffect(() => {
-    const test = async () => {
-      const res = await logInUser({});
-      console.log(res);
-    };
+  // useEffect(() => {
+  //   const test = async () => {
+  //     const res = await logInUser({});
+  //     console.log(res);
+  //   };
 
-    test();
-  }, []);
+  //   test();
+  // }, []);
   return (
     <>
       <div className="content">
@@ -144,7 +123,7 @@ export const Main = () => {
               autoPlaySpeed={3000}
             >
               {listGameItem.map((item, index) => {
-                return <CardDoctor key={index} value={index} />;
+                return <CardDoctor key={index} />;
               })}
             </Carousel>
           </div>

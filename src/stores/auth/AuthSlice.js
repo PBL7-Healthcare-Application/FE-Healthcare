@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signInUser, signUpUser } from "./AuthThunk";
+import { signInUser, signUpUser, VerifyEmail } from "./AuthThunk";
 import setAccessToken from "../../helpers/setAccessToken";
+
 
 const authSlice = createSlice({
   name: "auth",
@@ -14,6 +15,9 @@ const authSlice = createSlice({
       state.user = null;
       state.error = null;
     },
+    SetError: (state) => {
+      state.error = null;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -23,8 +27,13 @@ const authSlice = createSlice({
       })
       .addCase(signInUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
-        setAccessToken(action.payload.token);
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.user = action.payload.data;
+
+        setAccessToken(action.payload.data.accessToken);
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.loading = false;
@@ -39,14 +48,41 @@ const authSlice = createSlice({
       })
       .addCase(signUpUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.userInformation = action.payload;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.user = action.payload.data;
+
       })
       .addCase(signUpUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail || action.payload;
+      })
+
+
+      //==============================
+
+      .addCase(VerifyEmail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(VerifyEmail.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.user = action.payload.data;
+
+        setAccessToken(action.payload.data.accessToken);
+      })
+      .addCase(VerifyEmail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail || action.payload;
       });
   },
 });
 
-export const { logOut } = authSlice.actions;
-export default authSlice.actions;
+export const { logOut, SetError } = authSlice.actions;
+export default authSlice.reducer;

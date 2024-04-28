@@ -6,3 +6,7 @@ export const logInUser = (userData) => {
 export const registerUser = (userData) => {
   return http.post("/User/SignUp", userData);
 };
+
+export const verifyEmail = (userData) => {
+  return http.post("/User/ConfirmEmail", userData);
+}
