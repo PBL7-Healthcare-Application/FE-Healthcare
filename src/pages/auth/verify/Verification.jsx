@@ -1,17 +1,20 @@
-import { Button, Form, Input, Space, Typography, message } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, Form, Input, Space, Typography, notification } from "antd";
+import { useNavigate } from "react-router-dom";
 
 import "./Verification.scss";
 import Feature from "../../../components/feature/Feature";
 import { createRef, useEffect, useState } from "react";
 import { SetError } from "../../../stores/auth/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { VerifyEmail } from "../../../stores/auth/AuthThunk";
+import { ResendOTP, VerifyEmail } from "../../../stores/auth/AuthThunk";
+import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
+import { delay } from "lodash";
 const otpFields = new Array(6).fill(0);
 const Verification = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
+  const [amountOfResend, setAmountOfResend] = useState(3);
+  const [api, contextHolder] = notification.useNotification();
   const { user, error } = useSelector((state) => state.auth);
   const [otpValues, setOtpValues] = useState(Array(6).fill(""));
   const otpRefs = Array.from({ length: 6 }, () => createRef());
@@ -38,34 +41,49 @@ const Verification = () => {
     }
   }, [seconds]);
 
+  const handleResend = () => {
+    const email = JSON.parse(localStorage.getItem("profile"));
+    dispatch(
+      ResendOTP({
+        email: email.email,
+      })
+    );
+    openNotificationWithIcon(
+      "info",
+      api,
+      "",
+      "We sent the verification code to your Email"
+    );
+    setSeconds(120);
+    setAmountOfResend(amountOfResend - 1);
+    setResend(false);
+  };
+
   useEffect(() => {
     console.log(`UserVer::`, user);
     if (user) {
       if (user.role === "User") {
-        navigate("/");
+        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        delay(() => {
+          navigate("/");
+        }, 1500);
       }
     }
     if (error) {
-      messageApi.open({
-        type: "error",
-        content: error,
-        duration: 2,
-      });
+      openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => { };
-  }, [user, error, navigate, messageApi, dispatch]);
-
+    return () => {};
+  }, [user, error, navigate, api, dispatch]);
 
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
 
   const onFinish = (values) => {
-    const otp = Object.values(values).join('');
+    const otp = Object.values(values).join("");
     const email = localStorage.getItem("profile");
-    dispatch(VerifyEmail({ email: JSON.parse(email).email, otp: otp }))
+    dispatch(VerifyEmail({ email: JSON.parse(email).email, otp: otp }));
   };
-
 
   return (
     <Space className="in-main">
@@ -100,7 +118,6 @@ const Verification = () => {
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {otpFields.map((_, index) => (
               <Form.Item key={index} name={`verify${index}`}>
-
                 <Input
                   maxLength={1}
                   className="input__otp input"
@@ -147,13 +164,28 @@ const Verification = () => {
           </Form.Item>
           <Form.Item className="login-form-forgot">
             <Typography className="label">
-              Request new OTP in {reSend ? <Link to={"/auth/sign-up"}>Resend OTP.</Link> : <>{minutes}:{remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}</>}
-
+              Request new OTP in{" "}
+              {reSend ? (
+                amountOfResend > 0 ? (
+                  <div className="resend" onClick={handleResend}>
+                    Resend OTP.
+                  </div>
+                ) : (
+                  ""
+                )
+              ) : (
+                <>
+                  {minutes}:
+                  {remainingSeconds < 10
+                    ? `0${remainingSeconds}`
+                    : remainingSeconds}
+                </>
+              )}
             </Typography>
           </Form.Item>
         </Form>
       </Space>
-    </Space >
+    </Space>
   );
 };
 

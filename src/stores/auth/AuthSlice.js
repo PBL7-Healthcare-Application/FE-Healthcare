@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signInUser, signUpUser, VerifyEmail } from "./AuthThunk";
+import { ResendOTP, signInUser, signUpUser, VerifyEmail } from "./AuthThunk";
 import setAccessToken from "../../helpers/setAccessToken";
-
 
 const authSlice = createSlice({
   name: "auth",
@@ -17,7 +16,7 @@ const authSlice = createSlice({
     },
     SetError: (state) => {
       state.error = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -53,13 +52,11 @@ const authSlice = createSlice({
           return;
         }
         state.user = action.payload.data;
-
       })
       .addCase(signUpUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail || action.payload;
       })
-
 
       //==============================
 
@@ -78,6 +75,24 @@ const authSlice = createSlice({
         setAccessToken(action.payload.data.accessToken);
       })
       .addCase(VerifyEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail || action.payload;
+      })
+
+      //==============================
+
+      .addCase(ResendOTP.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(ResendOTP.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+      })
+      .addCase(ResendOTP.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail || action.payload;
       });

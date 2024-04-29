@@ -8,10 +8,12 @@ import { useEffect, useState } from "react";
 import SignInBtn from "./SignInBtn";
 import { MenuOutlined } from "@ant-design/icons";
 import getToken from "../../helpers/getToken";
+import { useSelector } from "react-redux";
 export const Header = () => {
   const { pathname } = useLocation();
   // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -43,17 +45,21 @@ export const Header = () => {
     if (token) {
       setIsLogin(true);
     }
-    return () => { };
-  }, [token])
+    if (user === null) {
+      setIsLogin(false);
+    }
+    return () => {};
+  }, [token, user]);
   const navItems = links.map((item, index) => {
     return (
       <div key={index} className="nav__item ">
         <Link
-          className={`nav__item-content ${pathname.split("/").filter(Boolean)[0] ===
+          className={`nav__item-content ${
+            pathname.split("/").filter(Boolean)[0] ===
             item.href.split("/").filter(Boolean)[0]
-            ? "active"
-            : ""
-            } `}
+              ? "active"
+              : ""
+          } `}
           to={item.href}
         >
           {item.label}
@@ -65,20 +71,32 @@ export const Header = () => {
   const menuItems = links.map((item, index) => ({
     key: index,
     label: (
-      <Link to={item.href} className="menu-selector__item" style={{ color: '#0f2f64' }}>
+      <Link
+        to={item.href}
+        className="menu-selector__item"
+        style={{ color: "#0f2f64" }}
+      >
         {item.label}
       </Link>
     ),
   }));
 
-
   return (
     <Space className={`menu`}>
       <Space className="logo" onClick={() => navigate("/")}>
         <MenuOutlined className="menu-icon" onClick={handleMenuClick} />
-        <Menu className={`menu-selector ${openMenu ? 'open' : ''}`} items={menuItems} />
+        <Menu
+          className={`menu-selector ${openMenu ? "open" : ""}`}
+          items={menuItems}
+        />
         <Image src={logo} preview={false} width={80} loading="lazy"></Image>
-        <Image src={title} preview={false} width={150} loading="lazy" className="image-title"></Image>
+        <Image
+          src={title}
+          preview={false}
+          width={150}
+          loading="lazy"
+          className="image-title"
+        ></Image>
       </Space>
       <Space className="nav">{navItems}</Space>
       {isLogin ? <Avt /> : <SignInBtn />}

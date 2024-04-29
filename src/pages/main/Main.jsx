@@ -12,7 +12,7 @@ import content1 from "../../assets/images/content_1.webp";
 import content2 from "../../assets/images/content_2.webp";
 import content3 from "../../assets/images/content_3.webp";
 import content4 from "../../assets/images/content_4.webp";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { responsive } from "../../constant/responsiveCarousel";
 import { useNavigate } from "react-router-dom";
 export const Main = () => {
@@ -48,14 +48,6 @@ export const Main = () => {
     navigate(`/search/doctor?name=${name}&specialty=${specialty}`);
   };
 
-  // useEffect(() => {
-  //   const test = async () => {
-  //     const res = await logInUser({});
-  //     console.log(res);
-  //   };
-
-  //   test();
-  // }, []);
   return (
     <>
       <div className="content">

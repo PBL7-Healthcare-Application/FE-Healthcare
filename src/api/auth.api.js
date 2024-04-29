@@ -9,4 +9,8 @@ export const registerUser = (userData) => {
 
 export const verifyEmail = (userData) => {
   return http.post("/User/ConfirmEmail", userData);
-}
+};
+
+export const resendOTP = (userData) => {
+  return http.post("/User/ResendOTP", userData);
+};

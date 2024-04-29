@@ -1,63 +1,105 @@
-import { Avatar, Badge, Popover, Space } from "antd";
+import { Avatar, Badge, Button, Image, Space, Typography } from "antd";
 import "./Avt.scss";
-import { BellOutlined, MessageOutlined } from "@ant-design/icons";
-import dashboardLink from "../../routers/Dashboard";
+import {
+  BellOutlined,
+  CloseOutlined,
+  MessageOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
-
-
-
+import { useState } from "react";
 
 const Avt = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const content = (
-        <Space direction="vertical" className="options">
-            {dashboardLink.map((link, index) => (
-                <Space
-                    key={index}
-                    className={`options__item ${link.label === "Sign Out" ? "sign_out" : ""
-                        }`}
-                    onClick={() => {
-                        if (link.label === "Sign Out") {
-                            dispatch(logOut());
-                            localStorage.removeItem("profile");
-                            deleteToken();
-                            navigate("/");
-                        } else navigate(`/dashboard${link.path}`);
-                    }}
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [visible, setvisible] = useState(true);
+  const handleAvatar = () => {
+    setvisible(!visible);
+  };
+  const handleLogout = () => {
+    dispatch(logOut());
+    localStorage.removeItem("profile");
+    deleteToken();
+    navigate("/");
+  };
+  return (
+    <Space className="avt">
+      <Badge count={3}>
+        <MessageOutlined className="avt-notify" style={{ width: 30 }} />
+      </Badge>
+      <Badge count={5}>
+        <BellOutlined className="avt-notify" />
+      </Badge>
+      <div style={{ position: "relative" }}>
+        {visible ? (
+          <Avatar
+            className="avt-avatar"
+            size="large"
+            style={{
+              backgroundColor: "#fde3cf",
+              color: "#f56a00",
+            }}
+            onClick={handleAvatar}
+          >
+            H
+          </Avatar>
+        ) : (
+          <div className="avt-icon" style={{ position: "relative" }}>
+            <CloseOutlined onClick={handleAvatar} className="avt-icon__item" />
+            <Space className="avt-popover" direction="vertical">
+              <Space>
+                <Image
+                  src="https://scontent.fdad5-1.fna.fbcdn.net/v/t39.30808-1/321425310_853450245775265_1754860979446746751_n.jpg?stp=dst-jpg_p200x200&_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_ohc=p9CaGGhPmjIQ7kNvgGpnMd2&_nc_ht=scontent.fdad5-1.fna&oh=00_AfABUj82UUSvq5B3syT5sfU2-Zv3RLg62_U-2127BPezXw&oe=663529F1"
+                  width={70}
+                  className="avt-popover__img avt-pointer"
+                  preview={false}
+                />
+                <div
+                  style={{ display: "flex", gap: 15, flexDirection: "column" }}
+                  className="avt-pointer"
                 >
-                    <Space className="options__icon">{link?.icon}</Space>
-                    <span className="options__label">{link?.label}</span>
+                  <Typography className="avt-font">Bui Van Huy</Typography>
+                  <Space style={{ marginTop: -10 }}>
+                    <Typography
+                      className="avt-font"
+                      style={{ fontSize: 12, color: "#595959" }}
+                    >
+                      View my profile
+                    </Typography>
+                    <RightOutlined style={{ fontSize: 12, color: "#595959" }} />
+                  </Space>
+                </div>
+              </Space>
+              <div className="avt-popover__box">
+                <Space className="avt-popover__box--item">
+                  <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" />
+                  <Typography className="avt-font" style={{ fontSize: 15 }}>
+                    My Appointment
+                  </Typography>
                 </Space>
-            ))}
-        </Space>
-    );
-    return (
-
-        <Popover placement="bottom" trigger="click" content={content}>
-            <Space className="avt" >
-                <Badge count={3}>
-                    <MessageOutlined className="avt-notify" style={{ width: 30 }} />
-                </Badge>
-                <Badge count={5}>
-                    <BellOutlined className="avt-notify" />
-                </Badge>
-                <Avatar
-                    size="large"
-                    style={{
-                        backgroundColor: "#fde3cf",
-                        color: "#f56a00",
-                    }}
-                >
-                    H
-                </Avatar>
+                <Space className="avt-popover__box--item">
+                  <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" />
+                  <Typography className="avt-font" style={{ fontSize: 15 }}>
+                    My Appointment
+                  </Typography>
+                </Space>
+              </div>
+              <Button
+                className="avt-popover__button avt-font"
+                style={{ fontSize: 13, marginTop: 13 }}
+                onClick={handleLogout}
+              >
+                Sign Out
+              </Button>
             </Space>
-        </Popover>
-
-    );
+          </div>
+        )}
+      </div>
+    </Space>
+  );
 };
 
 export default Avt;
