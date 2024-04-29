@@ -1,11 +1,10 @@
-@import "../../assets/scss/font.scss";
-@import "../../assets/scss/variable.scss";
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
 
 .appointment {
   &-main {
     width: 100%;
     padding: 40px 20px;
-
   }
 
   &-content {
@@ -42,12 +41,11 @@
     }
 
     &__infor {
-      background-color: #F5FAFF;
+      background-color: #f5faff;
       border-radius: 10px;
       padding: 10px;
 
-
-      border: 1px solid #E3F0FF;
+      border: 1px solid #e3f0ff;
 
       &--box {
         display: flex;
@@ -71,7 +69,6 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-
       }
     }
   }
@@ -80,10 +77,10 @@
     flex: 7;
 
     &__box {
-
       border-radius: 10px;
       padding: 15px;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
       margin-top: 20px;
     }
 
@@ -95,7 +92,6 @@
       align-items: center;
 
       &-icon {
-
         color: #626d7c;
       }
     }
@@ -122,7 +118,6 @@
       border-radius: 10px;
       background-color: #185fa0;
       padding: 20px 50px;
-
     }
   }
 

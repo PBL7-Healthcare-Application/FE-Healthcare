@@ -1,0 +1,36 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+.successBooking {
+  &-main {
+    width: 100%;
+    padding: 40px 20px;
+  }
+  &-content {
+    @media (min-width: 1024px) {
+      max-width: 1170px;
+    }
+
+    margin: 0px auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  &-font {
+    font-family: $font-main;
+    font-weight: 600;
+    font-size: 30px;
+    color: #284a75;
+  }
+  &-box {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+  &-service {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+}
