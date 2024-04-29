@@ -2,12 +2,93 @@
 @import "../../assets/scss/variable.scss";
 
 .avt {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
 
-    &-notify {
-        font-size: 35px;
-        color: $text-secondary-color ;
+  &-notify {
+    font-size: 35px;
+    color: $text-secondary-color;
+  }
+
+  &-avatar {
+    &:hover {
+      cursor: pointer;
     }
+  }
+  &-icon {
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    &__item {
+      font-size: 25px;
+      color: #8b98b8;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &-popover {
+    transition: all 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+    position: absolute;
+    bottom: -254px;
+    right: 0;
+    width: 368px;
+    border-radius: 6px;
+    box-shadow: rgb(217, 217, 217) 0px 4px 8px;
+    background-color: rgb(248 250 252);
+    padding: 10px 15px;
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: -10px;
+      right: 0;
+      transform: translateX(-50%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+    }
+    &::before {
+      border-bottom: 10px solid rgb(248 250 252);
+    }
+    &::after {
+      border-bottom: 10px solid rgb(217, 217, 217);
+      filter: drop-shadow(0px 4px 8px rgb(217, 217, 217));
+      z-index: -1;
+    }
+    &__img {
+      border-radius: 50%;
+    }
+    &__box {
+      margin-top: 10px;
+      display: flex;
+      width: 100%;
+      gap: 20px;
+      &--item {
+        flex: 5;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: rgb(217, 217, 217) 0px 4px 8px;
+        padding: 10px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    &__button {
+      width: 100%;
+      height: 40px;
+      box-shadow: rgb(217, 217, 217) 0px 4px 8px;
+    }
+  }
+  &-font {
+    font-family: $font-main;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.8;
+  }
+  &-pointer {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }

@@ -1,0 +1,11 @@
+.ant-input-outlined:hover {
+  border-color: #185fa0 !important;
+  background-color: #ffffff;
+}
+.resend {
+  display: inline;
+  color: #185fa0;
+  &:hover {
+    cursor: pointer;
+  }
+}

@@ -1,4 +1,8 @@
-import { CloseCircleOutlined, MailOutlined, PhoneOutlined, ScheduleOutlined } from "@ant-design/icons";
+import {
+  CloseCircleOutlined,
+  MailOutlined,
+  PhoneOutlined,
+} from "@ant-design/icons";
 import "./Appointment.scss";
 import { Button, Divider, Image, Radio, Typography } from "antd";
 import location from "../../assets/images/location.png";
@@ -76,30 +80,57 @@ const Appointment = () => {
       <div className="appointment-content">
         <div className="appointment-left appointment-box">
           <div>
-            <Typography className="appointment-left__title">Information</Typography>
+            <Typography className="appointment-left__title">
+              Information
+            </Typography>
             <div className="appointment-left__infor">
               <div className="appointment-left__infor--box">
-                <Image src="https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/321425310_853450245775265_1754860979446746751_n.jpg?stp=cp0_dst-jpg_p40x40&_nc_cat=111&_nc_cb=99be929b-ddd1f5c1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=IrcJe2BCQ8AQ7kNvgH8VgzZ&_nc_ht=scontent.fdad1-3.fna&oh=00_AfCAJ0ROHNIUm9fitBsaFKgx9En4tnv1rTTNvOfr-qAc2A&oe=66305471" width={60} className="appointment-left__infor--img" />
+                <Image
+                  src="https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/321425310_853450245775265_1754860979446746751_n.jpg?stp=cp0_dst-jpg_p40x40&_nc_cat=111&_nc_cb=99be929b-ddd1f5c1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=IrcJe2BCQ8AQ7kNvgH8VgzZ&_nc_ht=scontent.fdad1-3.fna&oh=00_AfCAJ0ROHNIUm9fitBsaFKgx9En4tnv1rTTNvOfr-qAc2A&oe=66305471"
+                  width={60}
+                  className="appointment-left__infor--img"
+                />
                 <div className="appointment-left__infor--left">
-                  <Typography className="appointment-font" style={{ fontSize: 16, fontWeight: 600 }}>Nguyen Van A</Typography>
-                  <Typography className="appointment-font" style={{ fontSize: 14, fontWeight: 500, color: '#6c81a0' }}>Male</Typography>
+                  <Typography
+                    className="appointment-font"
+                    style={{ fontSize: 16, fontWeight: 600 }}
+                  >
+                    Nguyen Van A
+                  </Typography>
+                  <Typography
+                    className="appointment-font"
+                    style={{ fontSize: 14, fontWeight: 500, color: "#6c81a0" }}
+                  >
+                    Male
+                  </Typography>
                 </div>
               </div>
 
               <Divider style={{ margin: "15px 0" }} />
               <div className="appointment-left__infor--phone">
-                <PhoneOutlined style={{ fontSize: 19, color: '#6c81a0' }} />
-                <Typography className="appointment-font" style={{ fontSize: 16, fontWeight: 400, color: '#6c81a0' }}>+84935350632</Typography>
+                <PhoneOutlined style={{ fontSize: 19, color: "#6c81a0" }} />
+                <Typography
+                  className="appointment-font"
+                  style={{ fontSize: 16, fontWeight: 400, color: "#6c81a0" }}
+                >
+                  +84935350632
+                </Typography>
               </div>
               <div className="appointment-left__infor--phone">
-                <MailOutlined style={{ fontSize: 19, color: '#6c81a0' }} />
-                <Typography className="appointment-font" style={{ fontSize: 16, fontWeight: 400, color: '#6c81a0' }}>vanhuy2107@gmail.com</Typography>
+                <MailOutlined style={{ fontSize: 19, color: "#6c81a0" }} />
+                <Typography
+                  className="appointment-font"
+                  style={{ fontSize: 16, fontWeight: 400, color: "#6c81a0" }}
+                >
+                  vanhuy2107@gmail.com
+                </Typography>
               </div>
             </div>
-
           </div>
           <div style={{ marginTop: 16 }}>
-            <Typography className="appointment-left__title">Survey questions</Typography>
+            <Typography className="appointment-left__title">
+              Survey questions
+            </Typography>
             <TextArea
               placeholder="Enter your issue ..."
               autoSize={{
@@ -111,64 +142,162 @@ const Appointment = () => {
           </div>
         </div>
         <div className="appointment-right" style={{ border: 0 }}>
-
           <div className="appointment-box">
-            <Typography className="appointment-left__title">Your appointment schedule</Typography>
+            <Typography className="appointment-left__title">
+              Your appointment schedule
+            </Typography>
             <div className="appointment-left__infor--box">
-              <Image src="https://cdn-healthcare.hellohealthgroup.com/2023/05/1684834987_646c8aab879aa9.52106579.jpg" width={90} className="appointment-left__infor--img" />
-              <div className="appointment-left__infor--left" style={{ justifyContent: 'flex-start' }}>
-                <Typography className="appointment-font" style={{ fontSize: 20, fontWeight: 500, letterSpacing: 0.4 }}>Dr.Nguyen Đuc Cong</Typography>
-                <Typography className="appointment-font" style={{ fontSize: 15, fontWeight: 400, color: '#6c81a0' }}>General medicine</Typography>
+              <Image
+                src="https://cdn-healthcare.hellohealthgroup.com/2023/05/1684834987_646c8aab879aa9.52106579.jpg"
+                width={90}
+                className="appointment-left__infor--img"
+              />
+              <div
+                className="appointment-left__infor--left"
+                style={{ justifyContent: "flex-start" }}
+              >
+                <Typography
+                  className="appointment-font"
+                  style={{ fontSize: 20, fontWeight: 500, letterSpacing: 0.4 }}
+                >
+                  Dr.Nguyen Đuc Cong
+                </Typography>
+                <Typography
+                  className="appointment-font"
+                  style={{ fontSize: 15, fontWeight: 400, color: "#6c81a0" }}
+                >
+                  General medicine
+                </Typography>
               </div>
             </div>
             <div style={{ marginTop: 20 }}>
-              <Typography className="appointment-font" style={{ fontSize: 16, fontWeight: 500, color: '#6c81a0' }}>Appointment schedule information</Typography>
+              <Typography
+                className="appointment-font"
+                style={{ fontSize: 16, fontWeight: 500, color: "#6c81a0" }}
+              >
+                Appointment schedule information
+              </Typography>
               <div className="appointment-right__box">
                 <div className="appointment-right__content">
                   {/* <ScheduleOutlined className="appointment-right__content-icon" /> */}
-                  <Image src={calender} width={28} className="appointment-right__content-icon" />
+                  <Image
+                    src={calender}
+                    width={28}
+                    className="appointment-right__content-icon"
+                  />
                   <div>
-                    <Typography className="appointment-font" style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.4 }}>07:00 - 07:30 AM</Typography>
-                    <Typography className="appointment-font" style={{ fontSize: 15, fontWeight: 400, color: '#6c81a0' }}>Saturday, April 13th, 2024</Typography>
+                    <Typography
+                      className="appointment-font"
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 600,
+                        letterSpacing: 0.4,
+                      }}
+                    >
+                      07:00 - 07:30 AM
+                    </Typography>
+                    <Typography
+                      className="appointment-font"
+                      style={{
+                        fontSize: 15,
+                        fontWeight: 400,
+                        color: "#6c81a0",
+                      }}
+                    >
+                      Saturday, April 13th, 2024
+                    </Typography>
                   </div>
                 </div>
                 <div className="appointment-right__content">
-                  <Image src={location} width={28} className="appointment-right__content-icon" />
+                  <Image
+                    src={location}
+                    width={28}
+                    className="appointment-right__content-icon"
+                  />
                   <div>
-                    <Typography className="appointment-font" style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.4 }}>Saigon Healthcare General Clinic</Typography>
-                    <Typography className="appointment-font" style={{ fontSize: 15, fontWeight: 400, color: '#6c81a0' }}>45 Thanh Thai Street, Ward 14, District 10, Ho Chi Minh City, Vietnam</Typography>
+                    <Typography
+                      className="appointment-font"
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 600,
+                        letterSpacing: 0.4,
+                      }}
+                    >
+                      Saigon Healthcare General Clinic
+                    </Typography>
+                    <Typography
+                      className="appointment-font"
+                      style={{
+                        fontSize: 15,
+                        fontWeight: 400,
+                        color: "#6c81a0",
+                      }}
+                    >
+                      45 Thanh Thai Street, Ward 14, District 10, Ho Chi Minh
+                      City, Vietnam
+                    </Typography>
                   </div>
                 </div>
                 <div className="appointment-right__content">
-                  <Image src={dolar} width={28} className="appointment-right__content-icon" />
+                  <Image
+                    src={dolar}
+                    width={28}
+                    className="appointment-right__content-icon"
+                  />
                   <div>
-                    <Typography className="appointment-font" style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.4, color: '#D84023' }}>500$</Typography>
-
+                    <Typography
+                      className="appointment-font"
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 600,
+                        letterSpacing: 0.4,
+                        color: "#D84023",
+                      }}
+                    >
+                      500$
+                    </Typography>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-
           {/* Phuong thuc thanh toan */}
           <div className="appointment-box" style={{ marginTop: 30 }}>
-            <Typography className="appointment-left__title">Your appointment schedule</Typography>
-            <div className="appointment-right__box appointment-right__payment" >
+            <Typography className="appointment-left__title">
+              Your appointment schedule
+            </Typography>
+            <div className="appointment-right__box appointment-right__payment">
               <div className="appointment-right__payment-left">
-                <Image src={wallet} width={28} className="appointment-right__content-icon" />
-                <Typography className="appointment-font" style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.4 }}>Cash on Delivery (COD)</Typography>
+                <Image
+                  src={wallet}
+                  width={28}
+                  className="appointment-right__content-icon"
+                />
+                <Typography
+                  className="appointment-font"
+                  style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.4 }}
+                >
+                  Direct Payment
+                </Typography>
               </div>
               <Radio />
             </div>
 
-            <div style={{ marginTop: 20, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+            <div
+              style={{
+                marginTop: 20,
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
               <Button className="appointment-right__button">Confirm</Button>
             </div>
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

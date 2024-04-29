@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../layouts/homePage/HomePage";
-import SignIn from "../pages/sign-in/SignIn";
-import SignUp from "../pages/sign-up/SignUp";
+import SignIn from "../pages/auth/sign-in/SignIn";
+import SignUp from "../pages/auth/sign-up/SignUp";
 import { Main } from "../pages/main/Main";
 import Search from "../pages/search/Search";
 import DetailDoctor from "../pages/detail-doctor/DetailDoctor";
 import Appointment from "../pages/appointment/Appointment";
+import Verification from "../pages/auth/verify/Verification";
 
 const routers = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const routers = createBrowserRouter([
       {
         path: "sign-up",
         element: <SignUp />,
+      },
+      {
+        path: "verify",
+        element: <Verification />,
       },
     ],
   },
