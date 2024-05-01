@@ -1,10 +1,11 @@
 import { Image, Select, Space, Typography } from "antd";
 import "./Specialty.scss";
-import { specialty } from "../../api/fetchAPI.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllSpecialty } from "../../api/doctor.api.js";
 
 
 
+// eslint-disable-next-line react/prop-types
 const Item = ({ img, name }) => (
   <Space className="select-item">
     <Image src={img} width={30} />
@@ -16,14 +17,26 @@ const Item = ({ img, name }) => (
 const filterOption = (input, option) =>
   (option?.value ?? "").toLowerCase().includes(input.toLowerCase());
 
+// eslint-disable-next-line react/prop-types
 const Specialty = ({ onChange }) => {
   const [selectValue, setSelectValue] = useState("All specialties");
-
+  const [specialties, setSpecialties] = useState([]);
   const handleChange = (value) => {
-
-    onChange(value.value);
-    setSelectValue(value.value)
+    onChange(value);
+    setSelectValue(value)
   };
+  const getSpecialties = async () => {
+    try {
+      const response = await getAllSpecialty();
+      setSpecialties(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getSpecialties();
+  }, []);
   return (
 
     <Select
@@ -37,11 +50,11 @@ const Specialty = ({ onChange }) => {
       optionLabelProp="label2"
       filterOption={filterOption}
       value={selectValue}
-      options={specialty.map((item) => ({
-        value: item.value,
-        label2: item.value,
+      options={specialties.map((item) => ({
+        value: item.idSpecialty,
+        label2: item.name,
         label: (
-          <Item img={item.image} name={item.value} />
+          <Item img={item?.image} name={item.name} />
         ),
       }))}
 

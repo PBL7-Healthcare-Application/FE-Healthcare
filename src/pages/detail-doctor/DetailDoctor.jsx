@@ -9,7 +9,9 @@ import "slick-carousel/slick/slick-theme.css";
 import CardDay from "../../components/Doctor/cardDay/CardDay";
 import CardTime from "../../components/Doctor/cardTime/CardTime";
 import NotAvailable from "../../components/Doctor/notAvailable/NotAvailable";
+import { useSelector } from "react-redux";
 const DetailDoctor = () => {
+    const { doctorDetail } = useSelector((state) => state.search);
     const navigate = useNavigate();
     function SampleNextArrow(props) {
         const { className, style, onClick } = props;
@@ -58,10 +60,10 @@ const DetailDoctor = () => {
                         <div className="detailDr-content__left-profile--infor">
                             <div>
                                 <Typography className="detailDr-content__left-profile--infor__name">
-                                    Dr. Le Van Cuong
+                                    {doctorDetail?.name}
                                 </Typography>
                                 <Typography className="detailDr-content__left-profile--infor__specialty">
-                                    General medicine
+                                    {doctorDetail?.medicalSpecialty}
                                 </Typography>
                             </div>
                             <div>
@@ -152,39 +154,28 @@ const DetailDoctor = () => {
                                     </div>
 
                                     <div>
-                                        <div className="detailDr-content__left-information__box">
-                                            <div>
-                                                <Typography
-                                                    className="detailDr-content__left-information__profile-content"
-                                                    style={{ fontSize: 16, fontWeight: 500 }}
-                                                >
-                                                    Doctor of Medicine
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    De La Salle Health Sciences Institute
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    2013-2015
-                                                </Typography>
-                                            </div>
-                                        </div>
+                                        {
+                                            doctorDetail?.trainingProcess.map((item, index) => (
+                                                <div className="detailDr-content__left-information__box" key={index}>
+                                                    <div>
+                                                        <Typography
+                                                            className="detailDr-content__left-information__profile-content"
+                                                            style={{ fontSize: 16, fontWeight: 500 }}
+                                                        >
+                                                            {item?.schoolName}
+                                                        </Typography>
+                                                        <Typography className="detailDr-content__left-information__profile-content">
+                                                            {item?.major}
+                                                        </Typography>
+                                                        <Typography className="detailDr-content__left-information__profile-content">
+                                                            2013-2015
+                                                        </Typography>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
 
-                                        <div className="detailDr-content__left-information__box">
-                                            <div>
-                                                <Typography
-                                                    className="detailDr-content__left-information__profile-content"
-                                                    style={{ fontSize: 16, fontWeight: 500 }}
-                                                >
-                                                    Bachelor of Science in Nursing
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    De La Salle Health Science Campus
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    2013-2015
-                                                </Typography>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
 
@@ -250,56 +241,28 @@ const DetailDoctor = () => {
                                     </div>
 
                                     <div>
-                                        <div className="detailDr-content__left-information__box">
-                                            <div>
-                                                <Typography
-                                                    className="detailDr-content__left-information__profile-content"
-                                                    style={{ fontSize: 16, fontWeight: 500 }}
-                                                >
-                                                    Post-Graduate Intership
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    De La Salle University Medical Center
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    2013-2015
-                                                </Typography>
-                                            </div>
-                                        </div>
-                                        <div className="detailDr-content__left-information__box">
-                                            <div>
-                                                <Typography
-                                                    className="detailDr-content__left-information__profile-content"
-                                                    style={{ fontSize: 16, fontWeight: 500 }}
-                                                >
-                                                    Residency Training
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    Department of Pediatrics, De La Salle University
-                                                    Medical
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    2013-2015
-                                                </Typography>
-                                            </div>
-                                        </div>
-                                        <div className="detailDr-content__left-information__box">
-                                            <div>
-                                                <Typography
-                                                    className="detailDr-content__left-information__profile-content"
-                                                    style={{ fontSize: 16, fontWeight: 500 }}
-                                                >
-                                                    Chief Resident
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    Department of Pediatrics, De La Salle University
-                                                    Medical Center
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    2013-2015
-                                                </Typography>
-                                            </div>
-                                        </div>
+                                        {
+                                            doctorDetail?.workingProcess.map((item, index) => (
+                                                <div className="detailDr-content__left-information__box" key={index}>
+                                                    <div>
+                                                        <Typography
+                                                            className="detailDr-content__left-information__profile-content"
+                                                            style={{ fontSize: 16, fontWeight: 500 }}
+                                                        >
+                                                            {item?.position}
+                                                        </Typography>
+                                                        <Typography className="detailDr-content__left-information__profile-content">
+                                                            {item?.workplace}
+                                                        </Typography>
+                                                        <Typography className="detailDr-content__left-information__profile-content">
+                                                            {item?.startYear}-{item?.endYear}
+                                                        </Typography>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
+
+
                                     </div>
                                 </div>
 
@@ -348,38 +311,23 @@ const DetailDoctor = () => {
                                     </div>
 
                                     <div>
-                                        <div className="detailDr-content__left-information__box">
-                                            <div>
-                                                <Typography
-                                                    className="detailDr-content__left-information__profile-content"
-                                                    style={{ fontSize: 16, fontWeight: 500 }}
-                                                >
-                                                    Bachelor of Science in Nursing
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    De La Salle Health Science Campus
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    2013-2015
-                                                </Typography>
-                                            </div>
-                                        </div>
-                                        <div className="detailDr-content__left-information__box">
-                                            <div>
-                                                <Typography
-                                                    className="detailDr-content__left-information__profile-content"
-                                                    style={{ fontSize: 16, fontWeight: 500 }}
-                                                >
-                                                    Bachelor of Science in Nursing
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    De La Salle Health Science Campus
-                                                </Typography>
-                                                <Typography className="detailDr-content__left-information__profile-content">
-                                                    2013-2015
-                                                </Typography>
-                                            </div>
-                                        </div>
+                                        {
+                                            doctorDetail?.certificates.map((item, index) => (
+                                                <div className="detailDr-content__left-information__box" key={index}>
+                                                    <div>
+                                                        <Typography
+                                                            className="detailDr-content__left-information__profile-content"
+                                                            style={{ fontSize: 16, fontWeight: 500 }}
+                                                        >
+                                                            {item?.name}
+                                                        </Typography>
+                                                        <Typography className="detailDr-content__left-information__profile-content">
+                                                            {item?.year}
+                                                        </Typography>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        }
                                     </div>
                                 </div>
                             </TabPane>
@@ -412,7 +360,7 @@ const DetailDoctor = () => {
                                             color: "#185FA0",
                                         }}
                                     >
-                                        300$
+                                        {doctorDetail?.price}₫
                                     </Typography>
                                 </div>
                                 <div className="detailDr-content__right-appointment--box__type">
@@ -430,7 +378,7 @@ const DetailDoctor = () => {
                                             color: "#185FA0",
                                         }}
                                     >
-                                        200$
+                                        Free
                                     </Typography>
                                 </div>
                             </div>

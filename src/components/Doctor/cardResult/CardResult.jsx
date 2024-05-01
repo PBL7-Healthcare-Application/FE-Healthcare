@@ -7,12 +7,15 @@ import {
     StarFilled,
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getDoctorDetail } from "../../../stores/search-doctor/SearchThunk";
 
-const CardResult = () => {
-
+const CardResult = ({ doctor }) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleDetail = () => {
-        navigate("/doctor/");
+        dispatch(getDoctorDetail(doctor?.idDoctor));
+        navigate(`/doctor/{doctor.idDoctor}`);
     }
     return (
         <div className="result" onClick={handleDetail}>
@@ -24,29 +27,30 @@ const CardResult = () => {
                 />
                 <Space className="result-first__title">
                     <Typography className="result-first__title-text">
-                        11 years exp
+                        {doctor.yearExperience} years exp
                     </Typography>
                 </Space>
             </div>
             <div className="result-second">
                 <Space>
-                    <Typography className="result-second__name">Dr. John Doe</Typography>
+                    <Typography className="result-second__name">{doctor?.name}</Typography>
                     <CheckCircleFilled style={{ color: "green" }} />
                 </Space>
                 <Typography className="result-second__specialty">
-                    Trauma – Orthopedics
+                    {doctor?.medicalSpecialty}
                 </Typography>
-                <Space className="result-second__address">
-                    <EnvironmentOutlined className="result-second__address-icon" />
-                    <Typography className="result-second__specialty">
-                        45 Thanh Thai Street, Ward 14, District 10, Ho Chi Minh City,
-                        Vietnam
-                    </Typography>
-                </Space>
-                <Space className="result-second__address">
-                    <DollarOutlined className="result-second__address-icon" />
-                    <Typography className="result-second__specialty">$200</Typography>
-                </Space>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <Space className="result-second__address">
+                        <EnvironmentOutlined className="result-second__address-icon" />
+                        <Typography className="result-second__specialty">
+                            {doctor?.address}
+                        </Typography>
+                    </Space>
+                    <Space className="result-second__address">
+                        <DollarOutlined className="result-second__address-icon" />
+                        <Typography className="result-second__specialty">{doctor.price}</Typography>
+                    </Space>
+                </div>
             </div>
             <div className="result-third">
                 <div className="result-third__rate">

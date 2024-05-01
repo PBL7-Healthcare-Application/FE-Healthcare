@@ -15,12 +15,14 @@ import content4 from "../../assets/images/content_4.webp";
 import { useState } from "react";
 import { responsive } from "../../constant/responsiveCarousel";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
 export const Main = () => {
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState("All Specialties");
   const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   // eslint-disable-next-line react/prop-types, no-unused-vars
   const CustomDot = ({ onClick, active, index, carouselState }) => {
     // eslint-disable-next-line react/prop-types, no-unused-vars
@@ -45,6 +47,8 @@ export const Main = () => {
     setSpecialty(value);
   };
   const handleClick = () => {
+
+    dispatch(getSearchResult({ keyword: name, IdSpecialty: specialty, sortBy: "exp_desc" }));
     navigate(`/search/doctor?name=${name}&specialty=${specialty}`);
   };
 
