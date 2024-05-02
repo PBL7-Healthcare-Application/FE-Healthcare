@@ -5,12 +5,14 @@ import {
 } from "@ant-design/icons";
 import "./Appointment.scss";
 import { Button, Divider, Image, Radio, Typography } from "antd";
-import location from "../../assets/images/location.png";
-import calender from "../../assets/images/calandar.png";
-import dolar from "../../assets/images/dollar.png";
+import location from "../../../assets/images/location.png";
+import calender from "../../../assets/images/calandar.png";
+import dolar from "../../../assets/images/dollar.png";
 import TextArea from "antd/es/input/TextArea";
-import wallet from "../../assets/images/wallet.png";
+import wallet from "../../../assets/images/wallet.png";
+import { useNavigate } from "react-router-dom";
 const Appointment = () => {
+  const navigate = useNavigate();
   return (
     <div className="appointment-main">
       <div
@@ -292,7 +294,12 @@ const Appointment = () => {
                 justifyContent: "flex-end",
               }}
             >
-              <Button className="appointment-right__button">Confirm</Button>
+              <Button
+                className="appointment-right__button"
+                onClick={() => navigate("/booking/success")}
+              >
+                Confirm
+              </Button>
             </div>
           </div>
         </div>

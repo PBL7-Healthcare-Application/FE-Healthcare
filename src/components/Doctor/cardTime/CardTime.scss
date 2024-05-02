@@ -2,14 +2,20 @@
 @import "../../../assets/scss/variable.scss";
 
 .cardTime {
-    padding: 5px 5px;
-    border-radius: 5px;
-    border: 1px solid #dbdfe5;
-
-    &__text {
-        letter-spacing: 1px;
-        font-family: $font-main;
-        font-size: 12px;
-        font-weight: 500;
-    }
+  padding: 5px 5px;
+  border-radius: 5px;
+  border: 1px solid #dbdfe5;
+  &:hover {
+    cursor: pointer;
+  }
+  &__text {
+    letter-spacing: 1px;
+    font-family: $font-main;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  &__active {
+    background-color: $background-primary;
+    color: #fff;
+  }
 }
