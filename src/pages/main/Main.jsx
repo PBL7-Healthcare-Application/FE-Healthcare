@@ -47,9 +47,24 @@ export const Main = () => {
     setSpecialty(value);
   };
   const handleClick = () => {
-
-    dispatch(getSearchResult({ keyword: name, IdSpecialty: specialty, sortBy: "exp_desc" }));
-    navigate(`/search/doctor?name=${name}&specialty=${specialty}`);
+    if (specialty === "All Specialties") {
+      dispatch(
+        getSearchResult({
+          keyword: name,
+          sortBy: "exp_desc",
+        })
+      );
+      navigate(`/search/doctor?name=${name}&specialty=all`);
+    } else {
+      dispatch(
+        getSearchResult({
+          keyword: name,
+          IdSpecialty: specialty,
+          sortBy: "exp_desc",
+        })
+      );
+      navigate(`/search/doctor?name=${name}&specialty=${specialty}`);
+    }
   };
 
   return (
