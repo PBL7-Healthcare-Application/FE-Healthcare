@@ -53,14 +53,24 @@ const Search = () => {
   ).current;
 
   const handleClickSearch = () => {
-    dispatch(
-      getSearchResult({
-        keyword: inputValue,
-        IdSpecialty: specialty,
-        sortBy: "exp_desc",
-      })
-    );
-    navigate(`/search/doctor?name=${inputValue}&specialty=${specialty}`);
+    if (specialty === "All specialties") {
+      dispatch(
+        getSearchResult({
+          keyword: inputValue,
+          sortBy: "exp_desc",
+        })
+      );
+      navigate(`/search/doctor?name=${inputValue}&specialty=all`);
+    } else {
+      dispatch(
+        getSearchResult({
+          keyword: inputValue,
+          IdSpecialty: specialty,
+          sortBy: "exp_desc",
+        })
+      );
+      navigate(`/search/doctor?name=${inputValue}&specialty=${specialty}`);
+    }
   };
   useEffect(() => {
     if (searchResult === null) {
@@ -235,7 +245,10 @@ const Search = () => {
                       dispatch(
                         getSearchResult({
                           keyword: inputValue,
-                          IdSpecialty: specialty,
+                          IdSpecialty:
+                            specialty === "All specialties"
+                              ? undefined
+                              : specialty,
                           sortBy: "exp_desc",
                           exp: value,
                         })
@@ -258,7 +271,10 @@ const Search = () => {
                           dispatch(
                             getSearchResult({
                               keyword: inputValue,
-                              IdSpecialty: specialty,
+                              IdSpecialty:
+                                specialty === "All specialties"
+                                  ? undefined
+                                  : specialty,
                               sortBy: "exp_desc",
                               exp: e.target.value,
                             })
@@ -296,7 +312,10 @@ const Search = () => {
                       dispatch(
                         getSearchResult({
                           keyword: inputValue,
-                          IdSpecialty: specialty,
+                          IdSpecialty:
+                            specialty === "All specialties"
+                              ? undefined
+                              : specialty,
                           sortBy: "exp_desc",
                           exp: years,
                           minPrice: parseInt(value[0] + "0000"),
@@ -330,7 +349,10 @@ const Search = () => {
                               dispatch(
                                 getSearchResult({
                                   keyword: inputValue,
-                                  IdSpecialty: specialty,
+                                  IdSpecialty:
+                                    specialty === "All specialties"
+                                      ? undefined
+                                      : specialty,
                                   sortBy: "exp_desc",
                                   exp: years,
                                   minPrice: e.target.value,
@@ -368,7 +390,10 @@ const Search = () => {
                               dispatch(
                                 getSearchResult({
                                   keyword: inputValue,
-                                  IdSpecialty: specialty,
+                                  IdSpecialty:
+                                    specialty === "All specialties"
+                                      ? undefined
+                                      : specialty,
                                   sortBy: "exp_desc",
                                   exp: years,
                                   minPrice: minPrice,

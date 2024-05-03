@@ -25,14 +25,18 @@ import { useState } from "react";
 const DetailDoctor = () => {
   const { doctorDetail } = useSelector((state) => state.search);
   const [times, setTimes] = useState([]);
+  const [chooseTime, setChooseTime] = useState(null);
+  const [chooseDate, setChooseDate] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  console.log(times);
   const handleCardClick = (cardId, item) => {
+    setChooseDate(item.date);
     setTimes(item.times);
     dispatch(setIsSelected(cardId));
   };
   const handleTimeClick = (time) => {
+    setChooseTime(time);
     dispatch(setIsTimeSelected(time));
   };
   function SampleNextArrow(props) {
@@ -125,14 +129,7 @@ const DetailDoctor = () => {
                     Profile
                   </Typography>
                   <span className="detailDr-content__left-information__profile-content">
-                    Ruben Dela Peña Macapinlac, M.D. is a graduate of De La
-                    Salle Medical & Health Sciences Institute, Doctor of
-                    Medicine. He had his Pediatric residency training at De La
-                    Salle University Medical Center. During his residency
-                    training, he wrote an award-winning case report and
-                    research. He also became the department’s Chief Resident.
-                    Dr. Macapinlac is now a General Pediatrician and the doctor
-                    behind “Pedia On-The-Go” Facebook page.
+                    {doctorDetail?.description}
                   </span>
                 </div>
                 <div className="detailDr-content__left-information__profile">
@@ -515,7 +512,28 @@ const DetailDoctor = () => {
 
             <Button
               className="detailDr-content__right-appointment__button"
-              onClick={() => navigate("/booking/doctor")}
+              onClick={() => {
+                const date = new Date(chooseDate);
+                const utcDate = new Date(
+                  Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                );
+                const appointment = {
+                  user: JSON.parse(localStorage.getItem("user")),
+                  doctor: doctorDetail,
+                  appointment: {
+                    date: utcDate,
+                    startTime: chooseTime?.startTime,
+                    endTime: chooseTime?.endTime,
+                  },
+                };
+
+                localStorage.setItem(
+                  "appointment",
+                  JSON.stringify(appointment)
+                );
+
+                navigate("/booking/doctor");
+              }}
             >
               Book
             </Button>

@@ -33,5 +33,5 @@ export const getAllSpecialty = () => {
   return http.get("/MedicalSpecialty/GetAllMedicalSpecialty");
 };
 export const getDoctorById = (id) => {
-  return http.get(`/Doctor/GetDoctorById/${id}`);
+  return http.get(`/Doctor/GetDoctorDetail/${id}`);
 };

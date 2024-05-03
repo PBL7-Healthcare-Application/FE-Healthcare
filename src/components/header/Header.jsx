@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import SignInBtn from "./SignInBtn";
 import { MenuOutlined } from "@ant-design/icons";
 import getToken from "../../helpers/getToken";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserProfile } from "../../stores/user/UserThunk";
 export const Header = () => {
   const { pathname } = useLocation();
   // eslint-disable-next-line no-unused-vars
@@ -16,12 +17,13 @@ export const Header = () => {
   const { user } = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
-
+  const dispatch = useDispatch();
+  const { profile } = useSelector((state) => state.profile);
   const token = getToken();
   const links = [
     {
       label: "Appointment",
-      href: "/b",
+      href: "/search/doctor",
     },
     {
       label: "Chatbot",
@@ -50,6 +52,10 @@ export const Header = () => {
     }
     return () => {};
   }, [token, user]);
+
+  useEffect(() => {
+    dispatch(getUserProfile());
+  }, [dispatch]);
   const navItems = links.map((item, index) => {
     return (
       <div key={index} className="nav__item ">
@@ -99,7 +105,7 @@ export const Header = () => {
         ></Image>
       </Space>
       <Space className="nav">{navItems}</Space>
-      {isLogin ? <Avt /> : <SignInBtn />}
+      {isLogin ? <Avt profile={profile} /> : <SignInBtn />}
     </Space>
   );
 };

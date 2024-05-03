@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Avatar, Badge, Button, Image, Space, Typography } from "antd";
 import "./Avt.scss";
 import {
@@ -12,7 +13,7 @@ import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
 import { useState } from "react";
 
-const Avt = () => {
+const Avt = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [visible, setvisible] = useState(true);
@@ -22,6 +23,7 @@ const Avt = () => {
   const handleLogout = () => {
     dispatch(logOut());
     localStorage.removeItem("profile");
+    localStorage.removeItem("user");
     deleteToken();
     navigate("/");
   };
@@ -44,7 +46,7 @@ const Avt = () => {
             }}
             onClick={handleAvatar}
           >
-            H
+            {props?.profile && props?.profile?.name[0]}
           </Avatar>
         ) : (
           <div className="avt-icon" style={{ position: "relative" }}>
@@ -61,7 +63,9 @@ const Avt = () => {
                   style={{ display: "flex", gap: 15, flexDirection: "column" }}
                   className="avt-pointer"
                 >
-                  <Typography className="avt-font">Bui Van Huy</Typography>
+                  <Typography className="avt-font">
+                    {props?.profile && props?.profile?.name}
+                  </Typography>
                   <Space style={{ marginTop: -10 }}>
                     <Typography
                       className="avt-font"
