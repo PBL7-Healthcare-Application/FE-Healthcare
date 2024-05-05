@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button, Image, Space, Typography } from "antd";
 import "./cardDoctor.scss";
 import { EnvironmentOutlined } from "@ant-design/icons";

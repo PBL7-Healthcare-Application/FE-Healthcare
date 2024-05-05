@@ -1,7 +1,7 @@
 import Typography from "antd/es/typography/Typography";
 import "./Search.scss";
 import Specialty from "../../components/specialty/Specialty";
-import { SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Button,
   Divider,
@@ -18,17 +18,40 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomSkeleton from "../../components/customSkeleton/CustomSkeleton";
 import { debounce } from "lodash";
 import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { setIdSpecialty } from "../../stores/search-doctor/SearchSlice";
 const Search = () => {
-  const { searchResult, loading } = useSelector((state) => state.search);
-  const [inputValue, setInputValue] = useState("");
-  const [specialty, setSpecialty] = useState("All specialties");
+  const { searchResult, loading, keyword, id_Specialty } = useSelector((state) => state.search);
+  const [inputValue, setInputValue] = useState(keyword);
+  const [specialty, setSpecialty] = useState(id_Specialty);
+  const [filterAvailable, setFilterAvailable] = useState("");
   const [years, setYears] = useState(0);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000000);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const params = useParams();
   const contentRef = useRef(null);
+
+
+  const handleClear = () => {
+    console.log(params)
+    setYears(0);
+    setMinPrice(0);
+    setMaxPrice(1000000);
+    setInputValue("");
+    setFilterAvailable("");
+    dispatch(
+      setIdSpecialty("All specialties")
+    )
+    dispatch(
+      getSearchResult({
+        sortBy: "exp_desc",
+
+      })
+    );
+  }
+
   const onYearChange = (newValue) => {
     setYears(newValue);
   };
@@ -38,26 +61,35 @@ const Search = () => {
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
     setInputValue(newValue);
-    debounceInputKey(newValue, specialty);
+    debounceInputKey(newValue, specialty, years, minPrice, maxPrice, filterAvailable);
   };
   const debounceInputKey = useRef(
-    debounce((nextValue, specialty) => {
+    debounce((nextValue, specialty, year, min, max, available) => {
+      console.log(years)
       dispatch(
         getSearchResult({
           keyword: nextValue,
-          IdSpecialty: specialty,
+          IdSpecialty: specialty === "All specialties" || specialty === 0 ? undefined : specialty,
           sortBy: "exp_desc",
+          exp: year !== 0 ? year : undefined,
+          minPrice: min !== 0 ? min : undefined,
+          maxPrice: max,
+          filterAvailable: available,
         })
       );
     }, 500)
   ).current;
 
   const handleClickSearch = () => {
-    if (specialty === "All specialties") {
+    if (specialty === "All specialties" || specialty === 0) {
       dispatch(
         getSearchResult({
           keyword: inputValue,
           sortBy: "exp_desc",
+          exp: years !== 0 ? years : undefined,
+          minPrice: minPrice !== 0 ? minPrice : undefined,
+          maxPrice: maxPrice,
+          filterAvailable: filterAvailable,
         })
       );
       navigate(`/search/doctor?name=${inputValue}&specialty=all`);
@@ -66,21 +98,42 @@ const Search = () => {
         getSearchResult({
           keyword: inputValue,
           IdSpecialty: specialty,
+          exp: years !== 0 ? years : undefined,
+          minPrice: minPrice !== 0 ? minPrice : undefined,
+          maxPrice: maxPrice,
           sortBy: "exp_desc",
+          filterAvailable: filterAvailable,
         })
       );
       navigate(`/search/doctor?name=${inputValue}&specialty=${specialty}`);
     }
   };
+
+  const handleAvailable = (e) => {
+    setFilterAvailable(e.target.value);
+    dispatch(
+      getSearchResult({
+        keyword: inputValue,
+        IdSpecialty: specialty === "All specialties" || specialty === 0 ? undefined : specialty,
+        sortBy: "exp_desc",
+        exp: years !== 0 ? years : undefined,
+        minPrice: minPrice !== 0 ? minPrice : undefined,
+        maxPrice: maxPrice,
+        filterAvailable: e.target.value,
+      })
+    );
+
+  }
+
   useEffect(() => {
-    if (searchResult === null) {
+    if (searchResult.length === 0) {
       dispatch(
         getSearchResult({
           sortBy: "exp_desc",
         })
       );
     }
-  }, [dispatch, searchResult]);
+  }, []);
 
   return (
     <div className="search-main">
@@ -182,269 +235,282 @@ const Search = () => {
               </div>
             )}
           </div>
-          {searchResult.length > 0 && (
-            <div className="search-result__filter">
-              <div className="search-result__filter-box">
-                <Space direction="vertical" style={{ width: "100%" }}>
-                  <Space>
-                    <Divider
-                      type="vertical"
-                      style={{ backgroundColor: "#2d87f3", width: 2 }}
-                    />
-                    <Typography className="search-result__filter-box-label">
-                      Available
-                    </Typography>
-                  </Space>
-                  <Space style={{ marginTop: 5 }}>
-                    <Radio.Group className="search-result__filter-box-radio">
-                      <Radio
-                        value={1}
-                        className="search-result__filter-box-radio__item"
-                      >
-                        Any day
-                      </Radio>
-                      <Radio
-                        value={3}
-                        className="search-result__filter-box-radio__item"
-                      >
-                        Today
-                      </Radio>
-                      <Radio
-                        value={4}
-                        className="search-result__filter-box-radio__item"
-                      >
-                        Tomorrow
-                      </Radio>
-                    </Radio.Group>
-                  </Space>
+
+          <div className="search-result__filter">
+            <div className="search-result__filter-box">
+              <Space direction="vertical" style={{ width: "100%" }}>
+                <Space>
                   <Divider
-                    style={{
-                      backgroundColor: "rgb(228, 232, 236)",
-                      width: "100%",
-                      marginBottom: 8,
-                    }}
+                    type="vertical"
+                    style={{ backgroundColor: "#2d87f3", width: 2 }}
                   />
-
-                  {/*  */}
-
-                  <Space>
-                    <Divider
-                      type="vertical"
-                      style={{ backgroundColor: "#2d87f3", width: 2 }}
-                    />
-                    <Typography className="search-result__filter-box-label">
-                      Years&apos; experience
-                    </Typography>
-                  </Space>
-
-                  <Slider
-                    onChange={onYearChange}
-                    tooltip={{ open: false }}
-                    value={years}
-                    onChangeComplete={(value) => {
-                      dispatch(
-                        getSearchResult({
-                          keyword: inputValue,
-                          IdSpecialty:
-                            specialty === "All specialties"
-                              ? undefined
-                              : specialty,
-                          sortBy: "exp_desc",
-                          exp: value,
-                        })
-                      );
-                    }}
-                  />
-                  <Space
-                    direction="vertical"
-                    className="search-result__filter__experience"
-                  >
-                    <Typography className="search-result__filter__experience--label">
-                      Years&apos; experience
-                    </Typography>
-                    <input
-                      onChange={(e) => setYears(e.target.value)}
-                      value={years}
-                      className="search-result__filter__experience--input"
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          dispatch(
-                            getSearchResult({
-                              keyword: inputValue,
-                              IdSpecialty:
-                                specialty === "All specialties"
-                                  ? undefined
-                                  : specialty,
-                              sortBy: "exp_desc",
-                              exp: e.target.value,
-                            })
-                          );
-                        }
-                      }}
-                    />
-                  </Space>
-                  <Divider
-                    style={{
-                      backgroundColor: "rgb(228, 232, 236)",
-                      width: "100%",
-                      marginBottom: 8,
-                    }}
-                  />
-
-                  {/*  */}
-
-                  <Space>
-                    <Divider
-                      type="vertical"
-                      style={{ backgroundColor: "#2d87f3", width: 2 }}
-                    />
-                    <Typography className="search-result__filter-box-label">
-                      Fees
-                    </Typography>
-                  </Space>
-                  <Slider
-                    range={{
-                      draggableTrack: true,
-                    }}
-                    value={[minPrice / 10000, maxPrice / 10000]}
-                    tooltip={{ open: false }}
-                    onChangeComplete={(value) => {
-                      dispatch(
-                        getSearchResult({
-                          keyword: inputValue,
-                          IdSpecialty:
-                            specialty === "All specialties"
-                              ? undefined
-                              : specialty,
-                          sortBy: "exp_desc",
-                          exp: years,
-                          minPrice: parseInt(value[0] + "0000"),
-                          maxPrice: parseInt(value[1] + "0000"),
-                        })
-                      );
-                    }}
-                    onChange={(value) => {
-                      if (value[0] > 0) {
-                        setMinPrice(value[0] + "0000");
-                      } else setMinPrice(value[0]);
-                      setMaxPrice(value[1] + "0000");
-                    }}
-                  />
-                  <div
-                    direction="horizontal"
-                    className="search-result__filter__price"
-                  >
-                    <Space className="search-result__filter__price--input">
-                      <Typography className="search-result__filter__experience--label">
-                        Min
-                      </Typography>
-                      <div style={{ position: "relative" }}>
-                        <input
-                          value={minPrice}
-                          className="search-result__filter__experience--input"
-                          style={{ width: "100%", paddingLeft: 10 }}
-                          onChange={(e) => setMinPrice(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              dispatch(
-                                getSearchResult({
-                                  keyword: inputValue,
-                                  IdSpecialty:
-                                    specialty === "All specialties"
-                                      ? undefined
-                                      : specialty,
-                                  sortBy: "exp_desc",
-                                  exp: years,
-                                  minPrice: e.target.value,
-                                  maxPrice: maxPrice,
-                                })
-                              );
-                            }
-                          }}
-                        />
-                        <span
-                          className="search-text"
-                          style={{
-                            position: "absolute",
-                            left: 0,
-                            color: "#000",
-                            fontSize: 20,
-                          }}
-                        >
-                          ₫
-                        </span>
-                      </div>
-                    </Space>
-                    <Space className="search-result__filter__price--input">
-                      <Typography className="search-result__filter__experience--label">
-                        Max
-                      </Typography>
-                      <div style={{ position: "relative" }}>
-                        <input
-                          value={maxPrice}
-                          className="search-result__filter__experience--input"
-                          style={{ width: "100%", paddingLeft: 10 }}
-                          onChange={(e) => setMaxPrice(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              dispatch(
-                                getSearchResult({
-                                  keyword: inputValue,
-                                  IdSpecialty:
-                                    specialty === "All specialties"
-                                      ? undefined
-                                      : specialty,
-                                  sortBy: "exp_desc",
-                                  exp: years,
-                                  minPrice: minPrice,
-                                  maxPrice: e.target.value,
-                                })
-                              );
-                            }
-                          }}
-                        />
-                        <span
-                          className="search-text"
-                          style={{
-                            position: "absolute",
-                            left: 0,
-                            color: "#000",
-                            fontSize: 20,
-                          }}
-                        >
-                          ₫
-                        </span>
-                      </div>
-                    </Space>
-                  </div>
-
-                  <Divider
-                    style={{
-                      backgroundColor: "rgb(228, 232, 236)",
-                      width: "100%",
-                      marginBottom: 8,
-                    }}
-                  />
-
-                  {/*  */}
-                  <Space>
-                    <Space direction="vertical">
-                      <Space>
-                        <Divider
-                          type="vertical"
-                          style={{ backgroundColor: "#2d87f3", width: 2 }}
-                        />
-                        <Typography className="search-result__filter-box-label">
-                          Rate
-                        </Typography>
-                      </Space>
-                      <Rate onChange={(value) => console.log(value)} />
-                    </Space>
-                  </Space>
+                  <Typography className="search-result__filter-box-label" >
+                    Available
+                  </Typography>
                 </Space>
-              </div>
+                <Space style={{ marginTop: 5 }}>
+                  <Radio.Group className="search-result__filter-box-radio" value={filterAvailable} onChange={(e) => handleAvailable(e)} >
+
+                    <Radio
+                      value={"TODAY"}
+                      className="search-result__filter-box-radio__item"
+                      checked={true}
+                    >
+                      Today
+                    </Radio>
+                    <Radio
+                      value={"TOMORROW"}
+                      className="search-result__filter-box-radio__item"
+                    >
+                      Tomorrow
+                    </Radio>
+                  </Radio.Group>
+                </Space>
+                <Divider
+                  style={{
+                    backgroundColor: "rgb(228, 232, 236)",
+                    width: "100%",
+                    marginBottom: 8,
+                  }}
+                />
+
+                {/*  */}
+
+                <Space>
+                  <Divider
+                    type="vertical"
+                    style={{ backgroundColor: "#2d87f3", width: 2 }}
+                  />
+                  <Typography className="search-result__filter-box-label">
+                    Years&apos; experience
+                  </Typography>
+                </Space>
+
+                <Slider
+                  onChange={onYearChange}
+                  tooltip={{ open: false }}
+                  value={years}
+                  onChangeComplete={(value) => {
+                    dispatch(
+                      getSearchResult({
+                        keyword: inputValue,
+                        IdSpecialty:
+                          specialty === "All specialties" || specialty === 0 ? undefined : specialty,
+                        sortBy: "exp_desc",
+                        exp: value,
+                        minPrice: minPrice !== 0 ? minPrice : undefined,
+                        maxPrice: maxPrice,
+                        filterAvailable: filterAvailable,
+                      })
+                    );
+                  }}
+                />
+                <Space
+                  direction="vertical"
+                  className="search-result__filter__experience"
+                >
+                  <Typography className="search-result__filter__experience--label">
+                    Years&apos; experience
+                  </Typography>
+                  <input
+                    onChange={(e) => setYears(e.target.value)}
+                    value={years}
+                    className="search-result__filter__experience--input"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        dispatch(
+                          getSearchResult({
+                            keyword: inputValue,
+                            IdSpecialty:
+                              specialty === "All specialties"
+                                ? undefined
+                                : specialty,
+                            sortBy: "exp_desc",
+                            exp: e.target.value,
+                            minPrice: minPrice !== 0 ? minPrice : undefined,
+                            maxPrice: maxPrice,
+                            filterAvailable: filterAvailable,
+                          })
+                        );
+                      }
+                    }}
+                  />
+                </Space>
+                <Divider
+                  style={{
+                    backgroundColor: "rgb(228, 232, 236)",
+                    width: "100%",
+                    marginBottom: 8,
+                  }}
+                />
+
+                {/*  */}
+
+                <Space>
+                  <Divider
+                    type="vertical"
+                    style={{ backgroundColor: "#2d87f3", width: 2 }}
+                  />
+                  <Typography className="search-result__filter-box-label">
+                    Fees
+                  </Typography>
+                </Space>
+                <Slider
+                  range={{
+                    draggableTrack: true,
+                  }}
+                  value={[minPrice / 10000, maxPrice / 10000]}
+                  tooltip={{ open: false }}
+                  onChangeComplete={(value) => {
+                    dispatch(
+                      getSearchResult({
+                        keyword: inputValue,
+                        IdSpecialty:
+                          specialty === "All specialties"
+                            ? undefined
+                            : specialty,
+                        sortBy: "exp_desc",
+                        exp: years,
+                        minPrice: parseInt(value[0] + "0000"),
+                        maxPrice: parseInt(value[1] + "0000"),
+                        filterAvailable: filterAvailable,
+                      })
+                    );
+                  }}
+                  onChange={(value) => {
+                    if (value[0] > 0) {
+                      setMinPrice(value[0] + "0000");
+                    } else setMinPrice(value[0]);
+                    setMaxPrice(value[1] + "0000");
+                  }}
+                />
+                <div
+                  direction="horizontal"
+                  className="search-result__filter__price"
+                >
+                  <Space className="search-result__filter__price--input">
+                    <Typography className="search-result__filter__experience--label">
+                      Min
+                    </Typography>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        value={minPrice}
+                        className="search-result__filter__experience--input"
+                        style={{ width: "100%", paddingLeft: 10 }}
+                        onChange={(e) => setMinPrice(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            dispatch(
+                              getSearchResult({
+                                keyword: inputValue,
+                                IdSpecialty:
+                                  specialty === "All specialties"
+                                    ? undefined
+                                    : specialty,
+                                sortBy: "exp_desc",
+                                exp: years,
+                                minPrice: e.target.value,
+                                maxPrice: maxPrice,
+                                filterAvailable: filterAvailable,
+                              })
+                            );
+                          }
+                        }}
+                      />
+                      <span
+                        className="search-text"
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          color: "#000",
+                          fontSize: 20,
+                        }}
+                      >
+                        ₫
+                      </span>
+                    </div>
+                  </Space>
+                  <Space className="search-result__filter__price--input">
+                    <Typography className="search-result__filter__experience--label">
+                      Max
+                    </Typography>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        value={maxPrice}
+                        className="search-result__filter__experience--input"
+                        style={{ width: "100%", paddingLeft: 10 }}
+                        onChange={(e) => setMaxPrice(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            dispatch(
+                              getSearchResult({
+                                keyword: inputValue,
+                                IdSpecialty:
+                                  specialty === "All specialties" || specialty === 0 ? undefined : specialty,
+                                sortBy: "exp_desc",
+                                exp: years,
+                                minPrice: minPrice,
+                                maxPrice: e.target.value,
+                                filterAvailable: filterAvailable,
+                              })
+                            );
+                          }
+                        }}
+                      />
+                      <span
+                        className="search-text"
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          color: "#000",
+                          fontSize: 20,
+                        }}
+                      >
+                        ₫
+                      </span>
+                    </div>
+                  </Space>
+                </div>
+
+                <Divider
+                  style={{
+                    backgroundColor: "rgb(228, 232, 236)",
+                    width: "100%",
+                    marginBottom: 8,
+                  }}
+                />
+
+                {/*  */}
+                <Space>
+                  <Space direction="vertical">
+                    <Space>
+                      <Divider
+                        type="vertical"
+                        style={{ backgroundColor: "#2d87f3", width: 2 }}
+                      />
+                      <Typography className="search-result__filter-box-label">
+                        Rate
+                      </Typography>
+                    </Space>
+                    <Rate onChange={(value) => console.log(value)} />
+                  </Space>
+
+                </Space>
+                <Divider
+                  style={{
+                    backgroundColor: "rgb(228, 232, 236)",
+                    width: "100%",
+                    marginBottom: 8,
+                  }}
+                />
+                <div className="clear" onClick={handleClear}>
+                  <DeleteOutlined className="clear-icon" />
+                  <Typography className="search-result__filter__experience--label" style={{ fontSize: 16, fontWeight: 500 }}>Clear All</Typography>
+                </div>
+              </Space>
             </div>
-          )}
+          </div>
+
         </div>
       </div>
       {searchResult.length > 0 && (

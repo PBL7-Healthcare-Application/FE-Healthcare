@@ -7,6 +7,7 @@ const profileSlice = createSlice({
     profile: null,
     appointment: null,
     loading: false,
+    statusCode: null,
     error: null,
   },
   reducers: {},
@@ -33,11 +34,17 @@ const profileSlice = createSlice({
       })
       .addCase(bookAppointment.fulfilled, (state, action) => {
         state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
         state.appointment = action.payload.data;
+        state.statusCode = action.payload.statusCode;
       })
       .addCase(bookAppointment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
+
       });
   },
 });

@@ -6,8 +6,8 @@ export const getSearchResult = createAsyncThunk(
     "search/getSearchResult",
     async (params, thunkApi) => {
         try {
-            const { keyword, exp, minPrice, maxPrice, sortBy, IdSpecialty } = params;
-            const response = await searchDoctor(keyword, exp, minPrice, maxPrice, sortBy, IdSpecialty);
+            const { keyword, exp, minPrice, maxPrice, sortBy, IdSpecialty, filterAvailable } = params;
+            const response = await searchDoctor(keyword, exp, minPrice, maxPrice, sortBy, IdSpecialty, filterAvailable);
             return response;
         } catch (error) {
             throw thunkApi.rejectWithValue(error);

@@ -1,0 +1,80 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.layoutProfile {
+    width: 100%;
+    padding: 40px 20px;
+
+    &-main {
+        @media (min-width: 1024px) {
+            max-width: 1170px;
+        }
+
+        margin: 0px auto;
+        display: flex;
+        gap: 40px;
+
+    }
+
+    &-left {
+        flex: 2;
+        height: fit-content;
+
+        &__box {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0px;
+            align-items: center;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &-icon {
+                font-size: 22px;
+                color: rgb(108, 129, 160);
+            }
+
+            &-text {
+                font-family: $font-main;
+                font-size: 16px;
+                font-weight: 500;
+                color: rgb(108, 129, 160);
+            }
+
+            &-active {
+                color: rgb(45, 135, 243);
+            }
+        }
+
+        &__setting {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+
+            &-show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+
+        }
+
+    }
+
+    &-right {
+        flex: 8;
+    }
+
+    &-box {
+        padding: 20px 16px;
+        border-radius: 10px;
+        border: 1px solid #dbdfe5;
+        // flex-direction: column;
+        // gap: 16px;
+
+    }
+}

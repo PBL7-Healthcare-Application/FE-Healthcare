@@ -17,9 +17,10 @@ export const Header = () => {
   const { user } = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+  const [token, setToken] = useState("");
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.profile);
-  const token = getToken();
+
   const links = [
     {
       label: "Appointment",
@@ -42,30 +43,40 @@ export const Header = () => {
   const handleMenuClick = () => {
     setOpenMenu(!openMenu);
   };
-
   useEffect(() => {
+
+    const token = getToken();
+    setToken(token);
+  }, [])
+  useEffect(() => {
+
     if (token) {
       setIsLogin(true);
+      dispatch(getUserProfile());
     }
-    if (user === null) {
-      setIsLogin(false);
-    }
-    return () => {};
-  }, [token, user]);
 
+
+    return () => { };
+  }, [token, dispatch]);
   useEffect(() => {
-    dispatch(getUserProfile());
-  }, [dispatch]);
+    if (user === null) {
+
+      const token = getToken();
+      if (!token) {
+        setIsLogin(false);
+      }
+    }
+  }, [user])
+
   const navItems = links.map((item, index) => {
     return (
       <div key={index} className="nav__item ">
         <Link
-          className={`nav__item-content ${
-            pathname.split("/").filter(Boolean)[0] ===
+          className={`nav__item-content ${pathname.split("/").filter(Boolean)[0] ===
             item.href.split("/").filter(Boolean)[0]
-              ? "active"
-              : ""
-          } `}
+            ? "active"
+            : ""
+            } `}
           to={item.href}
         >
           {item.label}

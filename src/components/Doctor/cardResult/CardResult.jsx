@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button, Image, Space, Typography } from "antd";
 import "./CardResult.scss";
 import {
@@ -9,11 +10,15 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getDoctorDetail } from "../../../stores/search-doctor/SearchThunk";
+import { setIsSelected } from "../../../stores/search-doctor/SearchSlice";
 
+// eslint-disable-next-line react/prop-types
 const CardResult = ({ doctor }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleDetail = () => {
+        // eslint-disable-next-line react/prop-types
+        dispatch(setIsSelected(0));
         dispatch(getDoctorDetail(doctor?.idDoctor));
         navigate(`/doctor/{doctor.idDoctor}`);
     }
@@ -27,7 +32,7 @@ const CardResult = ({ doctor }) => {
                 />
                 <Space className="result-first__title">
                     <Typography className="result-first__title-text">
-                        {doctor.yearExperience} years exp
+                        {doctor?.yearExperience} years exp
                     </Typography>
                 </Space>
             </div>

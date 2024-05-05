@@ -1,4 +1,5 @@
-import { Button, Image, Radio, Space, Tabs, Typography } from "antd";
+/* eslint-disable react/prop-types */
+import { Button, Image, Radio, Space, Tabs, Typography, notification } from "antd";
 import "./DetailDoctor.scss";
 import { StarFilled } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,27 +10,30 @@ import "slick-carousel/slick/slick-theme.css";
 import CardDay from "../../components/Doctor/cardDay/CardDay";
 import CardTime from "../../components/Doctor/cardTime/CardTime";
 import NotAvailable from "../../components/Doctor/notAvailable/NotAvailable";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   convertTime,
-  convertToInt,
   countTime,
-  doctorSchedule,
   monthNameToNumber,
 } from "../../helpers/timeBooking";
 import {
   setIsSelected,
   setIsTimeSelected,
 } from "../../stores/search-doctor/SearchSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import getToken from "../../helpers/getToken";
+import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
+import { delay } from "lodash";
 const DetailDoctor = () => {
-  const { doctorDetail } = useSelector((state) => state.search);
-  const [times, setTimes] = useState([]);
+  const { doctorDetail, schedule } = useSelector((state) => state.search);
+  const [times, setTimes] = useState(schedule[0]?.times);
+  const [api, contextHolder] = notification.useNotification();
   const [chooseTime, setChooseTime] = useState(null);
-  const [chooseDate, setChooseDate] = useState(null);
+  const [chooseDate, setChooseDate] = useState(schedule[0]?.date);
+  const [chooseType, setChooseType] = useState(1);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(times);
   const handleCardClick = (cardId, item) => {
     setChooseDate(item.date);
     setTimes(item.times);
@@ -70,23 +74,56 @@ const DetailDoctor = () => {
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
+  const handleBooking = () => {
+    const token = getToken();
 
-  const timeOff = doctorDetail?.timeOffs.filter((item) => item.status !== 2);
-  const timeBreak = doctorDetail?.timeOffs.filter((item) => item.status !== 1);
-  var schedule = [];
-  if (doctorDetail) {
-    schedule = doctorSchedule(
-      convertToInt(doctorDetail?.workingTimeStart),
-      convertToInt(doctorDetail?.workingTimeEnd),
-      60,
-      timeOff,
-      timeBreak
+    const date = new Date(chooseDate);
+    const utcDate = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
     );
+    const appointment = {
+      doctor: {
+        idDoctor: doctorDetail?.idDoctor,
+        name: doctorDetail?.name,
+        medicalSpecialty: doctorDetail?.medicalSpecialty,
+        price: doctorDetail?.price,
+        avatar: doctorDetail?.avatar,
+        address: doctorDetail?.address,
+      },
+      appointment: {
+        date: utcDate,
+        startTime: chooseTime?.startTime,
+        endTime: chooseTime?.endTime,
+        type: chooseType
+      },
+    };
+
+    localStorage.setItem(
+      "appointment",
+      JSON.stringify(appointment)
+    );
+    if (token) {
+      dispatch(setIsTimeSelected(null));
+      navigate("/booking/doctor");
+    }
+    else {
+      openNotificationWithIcon("warning", api, "", "Please sign in to continue!");
+      delay(() => {
+        navigate("/auth/sign-in");
+      }, 1500)
+    }
   }
+
+  useEffect(() => {
+    dispatch(setIsTimeSelected(null));
+    setTimes(schedule[0]?.times)
+    setChooseDate(schedule[0]?.date)
+  }, [schedule, dispatch]);
 
   const { TabPane } = Tabs;
   return (
     <div className="detailDr-main">
+      {contextHolder}
       <div className="detailDr-content">
         <div className="detailDr-content__left">
           <div className="detailDr-content__left-profile">
@@ -94,6 +131,7 @@ const DetailDoctor = () => {
               src="https://cdn-healthcare.hellohealthgroup.com/2023/05/1684834987_646c8aab879aa9.52106579.jpg"
               width={150}
               style={{ borderRadius: 6 }}
+              preview={false}
             />
             <div className="detailDr-content__left-profile--infor">
               <div>
@@ -373,7 +411,7 @@ const DetailDoctor = () => {
               Choose the type of appointment
             </Typography>
 
-            <Radio.Group style={{ width: "100%" }}>
+            <Radio.Group style={{ width: "100%" }} value={chooseType} onChange={(e) => setChooseType(e.target.value)}>
               <div className="detailDr-content__right-appointment--box">
                 <div className="detailDr-content__right-appointment--box__type">
                   <div className="detailDr-content__right-appointment--box__type-item">
@@ -449,7 +487,7 @@ const DetailDoctor = () => {
                 <div className="detailDr-content__right-appointment__time">
                   {countTime(times, "m") > 0 ? (
                     times.map((item, index) => {
-                      if (convertTime(item?.endTime) < 13) {
+                      if (convertTime(item?.endTime) <= 13) {
                         return (
                           <CardTime
                             startTime={item?.startTime}
@@ -471,7 +509,7 @@ const DetailDoctor = () => {
                     times.map((item, index) => {
                       if (
                         convertTime(item?.startTime) >= 13 &&
-                        convertTime(item?.endTime) < 18
+                        convertTime(item?.endTime) <= 18
                       ) {
                         return (
                           <CardTime
@@ -512,28 +550,8 @@ const DetailDoctor = () => {
 
             <Button
               className="detailDr-content__right-appointment__button"
-              onClick={() => {
-                const date = new Date(chooseDate);
-                const utcDate = new Date(
-                  Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-                );
-                const appointment = {
-                  user: JSON.parse(localStorage.getItem("user")),
-                  doctor: doctorDetail,
-                  appointment: {
-                    date: utcDate,
-                    startTime: chooseTime?.startTime,
-                    endTime: chooseTime?.endTime,
-                  },
-                };
-
-                localStorage.setItem(
-                  "appointment",
-                  JSON.stringify(appointment)
-                );
-
-                navigate("/booking/doctor");
-              }}
+              onClick={() => handleBooking()}
+              disabled={!chooseTime}
             >
               Book
             </Button>

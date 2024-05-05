@@ -8,6 +8,9 @@ import DetailDoctor from "../pages/detail-doctor/DetailDoctor";
 import Appointment from "../pages/appointment/booking/Appointment";
 import Verification from "../pages/auth/verify/Verification";
 import SuccessBooking from "../pages/appointment/successBooking/SuccessBooking";
+import ProfilePage from "../layouts/Profile/ProfilePage";
+import Profile from "../pages/user/Profile/Profile";
+import MyAppointment from "../pages/user/MyAppointment/MyAppointment";
 
 const routers = createBrowserRouter([
   {
@@ -39,6 +42,32 @@ const routers = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "user/",
+        element: <ProfilePage />,
+        children: [
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+          {
+            path: "appointment",
+            element: <MyAppointment />,
+          },
+          {
+            path: "medical-history",
+            element: <Profile />,
+          },
+          {
+            path: "password",
+            element: <Profile />,
+          },
+          {
+            path: "disable-account",
+            element: <Profile />,
+          }
+        ],
+      }
     ],
   },
   {

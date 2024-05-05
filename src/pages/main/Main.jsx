@@ -17,9 +17,10 @@ import { responsive } from "../../constant/responsiveCarousel";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
+import { setSearch } from "../../stores/search-doctor/SearchSlice";
 export const Main = () => {
   const [name, setName] = useState("");
-  const [specialty, setSpecialty] = useState("All Specialties");
+  const [specialty, setSpecialty] = useState("All specialties");
   const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,15 +48,17 @@ export const Main = () => {
     setSpecialty(value);
   };
   const handleClick = () => {
-    if (specialty === "All Specialties") {
+    if (specialty === "All specialties" || specialty === 0) {
       dispatch(
         getSearchResult({
           keyword: name,
           sortBy: "exp_desc",
         })
       );
+      dispatch(setSearch({ keyword: name, id: specialty }));
       navigate(`/search/doctor?name=${name}&specialty=all`);
     } else {
+      console.log(specialty);
       dispatch(
         getSearchResult({
           keyword: name,
@@ -63,6 +66,7 @@ export const Main = () => {
           sortBy: "exp_desc",
         })
       );
+      dispatch(setSearch({ keyword: name, id: specialty }));
       navigate(`/search/doctor?name=${name}&specialty=${specialty}`);
     }
   };

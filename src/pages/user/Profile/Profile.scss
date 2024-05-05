@@ -1,0 +1,138 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+.profile {
+    &-title {
+        font-size: 25px;
+        font-family: $font-main;
+        font-weight: 600;
+        padding: 0 20px;
+        color: #343434;
+    }
+
+    &-header {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        align-items: center;
+
+        &__img {
+            border-radius: 50%;
+        }
+
+        &__info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+        }
+
+        &__font {
+            font-family: $font-main;
+            font-weight: 500;
+            font-size: 25px;
+            color: #343434;
+        }
+
+        &__label {
+            font-size: 18px;
+            color: $text-secondary-color;
+        }
+    }
+
+    &-content {
+        margin-top: 20px;
+        display: flex;
+        gap: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        padding: 10px 20px;
+        flex-direction: column;
+
+        &__form {
+            width: 100%;
+        }
+
+        &__coverInput {
+            padding: 8px 0;
+            width: 100%;
+            border-bottom: 1px solid #e0e0e0;
+
+            &-active {
+                border: 1px solid #e0e0e0;
+                padding: 10px 10px;
+                border-radius: 10px;
+            }
+        }
+    }
+
+    &-input {
+        width: 100%;
+        font-weight: 500;
+        font-family: $font-main;
+        color: rgb(38, 38, 38);
+        font-size: 18px;
+        background-color: #fff;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &-datePicker {
+        width: 100%;
+        padding: 10px 10px;
+        font-weight: 500;
+        font-family: $font-main;
+        font-size: 18px;
+    }
+
+    &-radio {
+        font-weight: 500;
+        font-family: $font-main;
+        font-size: 18px;
+
+        &-active {
+            border: 0;
+        }
+
+        &-change {
+            margin-top: -8px;
+        }
+    }
+
+    &-edit {
+        display: flex;
+        gap: 5px;
+        flex-direction: row;
+        align-items: flex-start;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &__icon {
+            margin-top: 2px;
+            font-size: 20px;
+            color: rgb(45, 135, 243);
+        }
+    }
+
+    &-buttonArea {
+        display: flex;
+        width: 100%;
+        gap: 30px;
+
+        &__button {
+            padding: 20px 40px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+            &-save {
+                padding: 20px 20px;
+                background-color: #fff;
+                color: $text-color;
+                border: 1px solid #185fa0;
+            }
+        }
+    }
+}

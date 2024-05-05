@@ -10,6 +10,7 @@ import { signInUser } from "../../../stores/auth/AuthThunk";
 import { SetError } from "../../../stores/auth/AuthSlice";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { delay } from "lodash";
+import { getUserProfile } from "../../../stores/user/UserThunk";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,13 @@ const SignIn = () => {
       if (user.role === "User") {
         openNotificationWithIcon("success", api, "", "Sign In Success!");
         delay(() => {
-          navigate("/");
+          if (localStorage.getItem("appointment") !== null) {
+            dispatch(getUserProfile());
+            navigate("/booking/doctor");
+          }
+          else {
+            navigate("/");
+          }
         }, 1500);
       }
     }
@@ -31,7 +38,7 @@ const SignIn = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
 
   const onFinish = (values) => {

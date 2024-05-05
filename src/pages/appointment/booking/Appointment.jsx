@@ -1,6 +1,6 @@
 import { CloseCircleOutlined, MailOutlined } from "@ant-design/icons";
 import "./Appointment.scss";
-import { Button, Divider, Image, Radio, Typography } from "antd";
+import { Button, Divider, Image, Radio, Typography, notification } from "antd";
 import location from "../../../assets/images/location.png";
 import calender from "../../../assets/images/calandar.png";
 import dolar from "../../../assets/images/dollar.png";
@@ -11,16 +11,24 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bookAppointment } from "../../../stores/user/UserThunk";
 import { formatDate } from "../../../helpers/timeBooking";
+import { delay } from "lodash";
+import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 const Appointment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isMess, setIsMess] = useState(false);
   const [inputIssue, setInputIssue] = useState("");
   const [appointment, setAppointment] = useState();
+  const [user, setUser] = useState();
   const [closeInfor, setCloseInfor] = useState(true);
-  const { loading } = useSelector((state) => state.profile);
+  const [api, contextHolder] = notification.useNotification();
+  const { loading, statusCode, error } = useSelector((state) => state.profile);
   useEffect(() => {
     const app = JSON.parse(localStorage.getItem("appointment"));
+    const localUser = JSON.parse(localStorage.getItem("user"));
+    if (localUser) {
+      setUser(localUser);
+    }
     if (app) {
       setAppointment(app);
     }
@@ -34,17 +42,35 @@ const Appointment = () => {
           endTime: appointment?.appointment.endTime,
           date: appointment?.appointment.date,
           issue: inputIssue,
-          type: true,
+          type: appointment?.appointment.type === 1 ? true : false,
+          price: appointment?.doctor.price,
         })
       );
       setIsMess(false);
-      navigate("/booking/success");
+      localStorage.removeItem("appointment");
+
     } else {
       setIsMess(true);
     }
   };
+  useEffect(() => {
+    if (statusCode === 200) {
+      openNotificationWithIcon("success", api, "", "Successfully scheduled a medical examination!");
+      delay(() => {
+        navigate("/booking/success");
+      }, 1500)
+    }
+    if (error) {
+      openNotificationWithIcon("error", api, "", "Unsuccessfully scheduled a medical examination!");
+      delay(() => {
+        navigate("/");
+      }, 1500)
+    }
+  },
+    [statusCode, navigate, api])
   return (
     <div className="appointment-main">
+      {contextHolder}
       {closeInfor && (
         <div
           className="appointment-content appointment-noti appointment-font"
@@ -131,7 +157,7 @@ const Appointment = () => {
                     className="appointment-font"
                     style={{ fontSize: 16, fontWeight: 600 }}
                   >
-                    {appointment?.user.name}
+                    {user?.name}
                   </Typography>
                 </div>
               </div>
@@ -144,7 +170,7 @@ const Appointment = () => {
                   className="appointment-font"
                   style={{ fontSize: 16, fontWeight: 400, color: "#6c81a0" }}
                 >
-                  {appointment?.user.email}
+                  {user?.email}
                 </Typography>
               </div>
             </div>
@@ -162,6 +188,11 @@ const Appointment = () => {
               onChange={(e) => {
                 setIsMess(false);
                 setInputIssue(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.keyCode === 32 && inputIssue.length === 0) {
+                  e.preventDefault();
+                }
               }}
               className="textArea"
               required
@@ -215,6 +246,7 @@ const Appointment = () => {
                     src={calender}
                     width={28}
                     className="appointment-right__content-icon"
+                    preview={false}
                   />
                   <div>
                     <Typography
@@ -245,6 +277,7 @@ const Appointment = () => {
                     src={location}
                     width={28}
                     className="appointment-right__content-icon"
+                    preview={false}
                   />
                   <div>
                     <Typography
@@ -274,6 +307,7 @@ const Appointment = () => {
                     src={dolar}
                     width={28}
                     className="appointment-right__content-icon"
+                    preview={false}
                   />
                   <div>
                     <Typography
@@ -285,7 +319,7 @@ const Appointment = () => {
                         color: "#D84023",
                       }}
                     >
-                      {appointment?.doctor.price} VND
+                      {appointment?.doctor.price.toLocaleString('vi-VN')} ₫
                     </Typography>
                   </div>
                 </div>
@@ -312,7 +346,7 @@ const Appointment = () => {
                   className="appointment-font"
                   style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.4 }}
                 >
-                  Direct Payment
+                  Cash Payment
                 </Typography>
               </div>
               <Radio checked />
@@ -330,6 +364,7 @@ const Appointment = () => {
                 className="appointment-right__button"
                 onClick={() => handleBooking()}
                 loading={loading}
+                disabled={!inputIssue}
               >
                 Confirm
               </Button>
