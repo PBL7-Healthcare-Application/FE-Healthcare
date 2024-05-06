@@ -1,0 +1,90 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.cardAppointment {
+    width: 100%;
+    border: 1px solid #dbdfe5;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    // padding: 20px 20px;
+    border-radius: 10px;
+
+    &--header {
+        padding: 20px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-bottom: 12px;
+        border-bottom: 1px dashed rgb(228, 232, 236);
+
+        &__first {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-items: center;
+
+            &__img {
+                border-radius: 50%;
+            }
+
+            &__infor {
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+
+            }
+        }
+    }
+
+    &--font {
+        font-family: $font-main;
+        color: $text-color;
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    &--item {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+
+        &__text {
+            font-family: $font-main;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 13px;
+            color: #6c81a0;
+        }
+    }
+
+    &--type {
+        display: flex;
+        gap: 10px;
+        background-color: $background-secondary;
+        padding: 2px 10px;
+        border-radius: 6px;
+        align-items: center;
+
+    }
+
+    &--buttonArea {
+        display: flex;
+        justify-content: center;
+        background-color: rgb(247, 249, 252);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        gap: 30px;
+
+        &__button {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: $text-color;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}

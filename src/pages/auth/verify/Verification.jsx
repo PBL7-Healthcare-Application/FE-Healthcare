@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ResendOTP, VerifyEmail } from "../../../stores/auth/AuthThunk";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { delay } from "lodash";
+import { getUserProfile } from "../../../stores/user/UserThunk";
 const otpFields = new Array(6).fill(0);
 const Verification = () => {
   const dispatch = useDispatch();
@@ -60,12 +61,19 @@ const Verification = () => {
   };
 
   useEffect(() => {
-    console.log(`UserVer::`, user);
     if (user) {
       if (user.role === "User") {
         openNotificationWithIcon("success", api, "", "Sign In Success!");
         delay(() => {
-          navigate("/");
+          localStorage.removeItem("profile");
+          if (localStorage.getItem("appointment") !== null) {
+            dispatch(getUserProfile());
+            navigate("/booking/doctor");
+          }
+          else {
+
+            navigate("/");
+          }
         }, 1500);
       }
     }
@@ -73,7 +81,7 @@ const Verification = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
 
   const minutes = Math.floor(seconds / 60);

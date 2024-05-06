@@ -1,4 +1,5 @@
 import axios from "axios";
+import getToken from "./getToken";
 const apiUrl = import.meta.env.VITE_API_URL;
 class Http {
   constructor() {
@@ -25,10 +26,10 @@ class Http {
     );
     this.instance.interceptors.request.use(
       (config) => {
-        // const token = getTokenFromStorage();
-        // if (token) {
-        //   config.headers["Authorization"] = `Bearer ${token}`;
-        // }
+        const token = getToken();
+        if (token) {
+          config.headers["Authorization"] = `Bearer ${token}`;
+        }
         return config;
       },
       (error) => {

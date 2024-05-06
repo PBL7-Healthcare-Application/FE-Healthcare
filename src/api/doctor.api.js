@@ -6,7 +6,8 @@ export const searchDoctor = (
   minPrice,
   maxPrice,
   sortBy,
-  IdSpecialty
+  IdSpecialty,
+  filterAvailable
 ) => {
   let url = `/Doctor/GetDoctor?`;
   if (keyword) {
@@ -27,11 +28,14 @@ export const searchDoctor = (
   if (IdSpecialty) {
     url += `&id_specialty=${IdSpecialty}`;
   }
+  if (filterAvailable) {
+    url += `&filterAvailable=${filterAvailable}`;
+  }
   return http.get(url);
 };
 export const getAllSpecialty = () => {
   return http.get("/MedicalSpecialty/GetAllMedicalSpecialty");
 };
 export const getDoctorById = (id) => {
-  return http.get(`/Doctor/GetDoctorById/${id}`);
+  return http.get(`/Doctor/GetDoctorDetail/${id}`);
 };

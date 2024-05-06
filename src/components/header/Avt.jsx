@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Avatar, Badge, Button, Image, Space, Typography } from "antd";
 import "./Avt.scss";
 import {
@@ -12,7 +13,7 @@ import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
 import { useState } from "react";
 
-const Avt = () => {
+const Avt = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [visible, setvisible] = useState(true);
@@ -22,7 +23,9 @@ const Avt = () => {
   const handleLogout = () => {
     dispatch(logOut());
     localStorage.removeItem("profile");
+    localStorage.removeItem("user");
     deleteToken();
+    setvisible(!visible);
     navigate("/");
   };
   return (
@@ -44,13 +47,16 @@ const Avt = () => {
             }}
             onClick={handleAvatar}
           >
-            H
+            {props?.profile && props?.profile?.name[0]}
           </Avatar>
         ) : (
           <div className="avt-icon" style={{ position: "relative" }}>
             <CloseOutlined onClick={handleAvatar} className="avt-icon__item" />
             <Space className="avt-popover" direction="vertical">
-              <Space>
+              <Space onClick={() => {
+                navigate("/user/profile")
+                setvisible(!visible)
+              }}>
                 <Image
                   src="https://scontent.fdad5-1.fna.fbcdn.net/v/t39.30808-1/321425310_853450245775265_1754860979446746751_n.jpg?stp=dst-jpg_p200x200&_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_ohc=p9CaGGhPmjIQ7kNvgGpnMd2&_nc_ht=scontent.fdad5-1.fna&oh=00_AfABUj82UUSvq5B3syT5sfU2-Zv3RLg62_U-2127BPezXw&oe=663529F1"
                   width={70}
@@ -61,7 +67,9 @@ const Avt = () => {
                   style={{ display: "flex", gap: 15, flexDirection: "column" }}
                   className="avt-pointer"
                 >
-                  <Typography className="avt-font">Bui Van Huy</Typography>
+                  <Typography className="avt-font">
+                    {props?.profile && props?.profile?.name}
+                  </Typography>
                   <Space style={{ marginTop: -10 }}>
                     <Typography
                       className="avt-font"
@@ -73,7 +81,7 @@ const Avt = () => {
                   </Space>
                 </div>
               </Space>
-              <div className="avt-popover__box">
+              <div className="avt-popover__box" style={{ marginTop: 20 }}>
                 <Space className="avt-popover__box--item">
                   <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" />
                   <Typography className="avt-font" style={{ fontSize: 15 }}>

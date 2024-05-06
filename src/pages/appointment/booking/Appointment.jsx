@@ -1,84 +1,152 @@
-import {
-  CloseCircleOutlined,
-  MailOutlined,
-  PhoneOutlined,
-} from "@ant-design/icons";
+import { CloseCircleOutlined, MailOutlined } from "@ant-design/icons";
 import "./Appointment.scss";
-import { Button, Divider, Image, Radio, Typography } from "antd";
+import { Button, Divider, Image, Radio, Typography, notification } from "antd";
 import location from "../../../assets/images/location.png";
 import calender from "../../../assets/images/calandar.png";
 import dolar from "../../../assets/images/dollar.png";
 import TextArea from "antd/es/input/TextArea";
 import wallet from "../../../assets/images/wallet.png";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { bookAppointment } from "../../../stores/user/UserThunk";
+import { formatDate } from "../../../helpers/timeBooking";
+import { delay } from "lodash";
+import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
+import errors from "../../../assets/images/error.png";
 const Appointment = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isMess, setIsMess] = useState(false);
+  const [inputIssue, setInputIssue] = useState("");
+  const [appointment, setAppointment] = useState();
+  const [user, setUser] = useState();
+  const [closeInfor, setCloseInfor] = useState(true);
+  const [api, contextHolder] = notification.useNotification();
+  const { loading, statusCode, error } = useSelector((state) => state.profile);
+  useEffect(() => {
+    const app = JSON.parse(localStorage.getItem("appointment"));
+    const localUser = JSON.parse(localStorage.getItem("user"));
+    if (localUser) {
+      setUser(localUser);
+    }
+    if (app) {
+      setAppointment(app);
+    }
+  }, []);
+  const handleBooking = () => {
+    if (inputIssue !== null && inputIssue.length > 0) {
+      dispatch(
+        bookAppointment({
+          idDoctor: appointment?.doctor.idDoctor,
+          startTime: appointment?.appointment.startTime,
+          endTime: appointment?.appointment.endTime,
+          date: appointment?.appointment.date,
+          issue: inputIssue,
+          type: appointment?.appointment.type === 1 ? true : false,
+          price: appointment?.doctor.price,
+        })
+      );
+      setIsMess(false);
+      localStorage.removeItem("appointment");
+    } else {
+      setIsMess(true);
+    }
+  };
+  useEffect(() => {
+    if (statusCode === 200) {
+      openNotificationWithIcon(
+        "success",
+        api,
+        "",
+        "Successfully scheduled a medical examination!"
+      );
+      delay(() => {
+        navigate("/booking/success");
+      }, 1500);
+    }
+    if (error) {
+      openNotificationWithIcon(
+        "error",
+        api,
+        "",
+        "Unsuccessfully scheduled a medical examination!"
+      );
+      delay(() => {
+        navigate("/");
+      }, 1500);
+    }
+  }, [statusCode, navigate, api]);
   return (
     <div className="appointment-main">
-      <div
-        className="appointment-content appointment-noti appointment-font"
-        style={{ marginBottom: 40, position: "relative" }}
-      >
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+      {contextHolder}
+      {closeInfor && (
+        <div
+          className="appointment-content appointment-noti appointment-font"
+          style={{ marginBottom: 40, position: "relative" }}
         >
-          <circle cx="15.999" cy="15.999" r="13.333" fill="#BCDEFF"></circle>
-          <path
-            d="M22.513 2.922L6.378 5.337a1.732 1.732 0 00-1.456 1.97l3.04 20.313a1.731 1.731 0 001.968 1.456l16.134-2.415a1.732 1.732 0 001.456-1.969L24.481 4.379a1.732 1.732 0 00-1.968-1.457z"
-            fill="#65B5FF"
-          ></path>
-          <path
-            d="M6.148 5.373L22.74 2.89l3.16 21.128-16.59 2.483L6.147 5.373z"
-            fill="#fff"
-          ></path>
-          <path
-            d="M15.312 7.974l-.572.086a.838.838 0 00-.704.951l.021.143a.181.181 0 01-.151.205l-.142.02a.837.837 0 00-.704.953l.086.573a.838.838 0 00.951.703l.143-.021a.18.18 0 01.205.152l.021.142a.838.838 0 00.952.703l.572-.085a.838.838 0 00.704-.952l-.022-.143a.18.18 0 01.151-.205l.144-.021a.838.838 0 00.703-.952l-.086-.572a.837.837 0 00-.95-.703l-.144.021a.18.18 0 01-.205-.151l-.022-.144a.837.837 0 00-.951-.703z"
-            fill="#F44D2C"
-          ></path>
-          <path
-            d="M21.93 13.421l-9.403 1.408a.324.324 0 00.096.64l9.403-1.407a.324.324 0 10-.095-.64zM22.232 15.749l-11.787 1.764a.324.324 0 00.096.64l11.787-1.764a.324.324 0 00-.096-.64zM21.633 18.208l-10.887 1.629a.324.324 0 10.096.64l10.887-1.629a.324.324 0 00-.096-.64zM20.54 20.744l-9.491 1.421a.324.324 0 00.096.64l9.49-1.42a.324.324 0 10-.096-.64zM22.881 20.393l-.836.125a.324.324 0 00.096.64l.836-.124a.324.324 0 00-.096-.64z"
-            fill="#D2D6DC"
-          ></path>
-          <path
-            d="M19.464 5.42l-9.44 1.413a1.161 1.161 0 01-1.32-.977l-.1-.66a.442.442 0 01.372-.503l10.862-1.626a.442.442 0 01.503.372l.098.66a1.162 1.162 0 01-.976 1.321z"
-            fill="#284A75"
-          ></path>
-          <path
-            d="M31.75 27.879l-2.392-2.393-1.206 1.206 2.392 2.392a.853.853 0 101.206-1.205z"
-            fill="#2743AD"
-          ></path>
-          <path
-            d="M28.828 17.997a5.77 5.77 0 00-8.879 7.289 5.772 5.772 0 108.879-7.289zm-1.312 6.852a3.915 3.915 0 01-6.024-4.946 3.915 3.915 0 116.024 4.946z"
-            fill="#2D87F3"
-          ></path>
-          <path
-            d="M2.657 12.087l-.064.327a.482.482 0 01-.564.38l-.081-.015a.103.103 0 00-.121.081l-.016.084a.483.483 0 01-.567.38l-.327-.064a.484.484 0 01-.381-.564l.016-.081a.105.105 0 00-.081-.123l-.081-.016a.48.48 0 01-.381-.564l.064-.327a.481.481 0 01.564-.38l.081.015a.104.104 0 00.122-.084l.015-.081a.483.483 0 01.565-.38l.327.063a.484.484 0 01.383.565l-.016.081a.103.103 0 00.08.123l.082.016a.481.481 0 01.381.564z"
-            fill="#65B5FF"
-          ></path>
-          <path
-            d="M4.618 16.043l.043.245a.36.36 0 01-.293.418l-.063.011a.078.078 0 00-.063.09l.01.061a.362.362 0 01-.295.419l-.245.042a.362.362 0 01-.418-.295l-.01-.061a.077.077 0 00-.06-.063.078.078 0 00-.03 0l-.062.01a.36.36 0 01-.368-.164.362.362 0 01-.05-.131l-.043-.245a.363.363 0 01.295-.419l.061-.01a.077.077 0 00.05-.032.078.078 0 00.014-.059l-.01-.06a.362.362 0 01.294-.418l.246-.043a.362.362 0 01.418.295l.01.06a.078.078 0 00.09.065l.063-.011a.36.36 0 01.416.295zM29.944 6.043l.043.245a.36.36 0 01-.293.418l-.062.011a.078.078 0 00-.064.09l.01.061a.362.362 0 01-.295.419l-.245.042a.363.363 0 01-.418-.295l-.01-.061a.079.079 0 00-.06-.063.078.078 0 00-.03 0l-.061.01a.363.363 0 01-.42-.295l-.042-.245a.363.363 0 01.296-.419l.06-.01a.078.078 0 00.064-.09l-.01-.061a.362.362 0 01.295-.419l.245-.042a.363.363 0 01.418.295l.01.06a.078.078 0 00.09.065l.064-.011a.36.36 0 01.415.295z"
-            fill="#91CAFF"
-          ></path>
-          <circle
-            cx="24.666"
-            cy="22"
-            r="4"
-            fill="#fff"
-            fillOpacity="0.75"
-          ></circle>
-        </svg>
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="15.999" cy="15.999" r="13.333" fill="#BCDEFF"></circle>
+            <path
+              d="M22.513 2.922L6.378 5.337a1.732 1.732 0 00-1.456 1.97l3.04 20.313a1.731 1.731 0 001.968 1.456l16.134-2.415a1.732 1.732 0 001.456-1.969L24.481 4.379a1.732 1.732 0 00-1.968-1.457z"
+              fill="#65B5FF"
+            ></path>
+            <path
+              d="M6.148 5.373L22.74 2.89l3.16 21.128-16.59 2.483L6.147 5.373z"
+              fill="#fff"
+            ></path>
+            <path
+              d="M15.312 7.974l-.572.086a.838.838 0 00-.704.951l.021.143a.181.181 0 01-.151.205l-.142.02a.837.837 0 00-.704.953l.086.573a.838.838 0 00.951.703l.143-.021a.18.18 0 01.205.152l.021.142a.838.838 0 00.952.703l.572-.085a.838.838 0 00.704-.952l-.022-.143a.18.18 0 01.151-.205l.144-.021a.838.838 0 00.703-.952l-.086-.572a.837.837 0 00-.95-.703l-.144.021a.18.18 0 01-.205-.151l-.022-.144a.837.837 0 00-.951-.703z"
+              fill="#F44D2C"
+            ></path>
+            <path
+              d="M21.93 13.421l-9.403 1.408a.324.324 0 00.096.64l9.403-1.407a.324.324 0 10-.095-.64zM22.232 15.749l-11.787 1.764a.324.324 0 00.096.64l11.787-1.764a.324.324 0 00-.096-.64zM21.633 18.208l-10.887 1.629a.324.324 0 10.096.64l10.887-1.629a.324.324 0 00-.096-.64zM20.54 20.744l-9.491 1.421a.324.324 0 00.096.64l9.49-1.42a.324.324 0 10-.096-.64zM22.881 20.393l-.836.125a.324.324 0 00.096.64l.836-.124a.324.324 0 00-.096-.64z"
+              fill="#D2D6DC"
+            ></path>
+            <path
+              d="M19.464 5.42l-9.44 1.413a1.161 1.161 0 01-1.32-.977l-.1-.66a.442.442 0 01.372-.503l10.862-1.626a.442.442 0 01.503.372l.098.66a1.162 1.162 0 01-.976 1.321z"
+              fill="#284A75"
+            ></path>
+            <path
+              d="M31.75 27.879l-2.392-2.393-1.206 1.206 2.392 2.392a.853.853 0 101.206-1.205z"
+              fill="#2743AD"
+            ></path>
+            <path
+              d="M28.828 17.997a5.77 5.77 0 00-8.879 7.289 5.772 5.772 0 108.879-7.289zm-1.312 6.852a3.915 3.915 0 01-6.024-4.946 3.915 3.915 0 116.024 4.946z"
+              fill="#2D87F3"
+            ></path>
+            <path
+              d="M2.657 12.087l-.064.327a.482.482 0 01-.564.38l-.081-.015a.103.103 0 00-.121.081l-.016.084a.483.483 0 01-.567.38l-.327-.064a.484.484 0 01-.381-.564l.016-.081a.105.105 0 00-.081-.123l-.081-.016a.48.48 0 01-.381-.564l.064-.327a.481.481 0 01.564-.38l.081.015a.104.104 0 00.122-.084l.015-.081a.483.483 0 01.565-.38l.327.063a.484.484 0 01.383.565l-.016.081a.103.103 0 00.08.123l.082.016a.481.481 0 01.381.564z"
+              fill="#65B5FF"
+            ></path>
+            <path
+              d="M4.618 16.043l.043.245a.36.36 0 01-.293.418l-.063.011a.078.078 0 00-.063.09l.01.061a.362.362 0 01-.295.419l-.245.042a.362.362 0 01-.418-.295l-.01-.061a.077.077 0 00-.06-.063.078.078 0 00-.03 0l-.062.01a.36.36 0 01-.368-.164.362.362 0 01-.05-.131l-.043-.245a.363.363 0 01.295-.419l.061-.01a.077.077 0 00.05-.032.078.078 0 00.014-.059l-.01-.06a.362.362 0 01.294-.418l.246-.043a.362.362 0 01.418.295l.01.06a.078.078 0 00.09.065l.063-.011a.36.36 0 01.416.295zM29.944 6.043l.043.245a.36.36 0 01-.293.418l-.062.011a.078.078 0 00-.064.09l.01.061a.362.362 0 01-.295.419l-.245.042a.363.363 0 01-.418-.295l-.01-.061a.079.079 0 00-.06-.063.078.078 0 00-.03 0l-.061.01a.363.363 0 01-.42-.295l-.042-.245a.363.363 0 01.296-.419l.06-.01a.078.078 0 00.064-.09l-.01-.061a.362.362 0 01.295-.419l.245-.042a.363.363 0 01.418.295l.01.06a.078.078 0 00.09.065l.064-.011a.36.36 0 01.415.295z"
+              fill="#91CAFF"
+            ></path>
+            <circle
+              cx="24.666"
+              cy="22"
+              r="4"
+              fill="#fff"
+              fillOpacity="0.75"
+            ></circle>
+          </svg>
 
-        <span>
-          Please verify your information and confirm your appointment booking.
-        </span>
-        <CloseCircleOutlined
-          style={{ position: "absolute", right: 18, fontSize: 20 }}
-        />
-      </div>
+          <span>
+            Please verify your information and confirm your appointment booking.
+          </span>
+          <CloseCircleOutlined
+            style={{ position: "absolute", right: 18, fontSize: 20 }}
+            onClick={() => setCloseInfor(false)}
+          />
+        </div>
+      )}
       <div className="appointment-content">
         <div className="appointment-left appointment-box">
           <div>
@@ -88,43 +156,31 @@ const Appointment = () => {
             <div className="appointment-left__infor">
               <div className="appointment-left__infor--box">
                 <Image
-                  src="https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/321425310_853450245775265_1754860979446746751_n.jpg?stp=cp0_dst-jpg_p40x40&_nc_cat=111&_nc_cb=99be929b-ddd1f5c1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=IrcJe2BCQ8AQ7kNvgH8VgzZ&_nc_ht=scontent.fdad1-3.fna&oh=00_AfCAJ0ROHNIUm9fitBsaFKgx9En4tnv1rTTNvOfr-qAc2A&oe=66305471"
+                  src={user?.avatar}
                   width={60}
                   className="appointment-left__infor--img"
+                  preview={false}
+                  fallback={errors}
                 />
                 <div className="appointment-left__infor--left">
                   <Typography
                     className="appointment-font"
                     style={{ fontSize: 16, fontWeight: 600 }}
                   >
-                    Nguyen Van A
-                  </Typography>
-                  <Typography
-                    className="appointment-font"
-                    style={{ fontSize: 14, fontWeight: 500, color: "#6c81a0" }}
-                  >
-                    Male
+                    {user?.name}
                   </Typography>
                 </div>
               </div>
 
               <Divider style={{ margin: "15px 0" }} />
-              <div className="appointment-left__infor--phone">
-                <PhoneOutlined style={{ fontSize: 19, color: "#6c81a0" }} />
-                <Typography
-                  className="appointment-font"
-                  style={{ fontSize: 16, fontWeight: 400, color: "#6c81a0" }}
-                >
-                  +84935350632
-                </Typography>
-              </div>
+
               <div className="appointment-left__infor--phone">
                 <MailOutlined style={{ fontSize: 19, color: "#6c81a0" }} />
                 <Typography
                   className="appointment-font"
                   style={{ fontSize: 16, fontWeight: 400, color: "#6c81a0" }}
                 >
-                  vanhuy2107@gmail.com
+                  {user?.email}
                 </Typography>
               </div>
             </div>
@@ -139,8 +195,22 @@ const Appointment = () => {
                 minRows: 2,
                 maxRows: 6,
               }}
+              onChange={(e) => {
+                setIsMess(false);
+                setInputIssue(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.keyCode === 32 && inputIssue.length === 0) {
+                  e.preventDefault();
+                }
+              }}
               className="textArea"
+              required
+              style={{ marginBottom: 10 }}
             />
+            {isMess && (
+              <span style={{ color: "red" }}>Please enter your issues</span>
+            )}
           </div>
         </div>
         <div className="appointment-right" style={{ border: 0 }}>
@@ -150,9 +220,10 @@ const Appointment = () => {
             </Typography>
             <div className="appointment-left__infor--box">
               <Image
-                src="https://cdn-healthcare.hellohealthgroup.com/2023/05/1684834987_646c8aab879aa9.52106579.jpg"
+                src={appointment?.doctor.avatar}
                 width={90}
                 className="appointment-left__infor--img"
+                fallback={errors}
               />
               <div
                 className="appointment-left__infor--left"
@@ -162,13 +233,13 @@ const Appointment = () => {
                   className="appointment-font"
                   style={{ fontSize: 20, fontWeight: 500, letterSpacing: 0.4 }}
                 >
-                  Dr.Nguyen Đuc Cong
+                  {appointment?.doctor.name}
                 </Typography>
                 <Typography
                   className="appointment-font"
                   style={{ fontSize: 15, fontWeight: 400, color: "#6c81a0" }}
                 >
-                  General medicine
+                  {appointment?.doctor.medicalSpecialty}
                 </Typography>
               </div>
             </div>
@@ -186,6 +257,7 @@ const Appointment = () => {
                     src={calender}
                     width={28}
                     className="appointment-right__content-icon"
+                    preview={false}
                   />
                   <div>
                     <Typography
@@ -196,7 +268,8 @@ const Appointment = () => {
                         letterSpacing: 0.4,
                       }}
                     >
-                      07:00 - 07:30 AM
+                      {appointment?.appointment.startTime} -{" "}
+                      {appointment?.appointment.endTime}
                     </Typography>
                     <Typography
                       className="appointment-font"
@@ -206,7 +279,7 @@ const Appointment = () => {
                         color: "#6c81a0",
                       }}
                     >
-                      Saturday, April 13th, 2024
+                      {formatDate(appointment?.appointment.date)}
                     </Typography>
                   </div>
                 </div>
@@ -215,6 +288,7 @@ const Appointment = () => {
                     src={location}
                     width={28}
                     className="appointment-right__content-icon"
+                    preview={false}
                   />
                   <div>
                     <Typography
@@ -235,8 +309,9 @@ const Appointment = () => {
                         color: "#6c81a0",
                       }}
                     >
-                      45 Thanh Thai Street, Ward 14, District 10, Ho Chi Minh
-                      City, Vietnam
+                      {appointment?.doctor.address
+                        ? appointment?.doctor.address
+                        : "--"}
                     </Typography>
                   </div>
                 </div>
@@ -245,6 +320,7 @@ const Appointment = () => {
                     src={dolar}
                     width={28}
                     className="appointment-right__content-icon"
+                    preview={false}
                   />
                   <div>
                     <Typography
@@ -256,7 +332,7 @@ const Appointment = () => {
                         color: "#D84023",
                       }}
                     >
-                      500$
+                      {appointment?.doctor.price.toLocaleString("vi-VN")} ₫
                     </Typography>
                   </div>
                 </div>
@@ -269,7 +345,10 @@ const Appointment = () => {
             <Typography className="appointment-left__title">
               Your appointment schedule
             </Typography>
-            <div className="appointment-right__box appointment-right__payment">
+            <div
+              className="appointment-right__box appointment-right__payment"
+              style={{ border: "1px solid rgb(45, 135, 243)" }}
+            >
               <div className="appointment-right__payment-left">
                 <Image
                   src={wallet}
@@ -280,10 +359,10 @@ const Appointment = () => {
                   className="appointment-font"
                   style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.4 }}
                 >
-                  Direct Payment
+                  Cash Payment
                 </Typography>
               </div>
-              <Radio />
+              <Radio checked />
             </div>
 
             <div
@@ -296,7 +375,9 @@ const Appointment = () => {
             >
               <Button
                 className="appointment-right__button"
-                onClick={() => navigate("/booking/success")}
+                onClick={() => handleBooking()}
+                loading={loading}
+                disabled={!inputIssue}
               >
                 Confirm
               </Button>

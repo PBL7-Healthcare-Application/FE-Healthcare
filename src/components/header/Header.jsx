@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import SignInBtn from "./SignInBtn";
 import { MenuOutlined } from "@ant-design/icons";
 import getToken from "../../helpers/getToken";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserProfile } from "../../stores/user/UserThunk";
 export const Header = () => {
   const { pathname } = useLocation();
   // eslint-disable-next-line no-unused-vars
@@ -16,12 +17,14 @@ export const Header = () => {
   const { user } = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+  const [token, setToken] = useState("");
+  const dispatch = useDispatch();
+  const { profile } = useSelector((state) => state.profile);
 
-  const token = getToken();
   const links = [
     {
       label: "Appointment",
-      href: "/b",
+      href: "/search/doctor",
     },
     {
       label: "Chatbot",
@@ -40,26 +43,40 @@ export const Header = () => {
   const handleMenuClick = () => {
     setOpenMenu(!openMenu);
   };
-
   useEffect(() => {
+
+    const token = getToken();
+    setToken(token);
+  }, [])
+  useEffect(() => {
+
     if (token) {
       setIsLogin(true);
+      dispatch(getUserProfile());
     }
+
+
+    return () => { };
+  }, [token, dispatch]);
+  useEffect(() => {
     if (user === null) {
-      setIsLogin(false);
+
+      const token = getToken();
+      if (!token) {
+        setIsLogin(false);
+      }
     }
-    return () => {};
-  }, [token, user]);
+  }, [user])
+
   const navItems = links.map((item, index) => {
     return (
       <div key={index} className="nav__item ">
         <Link
-          className={`nav__item-content ${
-            pathname.split("/").filter(Boolean)[0] ===
+          className={`nav__item-content ${pathname.split("/").filter(Boolean)[0] ===
             item.href.split("/").filter(Boolean)[0]
-              ? "active"
-              : ""
-          } `}
+            ? "active"
+            : ""
+            } `}
           to={item.href}
         >
           {item.label}
@@ -99,7 +116,7 @@ export const Header = () => {
         ></Image>
       </Space>
       <Space className="nav">{navItems}</Space>
-      {isLogin ? <Avt /> : <SignInBtn />}
+      {isLogin ? <Avt profile={profile} /> : <SignInBtn />}
     </Space>
   );
 };

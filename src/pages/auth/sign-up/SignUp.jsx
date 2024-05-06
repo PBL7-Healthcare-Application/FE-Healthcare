@@ -19,16 +19,15 @@ const SignUp = () => {
   const { user, error } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    console.log(`SignUp::`, user);
     if (user) {
-      localStorage.setItem("profile", JSON.stringify(user));
+
       navigate("/auth/verify");
     }
     if (error) {
       openNotificationWithIcon("error", api, "Sign Up Error", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
   const onFinish = (values) => {
     dispatch(signUpUser(values));

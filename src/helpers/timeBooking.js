@@ -136,3 +136,15 @@ export const countTime = (arr, type) => {
     return count;
   }
 };
+
+export const formatDate = (gmtDateString) => {
+  const data = new Date(gmtDateString);
+  const options = {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  };
+  const convertDate = data.toLocaleDateString("en-US", options);
+  return convertDate;
+};

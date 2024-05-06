@@ -52,6 +52,7 @@ const authSlice = createSlice({
           return;
         }
         state.user = action.payload.data;
+        localStorage.setItem("profile", JSON.stringify(action.payload.data));
       })
       .addCase(signUpUser.rejected, (state, action) => {
         state.loading = false;

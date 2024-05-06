@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getDoctorDetail, getSearchResult } from "./SearchThunk";
+import { convertToInt, doctorSchedule } from "../../helpers/timeBooking";
+
 
 const searchSlice = createSlice({
   name: "search",
@@ -8,6 +10,7 @@ const searchSlice = createSlice({
     isTimeSelected: null,
     keyword: null,
     id_Specialty: null,
+    schedule: [],
     searchResult: [],
     doctorDetail: null,
     error: null,
@@ -20,12 +23,14 @@ const searchSlice = createSlice({
     setIsTimeSelected: (state, action) => {
       state.isTimeSelected = action.payload;
     },
-    setKeyword: (state, action) => {
-      state.keyword = action.payload;
+    setSearch: (state, action) => {
+      state.keyword = action.payload.keyword;
+      state.id_Specialty = action.payload.id;
     },
     setIdSpecialty: (state, action) => {
-      state.id_Specialty = action.payload;
-    },
+      state.id_Specialty = action.payload.id;
+    }
+
   },
   extraReducers: (builder) => {
     builder
@@ -34,6 +39,7 @@ const searchSlice = createSlice({
         state.error = null;
       })
       .addCase(getSearchResult.fulfilled, (state, action) => {
+
         state.loading = false;
         state.searchResult = action.payload.data;
       })
@@ -50,13 +56,25 @@ const searchSlice = createSlice({
       .addCase(getDoctorDetail.fulfilled, (state, action) => {
         state.loading = false;
         state.doctorDetail = action.payload.data;
+        const timeOff = action.payload.data?.timeOffs.filter((item) => item.status !== 2);
+        const timeBreak = action.payload.data?.timeOffs.filter((item) => item.status !== 1);
+        state.schedule = doctorSchedule(
+          convertToInt(action.payload.data?.workingTimeStart),
+          convertToInt(action.payload.data?.workingTimeEnd),
+          60,
+          timeOff,
+          timeBreak
+        ).map(item => ({
+          ...item,
+          date: item.date.toString(), // Convert date to ISO string
+        }));
       })
       .addCase(getDoctorDetail.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.detail;
+        state.error = action.payload;
       });
   },
 });
 
 export default searchSlice.reducer;
-export const { setIsSelected, setIsTimeSelected } = searchSlice.actions;
+export const { setIsSelected, setIsTimeSelected, setSearch, setIdSpecialty } = searchSlice.actions;
