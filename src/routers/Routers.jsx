@@ -11,6 +11,8 @@ import SuccessBooking from "../pages/appointment/successBooking/SuccessBooking";
 import ProfilePage from "../layouts/Profile/ProfilePage";
 import Profile from "../pages/user/Profile/Profile";
 import MyAppointment from "../pages/user/MyAppointment/MyAppointment";
+import Authenticate from "../guards/auth/Authenticate";
+import Partner from "../pages/partner/Partner";
 
 const routers = createBrowserRouter([
   {
@@ -44,7 +46,11 @@ const routers = createBrowserRouter([
       },
       {
         path: "user/",
-        element: <ProfilePage />,
+        element: (
+          <Authenticate>
+            <ProfilePage />
+          </Authenticate>
+        ),
         children: [
           {
             path: "profile",
@@ -65,9 +71,13 @@ const routers = createBrowserRouter([
           {
             path: "disable-account",
             element: <Profile />,
-          }
+          },
         ],
-      }
+      },
+      {
+        path: "partner",
+        element: <Partner />,
+      },
     ],
   },
   {

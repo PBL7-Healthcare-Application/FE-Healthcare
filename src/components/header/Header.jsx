@@ -37,46 +37,43 @@ export const Header = () => {
     },
     {
       label: "For Partners",
-      href: "/c",
+      href: "/partner",
     },
   ];
   const handleMenuClick = () => {
     setOpenMenu(!openMenu);
   };
   useEffect(() => {
-
     const token = getToken();
     setToken(token);
-  }, [])
+  }, []);
   useEffect(() => {
-
     if (token) {
       setIsLogin(true);
       dispatch(getUserProfile());
     }
 
-
-    return () => { };
+    return () => {};
   }, [token, dispatch]);
   useEffect(() => {
     if (user === null) {
-
       const token = getToken();
       if (!token) {
         setIsLogin(false);
       }
     }
-  }, [user])
+  }, [user]);
 
   const navItems = links.map((item, index) => {
     return (
       <div key={index} className="nav__item ">
         <Link
-          className={`nav__item-content ${pathname.split("/").filter(Boolean)[0] ===
+          className={`nav__item-content ${
+            pathname.split("/").filter(Boolean)[0] ===
             item.href.split("/").filter(Boolean)[0]
-            ? "active"
-            : ""
-            } `}
+              ? "active"
+              : ""
+          } `}
           to={item.href}
         >
           {item.label}

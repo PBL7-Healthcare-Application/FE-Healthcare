@@ -1,0 +1,138 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.partner {
+  width: 100%;
+  padding: 60px 20px;
+  &-main {
+    @media (min-width: 1024px) {
+      max-width: 1170px;
+    }
+
+    margin: 0px auto;
+  }
+  &-content1 {
+    display: flex;
+    gap: 40px;
+    flex-direction: row;
+    &__left {
+      flex: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      &-button {
+        height: 48px;
+        padding: 0 36px;
+        background-color: $background-primary;
+        color: #fff;
+        font-family: $font-main;
+        font-weight: 600;
+      }
+    }
+    &__right {
+      flex: 5;
+      max-width: 700px;
+      &-img {
+        width: 680px;
+        aspect-ratio: auto 680 / 420;
+        height: 420px;
+      }
+      //   max-height: 500px;
+    }
+  }
+  &-content2 {
+    width: 100%;
+    margin-top: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &__benefit {
+      display: flex;
+      flex-direction: row;
+      //   justify-content: center;
+      //   align-items: center;
+      width: 100%;
+      gap: 60px;
+      @media (max-width: 1018px) {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+    &__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      &-textMain {
+        font-family: $font-main;
+        font-size: 14px;
+        font-weight: 600;
+        color: $text-color;
+        text-align: center;
+      }
+      &-text {
+        font-family: $font-main;
+        font-size: 13px;
+        font-weight: 400;
+        color: #000;
+        text-align: center;
+      }
+    }
+  }
+  &-content3 {
+    width: 100%;
+    margin-top: 120px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    &__left {
+      flex: 4;
+      height: fit-content;
+      &-textArea {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      &-text {
+        font-family: $font-main;
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 38px;
+      }
+      &-content {
+        margin-top: 40px;
+        display: flex;
+        gap: 20px;
+        flex-direction: column;
+        &__item {
+          display: flex;
+          flex-direction: row;
+          gap: 20px;
+          align-items: center;
+        }
+        &__step {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        &__text {
+          font-family: $font-main;
+          font-size: 13px;
+          font-weight: 600;
+          color: #000;
+        }
+      }
+    }
+    &__right {
+      flex: 6;
+    }
+  }
+  &-font {
+    font-family: $font-main;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 57px;
+    color: $text-color;
+  }
+}
