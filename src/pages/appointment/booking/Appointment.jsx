@@ -13,6 +13,7 @@ import { bookAppointment } from "../../../stores/user/UserThunk";
 import { formatDate } from "../../../helpers/timeBooking";
 import { delay } from "lodash";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
+import errors from "../../../assets/images/error.png";
 const Appointment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,26 +49,34 @@ const Appointment = () => {
       );
       setIsMess(false);
       localStorage.removeItem("appointment");
-
     } else {
       setIsMess(true);
     }
   };
   useEffect(() => {
     if (statusCode === 200) {
-      openNotificationWithIcon("success", api, "", "Successfully scheduled a medical examination!");
+      openNotificationWithIcon(
+        "success",
+        api,
+        "",
+        "Successfully scheduled a medical examination!"
+      );
       delay(() => {
         navigate("/booking/success");
-      }, 1500)
+      }, 1500);
     }
     if (error) {
-      openNotificationWithIcon("error", api, "", "Unsuccessfully scheduled a medical examination!");
+      openNotificationWithIcon(
+        "error",
+        api,
+        "",
+        "Unsuccessfully scheduled a medical examination!"
+      );
       delay(() => {
         navigate("/");
-      }, 1500)
+      }, 1500);
     }
-  },
-    [statusCode, navigate, api])
+  }, [statusCode, navigate, api]);
   return (
     <div className="appointment-main">
       {contextHolder}
@@ -147,10 +156,11 @@ const Appointment = () => {
             <div className="appointment-left__infor">
               <div className="appointment-left__infor--box">
                 <Image
-                  src="https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/321425310_853450245775265_1754860979446746751_n.jpg?stp=cp0_dst-jpg_p40x40&_nc_cat=111&_nc_cb=99be929b-ddd1f5c1&ccb=1-7&_nc_sid=5f2048&_nc_ohc=IrcJe2BCQ8AQ7kNvgH8VgzZ&_nc_ht=scontent.fdad1-3.fna&oh=00_AfCAJ0ROHNIUm9fitBsaFKgx9En4tnv1rTTNvOfr-qAc2A&oe=66305471"
+                  src={user?.avatar}
                   width={60}
                   className="appointment-left__infor--img"
                   preview={false}
+                  fallback={errors}
                 />
                 <div className="appointment-left__infor--left">
                   <Typography
@@ -210,9 +220,10 @@ const Appointment = () => {
             </Typography>
             <div className="appointment-left__infor--box">
               <Image
-                src="https://cdn-healthcare.hellohealthgroup.com/2023/05/1684834987_646c8aab879aa9.52106579.jpg"
+                src={appointment?.doctor.avatar}
                 width={90}
                 className="appointment-left__infor--img"
+                fallback={errors}
               />
               <div
                 className="appointment-left__infor--left"
@@ -298,7 +309,9 @@ const Appointment = () => {
                         color: "#6c81a0",
                       }}
                     >
-                      {appointment?.doctor.address}
+                      {appointment?.doctor.address
+                        ? appointment?.doctor.address
+                        : "--"}
                     </Typography>
                   </div>
                 </div>
@@ -319,7 +332,7 @@ const Appointment = () => {
                         color: "#D84023",
                       }}
                     >
-                      {appointment?.doctor.price.toLocaleString('vi-VN')} ₫
+                      {appointment?.doctor.price.toLocaleString("vi-VN")} ₫
                     </Typography>
                   </div>
                 </div>

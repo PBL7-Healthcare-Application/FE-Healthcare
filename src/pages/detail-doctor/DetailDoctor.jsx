@@ -1,5 +1,13 @@
 /* eslint-disable react/prop-types */
-import { Button, Image, Radio, Space, Tabs, Typography, notification } from "antd";
+import {
+  Button,
+  Image,
+  Radio,
+  Space,
+  Tabs,
+  Typography,
+  notification,
+} from "antd";
 import "./DetailDoctor.scss";
 import { StarFilled } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,6 +33,7 @@ import { useEffect, useState } from "react";
 import getToken from "../../helpers/getToken";
 import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
 import { delay } from "lodash";
+import error from "../../assets/images/error.png";
 const DetailDoctor = () => {
   const { doctorDetail, schedule } = useSelector((state) => state.search);
   const [times, setTimes] = useState(schedule[0]?.times);
@@ -94,30 +103,31 @@ const DetailDoctor = () => {
         date: utcDate,
         startTime: chooseTime?.startTime,
         endTime: chooseTime?.endTime,
-        type: chooseType
+        type: chooseType,
       },
     };
 
-    localStorage.setItem(
-      "appointment",
-      JSON.stringify(appointment)
-    );
+    localStorage.setItem("appointment", JSON.stringify(appointment));
     if (token) {
       dispatch(setIsTimeSelected(null));
       navigate("/booking/doctor");
-    }
-    else {
-      openNotificationWithIcon("warning", api, "", "Please sign in to continue!");
+    } else {
+      openNotificationWithIcon(
+        "warning",
+        api,
+        "",
+        "Please sign in to continue!"
+      );
       delay(() => {
         navigate("/auth/sign-in");
-      }, 1500)
+      }, 1500);
     }
-  }
+  };
 
   useEffect(() => {
     dispatch(setIsTimeSelected(null));
-    setTimes(schedule[0]?.times)
-    setChooseDate(schedule[0]?.date)
+    setTimes(schedule[0]?.times);
+    setChooseDate(schedule[0]?.date);
   }, [schedule, dispatch]);
 
   const { TabPane } = Tabs;
@@ -128,10 +138,11 @@ const DetailDoctor = () => {
         <div className="detailDr-content__left">
           <div className="detailDr-content__left-profile">
             <Image
-              src="https://cdn-healthcare.hellohealthgroup.com/2023/05/1684834987_646c8aab879aa9.52106579.jpg"
+              src={doctorDetail?.avatar}
               width={150}
               style={{ borderRadius: 6 }}
               preview={false}
+              fallback={error}
             />
             <div className="detailDr-content__left-profile--infor">
               <div>
@@ -411,7 +422,11 @@ const DetailDoctor = () => {
               Choose the type of appointment
             </Typography>
 
-            <Radio.Group style={{ width: "100%" }} value={chooseType} onChange={(e) => setChooseType(e.target.value)}>
+            <Radio.Group
+              style={{ width: "100%" }}
+              value={chooseType}
+              onChange={(e) => setChooseType(e.target.value)}
+            >
               <div className="detailDr-content__right-appointment--box">
                 <div className="detailDr-content__right-appointment--box__type">
                   <div className="detailDr-content__right-appointment--box__type-item">
