@@ -33,7 +33,7 @@ import { useEffect, useState } from "react";
 import getToken from "../../helpers/getToken";
 import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
 import { delay } from "lodash";
-import error from "../../assets/images/error.png";
+import doctorDefault from "../../assets/images/doctor.jpeg";
 const DetailDoctor = () => {
   const { doctorDetail, schedule } = useSelector((state) => state.search);
   const [times, setTimes] = useState(schedule[0]?.times);
@@ -98,6 +98,7 @@ const DetailDoctor = () => {
         price: doctorDetail?.price,
         avatar: doctorDetail?.avatar,
         address: doctorDetail?.address,
+        nameClinic: doctorDetail?.nameClinic,
       },
       appointment: {
         date: utcDate,
@@ -142,7 +143,7 @@ const DetailDoctor = () => {
               width={150}
               style={{ borderRadius: 6 }}
               preview={false}
-              fallback={error}
+              fallback={doctorDefault}
             />
             <div className="detailDr-content__left-profile--infor">
               <div>

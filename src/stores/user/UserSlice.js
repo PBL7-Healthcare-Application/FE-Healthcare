@@ -10,7 +10,14 @@ const profileSlice = createSlice({
     statusCode: null,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setStatusCode: (state, action) => {
+      state.statusCode = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getUserProfile.pending, (state) => {
@@ -49,3 +56,4 @@ const profileSlice = createSlice({
   },
 });
 export default profileSlice.reducer;
+export const { setStatusCode, setError } = profileSlice.actions;

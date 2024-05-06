@@ -13,7 +13,9 @@ import { bookAppointment } from "../../../stores/user/UserThunk";
 import { formatDate } from "../../../helpers/timeBooking";
 import { delay } from "lodash";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
-import errors from "../../../assets/images/error.png";
+import doctorDefault from "../../../assets/images/doctor.jpeg";
+import personDefault from "../../../assets/images/personDefault.png";
+import { setError, setStatusCode } from "../../../stores/user/UserSlice";
 const Appointment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -62,10 +64,12 @@ const Appointment = () => {
         "Successfully scheduled a medical examination!"
       );
       delay(() => {
+        dispatch(setStatusCode(null));
         navigate("/booking/success");
+
       }, 1500);
     }
-    if (error) {
+    if (error !== null) {
       openNotificationWithIcon(
         "error",
         api,
@@ -73,10 +77,11 @@ const Appointment = () => {
         "Unsuccessfully scheduled a medical examination!"
       );
       delay(() => {
+        dispatch(setError(null));
         navigate("/");
       }, 1500);
     }
-  }, [statusCode, navigate, api]);
+  }, [statusCode, navigate, api, error, dispatch]);
   return (
     <div className="appointment-main">
       {contextHolder}
@@ -160,7 +165,7 @@ const Appointment = () => {
                   width={60}
                   className="appointment-left__infor--img"
                   preview={false}
-                  fallback={errors}
+                  fallback={personDefault}
                 />
                 <div className="appointment-left__infor--left">
                   <Typography
@@ -223,7 +228,7 @@ const Appointment = () => {
                 src={appointment?.doctor.avatar}
                 width={90}
                 className="appointment-left__infor--img"
-                fallback={errors}
+                fallback={doctorDefault}
               />
               <div
                 className="appointment-left__infor--left"
@@ -299,7 +304,7 @@ const Appointment = () => {
                         letterSpacing: 0.4,
                       }}
                     >
-                      Saigon Healthcare General Clinic
+                      {appointment?.doctor.nameClinic}
                     </Typography>
                     <Typography
                       className="appointment-font"
