@@ -1,4 +1,15 @@
-import { Button, Card, Form, Image, Input, InputNumber, Select, Typography, Upload } from "antd";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Form,
+  Image,
+  Input,
+  InputNumber,
+  Select,
+  Typography,
+  Upload,
+} from "antd";
 import partner1 from "../../assets/images/partner1.webp";
 import error from "../../assets/images/error.png";
 import benefit_1 from "../../assets/images/benefit_1.webp";
@@ -10,11 +21,10 @@ import step_2 from "../../assets/images/step_2.webp";
 import "./Partner.scss";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 
-
 const Partner = () => {
   const { Option } = Select;
   const normFile = (e) => {
-    console.log('Upload event:', e);
+    console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -28,7 +38,6 @@ const Partner = () => {
         }}
       >
         <Option value="84">+84</Option>
-
       </Select>
     </Form.Item>
   );
@@ -173,8 +182,24 @@ const Partner = () => {
               </div>
             </div>
           </div>
-          <div className="partner-content3__right" >
-            <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}> <span className="partner-content3__left-text" style={{ fontSize: 20 }} id="form">Register as Collaborator</span></div>
+          <div className="partner-content3__right">
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {" "}
+              <span
+                className="partner-content3__left-text"
+                style={{ fontSize: 20 }}
+                id="form"
+              >
+                Register as Collaborator
+              </span>
+            </div>
             <div style={{ marginTop: 20 }}>
               <Form
                 name="normal_login"
@@ -182,11 +207,9 @@ const Partner = () => {
                 initialValues={{
                   remember: true,
                   items: [{}],
-
                 }}
                 layout="vertical"
-                style={{ width: '100%' }}
-
+                style={{ width: "100%" }}
               >
                 <Form.Item
                   style={{
@@ -199,18 +222,18 @@ const Partner = () => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your phone number!',
+                        message: "Please input your phone number!",
                       },
                     ]}
                     style={{
-                      display: 'inline-block',
-                      width: 'calc(50% - 8px)',
+                      display: "inline-block",
+                      width: "calc(50% - 8px)",
                     }}
                   >
                     <Input
                       addonBefore={prefixSelector}
                       style={{
-                        width: '100%',
+                        width: "100%",
                       }}
                     />
                   </Form.Item>
@@ -223,23 +246,30 @@ const Partner = () => {
                       },
                     ]}
                     style={{
-                      display: 'inline-block',
-                      width: 'calc(50% - 8px)',
-                      margin: '0 8px',
+                      display: "inline-block",
+                      width: "calc(50% - 8px)",
+                      margin: "0 8px",
                     }}
                   >
-                    <InputNumber min={0} defaultValue={0} style={{ width: '100%' }} />
+                    <InputNumber
+                      min={0}
+                      defaultValue={0}
+                      style={{ width: "100%" }}
+                    />
                   </Form.Item>
                 </Form.Item>
                 <Form.Item
                   style={{
                     marginBottom: 0,
-                  }}>
-                  <Form.Item label="Specialty"
+                  }}
+                >
+                  <Form.Item
+                    label="Specialty"
                     style={{
-                      display: 'inline-block',
-                      width: 'calc(50% - 8px)',
-                    }}>
+                      display: "inline-block",
+                      width: "calc(50% - 8px)",
+                    }}
+                  >
                     <Select>
                       <Select.Option value="demo">Demo</Select.Option>
                     </Select>
@@ -248,12 +278,16 @@ const Partner = () => {
                     name="price"
                     label="Price"
                     style={{
-                      display: 'inline-block',
-                      width: 'calc(50% - 8px)',
-                      margin: '0 8px',
+                      display: "inline-block",
+                      width: "calc(50% - 8px)",
+                      margin: "0 8px",
                     }}
                   >
-                    <InputNumber min={0} defaultValue={0} style={{ width: '100%' }} />
+                    <InputNumber
+                      min={0}
+                      defaultValue={0}
+                      style={{ width: "100%" }}
+                    />
                   </Form.Item>
                 </Form.Item>
                 <Form.Item
@@ -279,14 +313,16 @@ const Partner = () => {
                 </Form.Item>
 
                 {/* ===== */}
-                <Typography style={{ marginBottom: 10 }}>Certificates</Typography>
+                <Typography style={{ marginBottom: 10 }}>
+                  Certificates
+                </Typography>
                 <Form.List name="items" label="Certificates">
                   {(fields, { add, remove }) => (
                     <div
                       style={{
-                        display: 'flex',
+                        display: "flex",
                         rowGap: 16,
-                        flexDirection: 'column',
+                        flexDirection: "column",
                       }}
                     >
                       {fields.map((field) => (
@@ -305,24 +341,30 @@ const Partner = () => {
                           <Form.Item
                             style={{
                               marginBottom: 0,
-                            }}>
-                            <Form.Item label="Certificate"
+                            }}
+                          >
+                            <Form.Item
+                              label="Certificate"
                               style={{
-                                display: 'inline-block',
-                                width: 'calc(50% - 8px)',
-                              }}>
+                                display: "inline-block",
+                                width: "calc(50% - 8px)",
+                              }}
+                            >
                               <Input />
                             </Form.Item>
                             <Form.Item
                               name="price"
                               label="Year"
                               style={{
-                                display: 'inline-block',
-                                width: 'calc(50% - 8px)',
-                                margin: '0 8px',
+                                display: "inline-block",
+                                width: "calc(50% - 8px)",
+                                margin: "0 8px",
                               }}
                             >
-                              <InputNumber min={0} defaultValue={0} style={{ width: '100%' }} />
+                              <DatePicker
+                                picker="year"
+                                style={{ width: "100%" }}
+                              />
                             </Form.Item>
                           </Form.Item>
                           <Form.Item
@@ -330,8 +372,14 @@ const Partner = () => {
                             valuePropName="fileList"
                             getValueFromEvent={normFile}
                           >
-                            <Upload name="logo" action="/upload.do" listType="picture">
-                              <Button icon={<UploadOutlined />}>Click to upload</Button>
+                            <Upload
+                              name="logo"
+                              action="/upload.do"
+                              listType="picture"
+                            >
+                              <Button icon={<UploadOutlined />}>
+                                Click to upload
+                              </Button>
                             </Upload>
                           </Form.Item>
                         </Card>

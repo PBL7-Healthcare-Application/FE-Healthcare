@@ -13,6 +13,7 @@ import Profile from "../pages/user/Profile/Profile";
 import MyAppointment from "../pages/user/MyAppointment/MyAppointment";
 import Authenticate from "../guards/auth/Authenticate";
 import Partner from "../pages/partner/Partner";
+import ChangePassword from "../pages/user/ChangePass/ChangePassword";
 
 const routers = createBrowserRouter([
   {
@@ -66,7 +67,7 @@ const routers = createBrowserRouter([
           },
           {
             path: "password",
-            element: <Profile />,
+            element: <ChangePassword />,
           },
           {
             path: "disable-account",

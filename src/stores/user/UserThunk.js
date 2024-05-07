@@ -1,5 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { booking, getProfile } from "../../api/user.api";
+import {
+  booking,
+  changePassword,
+  getAppointment,
+  getProfile,
+  updateProfile,
+} from "../../api/user.api";
 
 export const getUserProfile = createAsyncThunk(
   "user/getUserProfile",
@@ -17,6 +23,41 @@ export const bookAppointment = createAsyncThunk(
   async (userData, thunkApi) => {
     try {
       const response = await booking(userData);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const updateUserProfile = createAsyncThunk(
+  "user/updateUserProfile",
+  async (userData, thunkApi) => {
+    try {
+      const response = await updateProfile(userData);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const getUserAppointment = createAsyncThunk(
+  "user/getUserAppointment",
+  async (type, thunkApi) => {
+    try {
+      const response = await getAppointment(type);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const changeUserPassword = createAsyncThunk(
+  "user/changeUserPassword",
+  async (data, thunkApi) => {
+    try {
+      const response = await changePassword(data);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);
