@@ -11,8 +11,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getDoctorDetail } from "../../../stores/search-doctor/SearchThunk";
 import { setIsSelected } from "../../../stores/search-doctor/SearchSlice";
-import error from "../../../assets/images/error.png";
 
+import doctorDefault from "../../../assets/images/doctor.jpeg";
 // eslint-disable-next-line react/prop-types
 const CardResult = ({ doctor }) => {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const CardResult = ({ doctor }) => {
           src={doctor?.avatar}
           className="result-first__img"
           preview={false}
-          fallback={error}
+          fallback={doctorDefault}
         />
         <Space className="result-first__title">
           <Typography className="result-first__title-text">
@@ -52,7 +52,7 @@ const CardResult = ({ doctor }) => {
           <Space className="result-second__address">
             <EnvironmentOutlined className="result-second__address-icon" />
             <Typography className="result-second__specialty">
-              {doctor?.address}
+              {doctor?.address ? doctor?.address : "--"}
             </Typography>
           </Space>
           <Space className="result-second__address">

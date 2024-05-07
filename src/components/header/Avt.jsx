@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
 import { useState } from "react";
+import personDefault from "../../assets/images/personDefault.png";
 
 const Avt = (props) => {
   const dispatch = useDispatch();
@@ -58,10 +59,11 @@ const Avt = (props) => {
                 setvisible(!visible)
               }}>
                 <Image
-                  src="https://scontent.fdad5-1.fna.fbcdn.net/v/t39.30808-1/321425310_853450245775265_1754860979446746751_n.jpg?stp=dst-jpg_p200x200&_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_ohc=p9CaGGhPmjIQ7kNvgGpnMd2&_nc_ht=scontent.fdad5-1.fna&oh=00_AfABUj82UUSvq5B3syT5sfU2-Zv3RLg62_U-2127BPezXw&oe=663529F1"
+                  src={props?.profile?.avatar}
                   width={70}
                   className="avt-popover__img avt-pointer"
                   preview={false}
+                  fallback={personDefault}
                 />
                 <div
                   style={{ display: "flex", gap: 15, flexDirection: "column" }}
@@ -83,13 +85,13 @@ const Avt = (props) => {
               </Space>
               <div className="avt-popover__box" style={{ marginTop: 20 }}>
                 <Space className="avt-popover__box--item">
-                  <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" />
+                  <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" preview={false} />
                   <Typography className="avt-font" style={{ fontSize: 15 }}>
                     My Appointment
                   </Typography>
                 </Space>
                 <Space className="avt-popover__box--item">
-                  <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" />
+                  <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" preview={false} />
                   <Typography className="avt-font" style={{ fontSize: 15 }}>
                     My Appointment
                   </Typography>

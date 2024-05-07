@@ -2,7 +2,8 @@ import { Button, Image, Typography } from "antd";
 import location from "../../../assets/images/location.png";
 import calender from "../../../assets/images/calandar.png";
 import dolar from "../../../assets/images/dollar.png";
-import error from "../../../assets/images/error.png";
+import doctorDefault from "../../../assets/images/doctor.jpeg";
+import personDefault from "../../../assets/images/personDefault.png";
 import "./SuccessBooking.scss";
 import { useSelector } from "react-redux";
 import { formatDate } from "../../../helpers/timeBooking";
@@ -30,10 +31,10 @@ const SuccessBooking = () => {
         >
           <div className="appointment-left__infor--box">
             <Image
-              src={appointment?.avatar_Doctor}
+              src={appointment?.avatarDoctor}
               width={90}
               className="appointment-left__infor--img"
-              fallback={error}
+              fallback={doctorDefault}
               preview={false}
             />
             <div
@@ -44,13 +45,13 @@ const SuccessBooking = () => {
                 className="appointment-font"
                 style={{ fontSize: 20, fontWeight: 500, letterSpacing: 0.4 }}
               >
-                {appointment?.name}
+                {appointment?.nameDoctor}
               </Typography>
               <Typography
                 className="appointment-font"
                 style={{ fontSize: 15, fontWeight: 400, color: "#6c81a0" }}
               >
-                General medicine
+                {appointment?.nameMedicalSpecialty}
               </Typography>
             </div>
           </div>
@@ -109,7 +110,7 @@ const SuccessBooking = () => {
                       letterSpacing: 0.4,
                     }}
                   >
-                    Saigon Healthcare General Clinic
+                    {appointment?.nameClinic ? appointment?.nameClinic : "--"}
                   </Typography>
                   <Typography
                     className="appointment-font"
@@ -157,10 +158,10 @@ const SuccessBooking = () => {
             </Typography>
             <div className="appointment-right__box successBooking-service">
               <Image
-                src={appointment?.avatar_User}
+                src={appointment?.avatarUser}
                 width={60}
                 style={{ borderRadius: "50%" }}
-                fallback={error}
+                fallback={personDefault}
                 preview={false}
               />
               <div>
@@ -172,7 +173,7 @@ const SuccessBooking = () => {
                     letterSpacing: 0.4,
                   }}
                 >
-                  {appointment?.name_User}
+                  {appointment?.nameUser}
                 </Typography>
                 <Typography
                   className="appointment-font"
@@ -182,7 +183,7 @@ const SuccessBooking = () => {
                     color: "#6c81a0",
                   }}
                 >
-                  nguyenhoc0721@gmail.com
+                  {appointment?.emailUser}
                 </Typography>
               </div>
             </div>
