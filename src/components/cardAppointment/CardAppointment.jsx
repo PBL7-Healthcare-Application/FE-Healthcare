@@ -119,7 +119,7 @@ const CardAppointment = ({ appointment, type }) => {
                 letterSpacing: 0.4,
               }}
             >
-              Saigon Healthcare General Clinic
+              {appointment?.nameClinic}
             </Typography>
             <Typography
               className="appointment-font"
@@ -129,7 +129,7 @@ const CardAppointment = ({ appointment, type }) => {
                 color: "#6c81a0",
               }}
             >
-              7B/31 Thành Thái, phường 14, Quận 10, Ho Chi Minh City, Vietnam
+              {appointment?.address ? appointment?.address : "--"}
             </Typography>
           </div>
         </div>
@@ -149,7 +149,7 @@ const CardAppointment = ({ appointment, type }) => {
                 letterSpacing: 0.4,
               }}
             >
-              600.000 ₫
+              {appointment?.price.toLocaleString('vi-VN')} ₫
             </Typography>
           </div>
         </div>

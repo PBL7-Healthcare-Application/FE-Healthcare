@@ -65,7 +65,6 @@ const Profile = () => {
         return;
       }
     }
-    profiles.gender = profiles.gender === 1 ? true : false;
     dispatch(updateUserProfile(profiles));
     setIsEdit(!isEdit);
   };
@@ -95,6 +94,7 @@ const Profile = () => {
               width={110}
               className="profile-header__img"
               fallback={personDefaults}
+              preview={false}
             />
             <div className="profile-header__info">
               <span className="profile-header__font">{profiles?.name}</span>
@@ -124,9 +124,8 @@ const Profile = () => {
               Name
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -143,9 +142,8 @@ const Profile = () => {
               Date Of Birth
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-radio-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
+                }`}
             >
               {!isEdit ? (
                 <input
@@ -160,7 +158,7 @@ const Profile = () => {
                   onChange={(date, dateString) =>
                     handleChange({ name: "dob", value: dateString })
                   }
-                  value={dayjs(new Date(profile?.dob))}
+                  value={dayjs(new Date(profiles?.dob))}
                 />
               )}
             </div>
@@ -173,9 +171,8 @@ const Profile = () => {
               Gender
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-radio-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
+                }`}
             >
               {!isEdit ? (
                 <input
@@ -192,16 +189,15 @@ const Profile = () => {
               ) : (
                 <Radio.Group
                   value={
-                    profiles?.gender ? (profiles?.gender === true ? 1 : 0) : ""
-                  }
+                    profiles?.gender}
                   onChange={(e) =>
                     handleChange({ name: "gender", value: e.target.value })
                   }
                 >
-                  <Radio value={1} className="profile-radio">
+                  <Radio value={true} className="profile-radio">
                     Male
                   </Radio>
-                  <Radio value={2} className="profile-radio">
+                  <Radio value={false} className="profile-radio">
                     Female
                   </Radio>
                 </Radio.Group>
@@ -216,9 +212,8 @@ const Profile = () => {
               Address
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -237,9 +232,8 @@ const Profile = () => {
               Phone Number
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -248,8 +242,8 @@ const Profile = () => {
                   profiles?.phoneNumber
                     ? profiles?.phoneNumber
                     : isEdit
-                    ? ""
-                    : "--"
+                      ? ""
+                      : "--"
                 }
                 onChange={(e) =>
                   handleChange({ name: "phoneNumber", value: e.target.value })

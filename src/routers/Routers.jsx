@@ -14,6 +14,7 @@ import MyAppointment from "../pages/user/MyAppointment/MyAppointment";
 import Authenticate from "../guards/auth/Authenticate";
 import Partner from "../pages/partner/Partner";
 import ChangePassword from "../pages/user/ChangePass/ChangePassword";
+import Schedule from "../pages/doctor/Schedule/Schedule";
 
 const routers = createBrowserRouter([
   {
@@ -98,6 +99,15 @@ const routers = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/dr.Enclinic",
+    children: [
+      {
+        path: "schedule",
+        element: <Schedule />,
+      }
+    ]
+  }
 ]);
 
 export default routers;
