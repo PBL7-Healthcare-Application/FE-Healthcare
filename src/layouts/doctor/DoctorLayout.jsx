@@ -1,5 +1,5 @@
 import { LogoutOutlined } from "@ant-design/icons";
-import { Image, Layout, Menu, theme } from "antd";
+import { Image, Layout, Menu } from "antd";
 import "./DoctorLayout.scss";
 import title from "../../assets/images/title.png";
 import logo from "../../assets/images/logo.png";
@@ -40,9 +40,9 @@ const DoctorLayout = () => {
               label: "Appointment",
             },
             {
-              key: "/schedule",
+              key: "/calendar",
               icon: <FaRegCalendarAlt size={25} color="#b5bad4" />,
-              label: "Scheduled",
+              label: "Calendar",
             },
             {
               key: "/setting",
@@ -57,7 +57,7 @@ const DoctorLayout = () => {
           <span className="sidebar__logout__text">Sign Out</span>
         </div>
       </Sider>
-      <Layout>
+      <Layout style={{ backgroundColor: "#f1f5f9" }}>
         <Header className="customSlider__header">
           {isLogin ? <Avt /> : <SignInBtn />}
         </Header>
@@ -66,6 +66,7 @@ const DoctorLayout = () => {
             margin: "24px 16px",
             padding: 24,
             minHeight: 280,
+            // backgroundColor: "#F5F7FA"
           }}
         >
           <Outlet />

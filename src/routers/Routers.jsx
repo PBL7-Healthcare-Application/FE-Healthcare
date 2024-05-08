@@ -16,6 +16,7 @@ import Partner from "../pages/partner/Partner";
 import ChangePassword from "../pages/user/ChangePass/ChangePassword";
 import Schedule from "../pages/doctor/Schedule/Schedule";
 import DoctorLayout from "../layouts/doctor/DoctorLayout";
+import DoctorAppointment from "../pages/doctor/Appointment/DoctorAppointment";
 
 const routers = createBrowserRouter([
   {
@@ -106,10 +107,10 @@ const routers = createBrowserRouter([
     children: [
       {
         path: "appointment",
-        element: <Schedule />,
+        element: <DoctorAppointment />,
       },
       {
-        path: "schedule",
+        path: "calendar",
         element: <Schedule />,
       },
       {
