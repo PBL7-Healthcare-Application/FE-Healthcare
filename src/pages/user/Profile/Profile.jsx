@@ -41,7 +41,6 @@ const Profile = () => {
       (value) => value !== null
     );
     if (!allValuesNotNull) {
-      console.log(profiles);
       setIsDisabled(true);
       openNotificationWithIcon(
         "error",
@@ -124,8 +123,9 @@ const Profile = () => {
               Name
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-content__coverInput-active" : ""
+              }`}
             >
               <input
                 className="profile-input"
@@ -142,8 +142,9 @@ const Profile = () => {
               Date Of Birth
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-radio-active" : ""
+              }`}
             >
               {!isEdit ? (
                 <input
@@ -171,8 +172,9 @@ const Profile = () => {
               Gender
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-radio-active" : ""
+              }`}
             >
               {!isEdit ? (
                 <input
@@ -188,8 +190,7 @@ const Profile = () => {
                 />
               ) : (
                 <Radio.Group
-                  value={
-                    profiles?.gender}
+                  value={profiles?.gender}
                   onChange={(e) =>
                     handleChange({ name: "gender", value: e.target.value })
                   }
@@ -212,8 +213,9 @@ const Profile = () => {
               Address
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-content__coverInput-active" : ""
+              }`}
             >
               <input
                 className="profile-input"
@@ -232,8 +234,9 @@ const Profile = () => {
               Phone Number
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-content__coverInput-active" : ""
+              }`}
             >
               <input
                 className="profile-input"
@@ -242,8 +245,8 @@ const Profile = () => {
                   profiles?.phoneNumber
                     ? profiles?.phoneNumber
                     : isEdit
-                      ? ""
-                      : "--"
+                    ? ""
+                    : "--"
                 }
                 onChange={(e) =>
                   handleChange({ name: "phoneNumber", value: e.target.value })

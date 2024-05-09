@@ -24,7 +24,6 @@ import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 const Partner = () => {
   const { Option } = Select;
   const normFile = (e) => {
-    console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }

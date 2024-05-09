@@ -21,7 +21,9 @@ import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
 import { useNavigate, useParams } from "react-router-dom";
 import { setIdSpecialty } from "../../stores/search-doctor/SearchSlice";
 const Search = () => {
-  const { searchResult, loading, keyword, id_Specialty } = useSelector((state) => state.search);
+  const { searchResult, loading, keyword, id_Specialty } = useSelector(
+    (state) => state.search
+  );
   const [inputValue, setInputValue] = useState(keyword);
   const [specialty, setSpecialty] = useState(id_Specialty);
   const [filterAvailable, setFilterAvailable] = useState("");
@@ -33,24 +35,20 @@ const Search = () => {
   const params = useParams();
   const contentRef = useRef(null);
 
-
   const handleClear = () => {
-    console.log(params)
+    console.log(params);
     setYears(0);
     setMinPrice(0);
     setMaxPrice(1000000);
     setInputValue("");
     setFilterAvailable("");
-    dispatch(
-      setIdSpecialty("All specialties")
-    )
+    dispatch(setIdSpecialty("All specialties"));
     dispatch(
       getSearchResult({
         sortBy: "exp_desc",
-
       })
     );
-  }
+  };
 
   const onYearChange = (newValue) => {
     setYears(newValue);
@@ -61,15 +59,24 @@ const Search = () => {
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
     setInputValue(newValue);
-    debounceInputKey(newValue, specialty, years, minPrice, maxPrice, filterAvailable);
+    debounceInputKey(
+      newValue,
+      specialty,
+      years,
+      minPrice,
+      maxPrice,
+      filterAvailable
+    );
   };
   const debounceInputKey = useRef(
     debounce((nextValue, specialty, year, min, max, available) => {
-      console.log(years)
       dispatch(
         getSearchResult({
           keyword: nextValue,
-          IdSpecialty: specialty === "All specialties" || specialty === 0 ? undefined : specialty,
+          IdSpecialty:
+            specialty === "All specialties" || specialty === 0
+              ? undefined
+              : specialty,
           sortBy: "exp_desc",
           exp: year !== 0 ? year : undefined,
           minPrice: min !== 0 ? min : undefined,
@@ -114,7 +121,10 @@ const Search = () => {
     dispatch(
       getSearchResult({
         keyword: inputValue,
-        IdSpecialty: specialty === "All specialties" || specialty === 0 ? undefined : specialty,
+        IdSpecialty:
+          specialty === "All specialties" || specialty === 0
+            ? undefined
+            : specialty,
         sortBy: "exp_desc",
         exp: years !== 0 ? years : undefined,
         minPrice: minPrice !== 0 ? minPrice : undefined,
@@ -122,8 +132,7 @@ const Search = () => {
         filterAvailable: e.target.value,
       })
     );
-
-  }
+  };
 
   useEffect(() => {
     if (searchResult.length === 0) {
@@ -244,13 +253,16 @@ const Search = () => {
                     type="vertical"
                     style={{ backgroundColor: "#2d87f3", width: 2 }}
                   />
-                  <Typography className="search-result__filter-box-label" >
+                  <Typography className="search-result__filter-box-label">
                     Available
                   </Typography>
                 </Space>
                 <Space style={{ marginTop: 5 }}>
-                  <Radio.Group className="search-result__filter-box-radio" value={filterAvailable} onChange={(e) => handleAvailable(e)} >
-
+                  <Radio.Group
+                    className="search-result__filter-box-radio"
+                    value={filterAvailable}
+                    onChange={(e) => handleAvailable(e)}
+                  >
                     <Radio
                       value={"TODAY"}
                       className="search-result__filter-box-radio__item"
@@ -295,7 +307,9 @@ const Search = () => {
                       getSearchResult({
                         keyword: inputValue,
                         IdSpecialty:
-                          specialty === "All specialties" || specialty === 0 ? undefined : specialty,
+                          specialty === "All specialties" || specialty === 0
+                            ? undefined
+                            : specialty,
                         sortBy: "exp_desc",
                         exp: value,
                         minPrice: minPrice !== 0 ? minPrice : undefined,
@@ -446,7 +460,10 @@ const Search = () => {
                               getSearchResult({
                                 keyword: inputValue,
                                 IdSpecialty:
-                                  specialty === "All specialties" || specialty === 0 ? undefined : specialty,
+                                  specialty === "All specialties" ||
+                                  specialty === 0
+                                    ? undefined
+                                    : specialty,
                                 sortBy: "exp_desc",
                                 exp: years,
                                 minPrice: minPrice,
@@ -494,7 +511,6 @@ const Search = () => {
                     </Space>
                     <Rate onChange={(value) => console.log(value)} />
                   </Space>
-
                 </Space>
                 <Divider
                   style={{
@@ -505,12 +521,16 @@ const Search = () => {
                 />
                 <div className="clear" onClick={handleClear}>
                   <DeleteOutlined className="clear-icon" />
-                  <Typography className="search-result__filter__experience--label" style={{ fontSize: 16, fontWeight: 500 }}>Clear All</Typography>
+                  <Typography
+                    className="search-result__filter__experience--label"
+                    style={{ fontSize: 16, fontWeight: 500 }}
+                  >
+                    Clear All
+                  </Typography>
                 </div>
               </Space>
             </div>
           </div>
-
         </div>
       </div>
       {searchResult.length > 0 && (

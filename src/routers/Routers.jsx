@@ -17,6 +17,8 @@ import ChangePassword from "../pages/user/ChangePass/ChangePassword";
 import Schedule from "../pages/doctor/Schedule/Schedule";
 import DoctorLayout from "../layouts/doctor/DoctorLayout";
 import DoctorAppointment from "../pages/doctor/Appointment/DoctorAppointment";
+import MedicalHistory from "../pages/user/MedicalHistory/MedicalHistory";
+import DisableAccount from "../pages/user/DisableAccount/DisableAccount";
 
 const routers = createBrowserRouter([
   {
@@ -66,7 +68,7 @@ const routers = createBrowserRouter([
           },
           {
             path: "medical-history",
-            element: <Profile />,
+            element: <MedicalHistory />,
           },
           {
             path: "password",
@@ -74,7 +76,7 @@ const routers = createBrowserRouter([
           },
           {
             path: "disable-account",
-            element: <Profile />,
+            element: <DisableAccount />,
           },
         ],
       },

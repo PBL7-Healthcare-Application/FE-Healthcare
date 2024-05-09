@@ -15,3 +15,7 @@ export const getAppointment = (type) => {
 export const booking = (data) => {
   return http.post(`/Appointment/BookAppointment`, data);
 };
+
+export const disableAccount = (data) => {
+  return http.post("/Profile/LockAccount", data);
+};
