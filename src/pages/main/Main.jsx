@@ -152,22 +152,22 @@ export const Main = () => {
           <CardContent
             img={content1}
             title="Based on verified information"
-            content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations"
+            content="All articles from Enclinic are written based on medical news, research, and scientific reports from leading educational and healthcare organizations."
           />
           <CardContent
             img={content2}
-            title="Based on verified information"
-            content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations"
+            title="Consulted with medical professionals"
+            content="The team of doctors has many years of experience and works at famous hospitals."
           />
           <CardContent
             img={content3}
-            title="Based on verified information"
-            content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations"
+            title="Regularly updated"
+            content="We work with doctors and healthcare experts to continuously update articles to ensure accuracy."
           />
           <CardContent
             img={content4}
-            title="Based on verified information"
-            content="All articles from Hello Bacsi are written based on medical news, research, and scientific reports from leading educational and healthcare organizations"
+            title="Reliable"
+            content="At Enclinic, the healthcare website, we are committed to providing accurate, easily accessible informations, that help readers make the most informed decisions for their own health ."
           />
         </div>
       </div>

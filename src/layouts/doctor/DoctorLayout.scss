@@ -1,0 +1,98 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.customSlider {
+  background-color: #fff !important;
+  max-width: 300px !important;
+  width: 300px !important;
+  min-width: 250px !important;
+  &__logo {
+    width: 100%;
+    background-color: #fff;
+    padding: 20px 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  &__header {
+    width: 100%;
+    background-color: #fff;
+    padding: 10px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    line-height: 0 !important;
+  }
+}
+
+.sidebar {
+  height: 100vh;
+  margin: 0 8px;
+
+  &__nav {
+    height: 60%;
+    font-family: $font-main;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border: none !important;
+    .ant-menu-item {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 20px;
+      height: 60px;
+      border-radius: 10px;
+      //margin-left: 15px;
+      .anticon {
+        font-size: 22px;
+        color: $text-secondary-color;
+      }
+
+      .ant-menu-title-content {
+        margin-right: 24px;
+        font-size: 17px;
+        color: #b5bad4;
+
+        font-weight: 600 !important;
+      }
+    }
+    .ant-menu-item-selected {
+      background-color: #e9f0ff;
+      border-radius: 20px;
+      .anticon {
+        color: #3372fe;
+        transition: all 0.2s linear;
+      }
+
+      .ant-menu-title-content {
+        color: #3372fe;
+        transition: all 0.2s linear;
+      }
+    }
+  }
+  &__logout {
+    position: absolute;
+    bottom: 0;
+    width: 94%;
+    display: flex;
+    flex-direction: row;
+    padding: 15px 24px;
+    margin: 0 8px;
+    margin-bottom: 30px;
+    justify-content: flex-start;
+    gap: 25px;
+    &:hover {
+      cursor: pointer;
+      background-color: #e9f0ff;
+    }
+    border: 1px solid #e9f0ff;
+    border-radius: 20px;
+    &__text {
+      font-size: 17px;
+      font-family: $font-main;
+      font-weight: 600;
+      color: #b5bad4;
+    }
+  }
+}
