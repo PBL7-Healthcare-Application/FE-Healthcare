@@ -19,7 +19,6 @@ const SignIn = () => {
   const { user, error } = useSelector((state) => state.auth);
   const [api, contextHolder] = notification.useNotification();
   useEffect(() => {
-    console.log(`User::`, user);
     if (user) {
       if (user.role === "User") {
         openNotificationWithIcon("success", api, "", "Sign In Success!");
@@ -27,8 +26,7 @@ const SignIn = () => {
           if (localStorage.getItem("appointment") !== null) {
             dispatch(getUserProfile());
             navigate("/booking/doctor");
-          }
-          else {
+          } else {
             navigate("/");
           }
         }, 1500);
@@ -38,7 +36,7 @@ const SignIn = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => { };
+    return () => {};
   }, [user, error, navigate, api, dispatch]);
 
   const onFinish = (values) => {

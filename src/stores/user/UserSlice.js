@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   bookAppointment,
   changeUserPassword,
+  disableUserAccount,
   getUserAppointment,
   getUserProfile,
   updateUserProfile,
@@ -102,6 +103,20 @@ const profileSlice = createSlice({
         state.statusCode = action.payload.statusCode;
       })
       .addCase(changeUserPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
+      //=====================================
+      .addCase(disableUserAccount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(disableUserAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(disableUserAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
       });

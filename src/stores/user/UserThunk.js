@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   booking,
   changePassword,
+  disableAccount,
   getAppointment,
   getProfile,
   updateProfile,
@@ -58,6 +59,18 @@ export const changeUserPassword = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await changePassword(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const disableUserAccount = createAsyncThunk(
+  "user/disableUserAccount",
+  async (data, thunkApi) => {
+    try {
+      const response = await disableAccount(data);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);
