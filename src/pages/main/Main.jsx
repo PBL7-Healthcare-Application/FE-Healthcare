@@ -58,7 +58,6 @@ export const Main = () => {
       dispatch(setSearch({ keyword: name, id: specialty }));
       navigate(`/search/doctor?name=${name}&specialty=all`);
     } else {
-      console.log(specialty);
       dispatch(
         getSearchResult({
           keyword: name,

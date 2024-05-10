@@ -1,5 +1,29 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
 .myAppointment {
+  display: flex;
+  gap: 25px;
+  flex-direction: column;
+  &-cancel {
+    width: 100%;
     display: flex;
-    gap: 25px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
     flex-direction: column;
+    &__content {
+      margin-top: 50px;
+      display: flex;
+      width: 100%;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      &-text {
+        font-family: $font-main;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+  }
 }

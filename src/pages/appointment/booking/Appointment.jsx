@@ -50,13 +50,13 @@ const Appointment = () => {
         })
       );
       setIsMess(false);
-      localStorage.removeItem("appointment");
     } else {
       setIsMess(true);
     }
   };
   useEffect(() => {
     if (statusCode === 200) {
+      localStorage.removeItem("appointment");
       openNotificationWithIcon(
         "success",
         api,
@@ -66,10 +66,10 @@ const Appointment = () => {
       delay(() => {
         dispatch(setStatusCode(null));
         navigate("/booking/success");
-
       }, 1500);
     }
     if (error !== null) {
+      localStorage.removeItem("appointment");
       openNotificationWithIcon(
         "error",
         api,
@@ -78,10 +78,10 @@ const Appointment = () => {
       );
       delay(() => {
         dispatch(setError(null));
-        navigate("/");
+        navigate(`/doctor/${appointment?.doctor.idDoctor}`);
       }, 1500);
     }
-  }, [statusCode, navigate, api, error, dispatch]);
+  }, [statusCode, navigate, api, error, dispatch, appointment]);
   return (
     <div className="appointment-main">
       {contextHolder}

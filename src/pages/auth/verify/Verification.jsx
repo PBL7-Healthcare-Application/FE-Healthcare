@@ -63,15 +63,13 @@ const Verification = () => {
   useEffect(() => {
     if (user) {
       if (user.role === "User") {
-        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        openNotificationWithIcon("success", api, "", "Sign Up Success!");
         delay(() => {
           localStorage.removeItem("profile");
           if (localStorage.getItem("appointment") !== null) {
             dispatch(getUserProfile());
             navigate("/booking/doctor");
-          }
-          else {
-
+          } else {
             navigate("/");
           }
         }, 1500);
@@ -81,7 +79,7 @@ const Verification = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => { };
+    return () => {};
   }, [user, error, navigate, api, dispatch]);
 
   const minutes = Math.floor(seconds / 60);

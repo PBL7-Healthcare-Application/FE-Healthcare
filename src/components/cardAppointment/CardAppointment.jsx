@@ -7,7 +7,7 @@ import dolar from "../../assets/images/dollar.png";
 import jam_medical from "../../assets/images/jam_medical.png";
 import doctorDefault from "../../assets/images/doctor.jpeg";
 import { formatDate } from "../../helpers/timeBooking";
-const CardAppointment = ({ appointment, type }) => {
+const CardAppointment = ({ appointment, type, onCancel }) => {
   return (
     <div className="cardAppointment">
       <div className="cardAppointment--header">
@@ -149,7 +149,7 @@ const CardAppointment = ({ appointment, type }) => {
                 letterSpacing: 0.4,
               }}
             >
-              {appointment?.price.toLocaleString('vi-VN')} ₫
+              {appointment?.price.toLocaleString("vi-VN")} ₫
             </Typography>
           </div>
         </div>
@@ -157,7 +157,10 @@ const CardAppointment = ({ appointment, type }) => {
       <div className="cardAppointment--buttonArea">
         <div className="cardAppointment--buttonArea__button">
           {type === 1 && (
-            <>
+            <div
+              onClick={() => onCancel(appointment?.idAppointment)}
+              style={{ display: "flex", alignItems: "center", gap: 10 }}
+            >
               <svg
                 width="16"
                 height="16"
@@ -172,7 +175,7 @@ const CardAppointment = ({ appointment, type }) => {
                 ></path>
               </svg>
               <span className="appointment-font">Cancel</span>
-            </>
+            </div>
           )}
           {type === 2 && (
             <>
