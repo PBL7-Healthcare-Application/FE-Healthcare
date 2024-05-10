@@ -19,6 +19,7 @@ import DoctorLayout from "../layouts/doctor/DoctorLayout";
 import DoctorAppointment from "../pages/doctor/Appointment/DoctorAppointment";
 import MedicalHistory from "../pages/user/MedicalHistory/MedicalHistory";
 import DisableAccount from "../pages/user/DisableAccount/DisableAccount";
+import Setting from "../pages/doctor/Setting/Setting";
 
 const routers = createBrowserRouter([
   {
@@ -117,7 +118,7 @@ const routers = createBrowserRouter([
       },
       {
         path: "setting",
-        element: <Schedule />,
+        element: <Setting />,
       },
     ],
   },

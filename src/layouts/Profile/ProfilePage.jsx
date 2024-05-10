@@ -45,11 +45,10 @@ const ProfilePage = () => {
               ></path>
             </svg>
             <span
-              className={`layoutProfile-left__box-text  ${
-                pathname.split("/").filter(Boolean)[1] === "profile"
+              className={`layoutProfile-left__box-text  ${pathname.split("/").filter(Boolean)[1] === "profile"
                   ? "layoutProfile-left__box-active"
                   : ""
-              }`}
+                }`}
             >
               My Profile
             </span>
@@ -200,11 +199,10 @@ const ProfilePage = () => {
               ></path>
             </svg>
             <span
-              className={`layoutProfile-left__box-text  ${
-                pathname.split("/").filter(Boolean)[1] === "appointment"
+              className={`layoutProfile-left__box-text  ${pathname.split("/").filter(Boolean)[1] === "appointment"
                   ? "layoutProfile-left__box-active"
                   : ""
-              }`}
+                }`}
             >
               My Appointment
             </span>
@@ -212,11 +210,10 @@ const ProfilePage = () => {
           <Link className="layoutProfile-left__box" to="/user/medical-history">
             <Image src={medicalHistory} width={24} preview={false} />
             <span
-              className={`layoutProfile-left__box-text  ${
-                pathname.split("/").filter(Boolean)[1] === "medical-history"
+              className={`layoutProfile-left__box-text  ${pathname.split("/").filter(Boolean)[1] === "medical-history"
                   ? "layoutProfile-left__box-active"
                   : ""
-              }`}
+                }`}
             >
               My Medical History
             </span>
@@ -236,18 +233,16 @@ const ProfilePage = () => {
           </div>
           {setting && (
             <div
-              className={`layoutProfile-left__setting  ${
-                setting ? "layoutProfile-left__setting-show" : ""
-              }`}
+              className={`layoutProfile-left__setting  ${setting ? "layoutProfile-left__setting-show" : ""
+                }`}
             >
               <Link className="layoutProfile-left__box" to="/user/password">
                 <Image src={resetPassword} width={24} preview={false} />
                 <span
-                  className={`layoutProfile-left__box-text  ${
-                    pathname.split("/").filter(Boolean)[1] === "password"
+                  className={`layoutProfile-left__box-text  ${pathname.split("/").filter(Boolean)[1] === "password"
                       ? "layoutProfile-left__box-active"
                       : ""
-                  }`}
+                    }`}
                   style={{ marginTop: 6 }}
                 >
                   Change Password
@@ -259,11 +254,10 @@ const ProfilePage = () => {
               >
                 <Image src={security} width={24} preview={false} />
                 <span
-                  className={`layoutProfile-left__box-text  ${
-                    pathname.split("/").filter(Boolean)[1] === "disable-account"
+                  className={`layoutProfile-left__box-text  ${pathname.split("/").filter(Boolean)[1] === "disable-account"
                       ? "layoutProfile-left__box-active"
                       : ""
-                  }`}
+                    }`}
                 >
                   Disable Account
                 </span>
@@ -272,7 +266,7 @@ const ProfilePage = () => {
           )}
           <div className="layoutProfile-left__box" onClick={handleLogout}>
             <Image src={logout} width={24} preview={false} />
-            <span className="layoutProfile-left__box-text">Log Out</span>
+            <span className="layoutProfile-left__box-text">Sign Out</span>
           </div>
         </div>
         <div
