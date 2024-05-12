@@ -158,6 +158,14 @@
       flex: 6;
       align-items: center;
     }
+
+    &__education {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
   }
 
   &-font {

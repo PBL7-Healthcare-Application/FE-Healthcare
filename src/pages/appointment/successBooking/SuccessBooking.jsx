@@ -27,7 +27,7 @@ const SuccessBooking = () => {
         </Typography>
         <div
           className="appointment-box successBooking-box"
-          style={{ marginTop: 40 }}
+          style={{ marginTop: 40, minWidth: 550 }}
         >
           <div className="appointment-left__infor--box">
             <Image

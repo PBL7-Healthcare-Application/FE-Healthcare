@@ -1,0 +1,30 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+.profileDr {
+    width: 100%;
+    padding: 10px 30px;
+
+    &-content {
+        margin-top: 40px;
+        width: 100%;
+
+        &__form {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    &-font {
+        font-family: $font-main;
+        font-weight: 400;
+        font-size: 16px;
+    }
+}
+
+.ant-select-selection-item {
+    font-family: $font-main;
+    font-weight: 400;
+
+}

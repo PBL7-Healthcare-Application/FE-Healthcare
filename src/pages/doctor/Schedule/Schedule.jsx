@@ -114,7 +114,7 @@ const Schedule = () => {
                 <div className="Schedule-content__left">
                     <div className="Schedule-content__left-action">
                         <Select
-                            defaultValue="lucy"
+                            placeholder="-- select --"
                             style={{
                                 width: '100%',
                                 height: 40,
@@ -122,21 +122,12 @@ const Schedule = () => {
                             }}
                             options={[
                                 {
-                                    value: 'jack',
-                                    label: 'Jack',
+                                    value: 'busy',
+                                    label: 'Busy',
                                 },
                                 {
-                                    value: 'lucy',
-                                    label: 'Lucy',
-                                },
-                                {
-                                    value: 'Yiminghe',
-                                    label: 'yiminghe',
-                                },
-                                {
-                                    value: 'disabled',
-                                    label: 'Disabled',
-                                    disabled: true,
+                                    value: 'Break time',
+                                    label: 'Break time',
                                 },
                             ]}
                         />

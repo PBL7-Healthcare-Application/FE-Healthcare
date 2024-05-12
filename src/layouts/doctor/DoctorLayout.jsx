@@ -10,21 +10,27 @@ import Avt from "../../components/header/Avt";
 import SignInBtn from "../../components/header/SignInBtn";
 const { Header, Sider, Content } = Layout;
 const DoctorLayout = () => {
+
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [current, setCurrent] = useState("/appointment");
   const location = useLocation();
+
   useEffect(() => {
     const endpoint = location.pathname;
     setCurrent(`/${endpoint.split("/")[2]}`);
+
   }, [location.pathname]);
   const onNavItemClick = (e) => {
+    console.log("huy:", e.key);
     setCurrent(e.key);
-    navigate(`/dr.Enclinic${e.key}`);
+    if (e.key.trim() === "/setting") navigate("/dr.Enclinic/setting/profile/personal");
+    else navigate(`/dr.Enclinic${e.key}`);
   };
+
   return (
-    <Layout style={{ height: "100vh" }}>
-      <Sider trigger={null} collapsible className="customSlider">
+    <Layout style={{ backgroundColor: '#fff' }}>
+      <Sider trigger={null} collapsible className="customSlider" >
         <div className="customSlider__logo">
           <Image src={logo} preview={false} width="60%" />
           <Image src={title} preview={false} width="70%" />

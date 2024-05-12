@@ -1,0 +1,19 @@
+.chatting {
+    width: 100%;
+    padding: 40px 30px;
+
+
+    &-container {
+        @media (min-width: 1024px) {
+            max-width: 1170px;
+        }
+
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        height: 80vh;
+        border-radius: 10px;
+        align-items: flex-start;
+        margin: 0px auto;
+        display: flex;
+
+    }
+}

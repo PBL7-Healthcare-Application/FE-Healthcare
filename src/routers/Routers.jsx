@@ -19,6 +19,14 @@ import DoctorLayout from "../layouts/doctor/DoctorLayout";
 import DoctorAppointment from "../pages/doctor/Appointment/DoctorAppointment";
 import MedicalHistory from "../pages/user/MedicalHistory/MedicalHistory";
 import DisableAccount from "../pages/user/DisableAccount/DisableAccount";
+import Setting from "../pages/doctor/Setting/Setting";
+import Certification from "../components/DoctorProfile/Certification/Certification";
+import ProfileDr from "../components/DoctorProfile/Profile/ProfileDr";
+import Education from "../components/DoctorProfile/Education/Education";
+import Experience from "../components/DoctorProfile/Experience/Experience";
+import { AppointmentDetail } from "../components/Doctor/appointmentDetail/AppointmentDetail";
+import SetUpSchedule from "../components/DoctorProfile/SetUpSchedule/SetUpSchedule";
+import Chatting from "../pages/chatting/Chatting";
 
 const routers = createBrowserRouter([
   {
@@ -84,6 +92,12 @@ const routers = createBrowserRouter([
         path: "partner",
         element: <Partner />,
       },
+      {
+        path: '/chatting',
+        element:
+          <Chatting />
+
+      }
     ],
   },
   {
@@ -108,8 +122,19 @@ const routers = createBrowserRouter([
     element: <DoctorLayout />,
     children: [
       {
-        path: "appointment",
-        element: <DoctorAppointment />,
+        path: "appointment/",
+
+        children: [
+          {
+            path: "",
+            element: <DoctorAppointment />,
+          },
+          {
+            path: ":id",
+            element: <AppointmentDetail />,
+          },
+
+        ]
       },
       {
         path: "calendar",
@@ -117,10 +142,52 @@ const routers = createBrowserRouter([
       },
       {
         path: "setting",
-        element: <Schedule />,
+        element: <Setting />,
+        children: [
+          {
+            path: "profile",
+            children: [
+              {
+                path: "personal",
+                element: <ProfileDr />
+              },
+              {
+                path: "certification",
+                element: <Certification />
+              },
+              {
+                path: "education",
+                element: <Education />
+              },
+              {
+                path: "experience",
+                element: <Experience />
+              }
+            ]
+          },
+          {
+            path: "work-schedule",
+            element: <SetUpSchedule />,
+          },
+          {
+            path: "account",
+            children: [
+              {
+                path: "password",
+                element: <ChangePassword />,
+              },
+              {
+                path: "disable-account",
+                element: <DisableAccount />,
+              },
+            ],
+
+          }
+        ]
       },
     ],
   },
+
 ]);
 
 export default routers;
