@@ -1,29 +1,42 @@
-import { SearchOutlined } from "@ant-design/icons";
+/* eslint-disable no-unused-vars */
+import { CheckCircleOutlined, CloseCircleOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import "./Appointment.scss";
-import { Button, Input, Select, Table } from "antd";
+import { Button, Input, Select, Table, Tag } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const DoctorAppointment = () => {
+  const navigate = useNavigate();
   const columns = [
     {
       title: "Id",
       dataIndex: "key",
+      align: 'center'
     },
     {
       title: "Name",
       dataIndex: "name",
+      align: 'center'
     },
 
     {
       title: "Phone",
       dataIndex: "phone",
+      align: 'center'
     },
     {
       title: "Date",
       dataIndex: "date",
+      align: 'center'
     },
     {
       title: "Time",
       dataIndex: "time",
+      align: 'center'
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      align: 'center'
     },
   ];
   const data = [
@@ -33,6 +46,9 @@ const DoctorAppointment = () => {
       phone: 18889898989,
       date: "2021-10-10",
       time: "09:00 - 10:00",
+      status: <Tag icon={<CheckCircleOutlined />} color="success">
+        Completed
+      </Tag>
     },
     {
       key: "2",
@@ -40,6 +56,9 @@ const DoctorAppointment = () => {
       phone: 18889898888,
       date: "2021-10-10",
       time: "09:00 - 10:00",
+      status: <Tag icon={<CheckCircleOutlined />} color="success">
+        Completed
+      </Tag>
     },
     {
       key: "3",
@@ -47,6 +66,9 @@ const DoctorAppointment = () => {
       phone: 18900010002,
       date: "2021-10-10",
       time: "09:00 - 10:00",
+      status: <Tag icon={<SyncOutlined spin />} color="processing">
+        Upcoming
+      </Tag>
     },
     {
       key: "4",
@@ -54,6 +76,9 @@ const DoctorAppointment = () => {
       phone: 18900010002,
       date: "2021-10-10",
       time: "09:00 - 10:00",
+      status: <Tag icon={<SyncOutlined spin />} color="processing">
+        Upcoming
+      </Tag>
     },
     {
       key: "5",
@@ -61,6 +86,9 @@ const DoctorAppointment = () => {
       phone: 18900010002,
       date: "2021-10-10",
       time: "09:00 - 10:00",
+      status: <Tag icon={<CloseCircleOutlined />} color="error">
+        Canceled
+      </Tag>
     },
   ];
   return (
@@ -117,7 +145,13 @@ const DoctorAppointment = () => {
         </div>
       </div>
       <div className="DoctorAppointment-filter">
-        <Table columns={columns} dataSource={data} bordered />
+        <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
+          return {
+            onClick: event => {
+              navigate(`/dr.Enclinic/appointment/${record.key}`)
+            },
+          };
+        }} />
       </div>
     </div>
   );

@@ -6,6 +6,8 @@
   max-width: 300px !important;
   width: 300px !important;
   min-width: 250px !important;
+  height: 100vh;
+
   &__logo {
     width: 100%;
     background-color: #fff;
@@ -14,6 +16,7 @@
     align-items: center;
     flex-direction: column;
   }
+
   &__header {
     width: 100%;
     background-color: #fff;
@@ -36,6 +39,7 @@
     flex-direction: column;
     gap: 15px;
     border: none !important;
+
     .ant-menu-item {
       display: flex;
       justify-content: flex-start;
@@ -43,6 +47,7 @@
       gap: 20px;
       height: 60px;
       border-radius: 10px;
+
       //margin-left: 15px;
       .anticon {
         font-size: 22px;
@@ -52,14 +57,16 @@
       .ant-menu-title-content {
         margin-right: 24px;
         font-size: 17px;
-        color: #b5bad4;
+        color: #6c81a0;
 
         font-weight: 600 !important;
       }
     }
+
     .ant-menu-item-selected {
       background-color: #e9f0ff;
       border-radius: 20px;
+
       .anticon {
         color: #3372fe;
         transition: all 0.2s linear;
@@ -71,6 +78,7 @@
       }
     }
   }
+
   &__logout {
     position: absolute;
     bottom: 0;
@@ -82,17 +90,20 @@
     margin-bottom: 30px;
     justify-content: flex-start;
     gap: 25px;
+
     &:hover {
       cursor: pointer;
       background-color: #e9f0ff;
     }
+
     border: 1px solid #e9f0ff;
     border-radius: 20px;
+
     &__text {
       font-size: 17px;
       font-family: $font-main;
       font-weight: 600;
-      color: #b5bad4;
+      color: $text-secondary-color;
     }
   }
 }

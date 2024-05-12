@@ -7,7 +7,13 @@ import dolar from "../../assets/images/dollar.png";
 import jam_medical from "../../assets/images/jam_medical.png";
 import doctorDefault from "../../assets/images/doctor.jpeg";
 import { formatDate } from "../../helpers/timeBooking";
+import { useNavigate } from "react-router-dom";
+import { setIsSelected } from "../../stores/search-doctor/SearchSlice";
+import { getDoctorDetail } from "../../stores/search-doctor/SearchThunk";
+import { useDispatch } from "react-redux";
 const CardAppointment = ({ appointment, type, onCancel }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div className="cardAppointment">
       <div className="cardAppointment--header">
@@ -200,7 +206,11 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
             </>
           )}
         </div>
-        <div className="cardAppointment--buttonArea__button">
+        <div className="cardAppointment--buttonArea__button" onClick={() => {
+          dispatch(setIsSelected(0));
+          dispatch(getDoctorDetail(appointment?.idDoctor));
+          navigate(`/doctor/${appointment?.idDoctor}`)
+        }}>
           <svg
             width="16"
             height="16"

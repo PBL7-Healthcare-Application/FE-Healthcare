@@ -1,0 +1,53 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+.listUser {
+    flex: 3;
+    display: flex;
+    background-color: #fff;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    border-right: 1px solid #dbdfe5;
+    padding: 10px 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    height: 100%;
+
+
+    &-font {
+        font-family: $font-main;
+        font-size: 20px;
+        font-weight: 600;
+        color: $text-color;
+    }
+
+    &-list {
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    &-item {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        align-items: center;
+        cursor: pointer;
+        padding: 10px 20px;
+        border-bottom: 1px solid #dbdfe5;
+
+        &__texts {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        &__name {
+            font-family: $font-main;
+            font-size: 16px;
+            font-weight: 600;
+
+        }
+    }
+}

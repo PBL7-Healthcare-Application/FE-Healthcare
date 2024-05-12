@@ -1,0 +1,113 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+.setting {
+    border-radius: 10px;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px 30px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    align-items: center;
+
+    &-tab1 {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        padding: 0 20px;
+
+        &__left {
+            flex: 2;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+
+
+            &-nav {
+                border: 1px solid #dbdfe5;
+                width: 100%;
+                padding: 20px 20px;
+                padding-left: 40px;
+                display: flex;
+                justify-content: space-between;
+
+                &:first-child {
+                    border-radius: 6px 6px 0 0;
+                }
+
+                &:last-child {
+                    border-radius: 0 0 6px 6px;
+                }
+
+                &:nth-child(1) {
+                    border-bottom: none;
+                }
+
+                &:nth-child(2) {
+                    border-bottom: none;
+                }
+
+                &:nth-child(3) {
+                    border-bottom: none;
+                }
+
+
+
+            }
+
+            &-nav2 {
+                border: 1px solid #dbdfe5;
+                width: 100%;
+                padding: 20px 20px;
+                padding-left: 40px;
+                display: flex;
+                justify-content: space-between;
+
+                &:first-child {
+                    border-radius: 6px 6px 0 0;
+                }
+
+                &:last-child {
+                    border-radius: 0 0 6px 6px;
+                }
+
+                &:nth-child(1) {
+                    border-bottom: none;
+                }
+            }
+
+            &-active {
+                background-color: $background-secondary;
+            }
+
+
+        }
+
+        &__right {
+            border: 1px solid #dbdfe5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            flex: 8;
+            border-radius: 6px;
+        }
+    }
+
+    &-tab2 {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px 40px;
+
+        align-items: center;
+
+
+    }
+
+    &-font {
+        font-family: $font-main;
+        font-weight: 500;
+        font-size: 16;
+        color: $text-secondary-color;
+    }
+}

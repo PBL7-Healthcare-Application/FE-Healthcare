@@ -1,0 +1,93 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+.appointmentDetail {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-icon {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &-main {
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+
+        gap: 20px;
+        background-color: #fff;
+        margin-top: 30px;
+        width: 80%;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    &-content {
+
+        padding: 50px 100px;
+        gap: 40px;
+        display: flex;
+        flex-direction: row;
+        padding-top: 20px;
+    }
+
+    &-left {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+
+        &__image {
+            border-radius: 6px;
+        }
+
+        &__status {
+            border-radius: 6px;
+            background-color: #2db7f5;
+            padding: 3px 15px;
+            font-family: $font-main;
+            font-weight: 500;
+            color: #fff;
+        }
+    }
+
+    &-right {
+        width: 100%;
+
+        &__buttonView {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        &__button {
+            background-color: #ef4444;
+            color: #fff;
+            height: 38px;
+            padding: 0 40px;
+            border-radius: 6px;
+            font-family: $font-main;
+            font-weight: 500;
+
+
+            &:hover {
+                border: 1px solid #ef4444 !important;
+                color: #ef4444 !important;
+                background-color: #fff !important;
+            }
+        }
+    }
+
+    &-font {
+        font-family: $font-main;
+        font-size: 18px;
+        font-weight: 600;
+    }
+}
