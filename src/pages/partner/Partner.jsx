@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import {
   Button,
@@ -23,19 +24,74 @@ import step_3 from "../../assets/images/step_3.webp";
 import verify from "../../assets/images/verify.avif";
 import "./Partner.scss";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllSpecialty } from "../../api/doctor.api";
+import getImageUpload from "../../helpers/uploadCloudinary";
 
 const Partner = () => {
   const [isEducation, setIsEducation] = useState(false);
   const [isExperience, setIsExperience] = useState(false);
-  const { Option } = Select;
-  const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
+  const [specialties, setSpecialties] = useState([]);
+  const [form] = Form.useForm();
+  const [certificates] = useState([{}]);
+  const [educations] = useState([{}]);
+  const [experiences] = useState([{}]);
+  const propsUpload = {
+    // action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+    maxCount: 1,
+    accept: "image/* ",
+    onChange({ file, fileList }) {
+      if (file.status === "error") {
+        return { ...file, status: "error" };
+      }
 
+      if (file.status === "removed") {
+        return undefined;
+      }
+      if (file.status === "done") {
+        return { ...file, status: "done" };
+      }
+      return file;
+    },
+    beforeUpload: (file) => {
+      const isImage = file.type.startsWith("image/");
+      if (!isImage) {
+        console.log("Not an image file!");
+      }
+      return isImage || Upload.LIST_IGNORE;
+    },
+  };
+  useEffect(() => {
+    form.setFieldsValue({
+      certificates,
+      educations,
+      experiences,
+    });
+  }, [form, certificates, educations, experiences]);
+
+  const getSpecialties = async () => {
+    try {
+      const response = await getAllSpecialty();
+      setSpecialties(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getSpecialties();
+  }, []);
+
+  const onFinish = async (values) => {
+    console.log(values);
+    // const res = await getImageUpload(values.businessLicense.file.originFileObj);
+    // console.log(res);
+    form.resetFields();
+    form.setFieldsValue({
+      certificates,
+      educations,
+      experiences,
+    });
+  };
   return (
     <div className="partner">
       <div className="partner-main">
@@ -199,7 +255,8 @@ const Partner = () => {
                     className="partner-content3__left-content__text"
                     style={{ maxWidth: 300, fontWeight: 400 }}
                   >
-                    Provide additional information about the doctor's missing details.
+                    Provide additional information about the doctor's missing
+                    details.
                   </span>
                 </div>
               </div>
@@ -227,42 +284,56 @@ const Partner = () => {
               <Form
                 name="normal_login"
                 // className="login-form"
-                initialValues={{
-                  remember: true,
-                  items: [{}],
-                  education: [{}],
-                  experience: [{}]
-                }}
+                form={form}
+                onFinish={onFinish}
                 layout="vertical"
-                style={{ width: "100%", backgroundColor: '#fafafa', padding: 20, borderRadius: 10, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}
+                style={{
+                  width: "100%",
+                  backgroundColor: "#fafafa",
+                  padding: 20,
+                  borderRadius: 10,
+                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                }}
               >
-                <Typography style={{ marginBottom: 10, fontWeight: 500, fontSize: 20 }}>
+                <Typography
+                  style={{ marginBottom: 10, fontWeight: 500, fontSize: 20 }}
+                >
                   Information
                 </Typography>
-                <Form.Item className="login-form" style={{ width: '100%' }}>
+                <Form.Item className="login-form" style={{ width: "100%" }}>
                   <Form.Item
                     style={{
                       marginBottom: 0,
                     }}
-
                   >
                     <Form.Item
                       label="Specialty"
+                      name="specialty"
                       style={{
                         display: "inline-block",
                         width: "calc(50% - 8px)",
                       }}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Specialty is required",
+                        },
+                      ]}
                     >
-                      <Select>
-                        <Select.Option value="demo">Demo</Select.Option>
-                      </Select>
+                      <Select
+                        options={specialties.map((item) => ({
+                          label: item.name,
+                          value: item.idSpecialty,
+                        }))}
+                      />
                     </Form.Item>
                     <Form.Item
-                      name="name"
+                      name="nameClinic"
                       label="Clinic Name"
                       rules={[
                         {
                           required: true,
+                          message: "Clinic Name is required",
                         },
                       ]}
                       style={{
@@ -276,22 +347,28 @@ const Partner = () => {
                   </Form.Item>
 
                   <Form.Item
-                    name="upload"
+                    name="businessLicense"
                     label="Upload Business License"
-                    valuePropName="fileList"
-                    getValueFromEvent={normFile}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Business License is required",
+                      },
+                    ]}
                   >
-                    <Upload name="logo" action="/upload.do" listType="picture">
+                    <Upload {...propsUpload}>
                       <Button icon={<UploadOutlined />}>Click to upload</Button>
                     </Upload>
                   </Form.Item>
                 </Form.Item>
                 {/* ===== */}
-                <Typography style={{ marginBottom: 10, fontWeight: 500, fontSize: 20 }}>
+                <Typography
+                  style={{ marginBottom: 10, fontWeight: 500, fontSize: 20 }}
+                >
                   Certificates
                 </Typography>
-                <Form.Item className="login-form" style={{ width: '100%' }}>
-                  <Form.List name="items" label="Certificates" >
+                <Form.Item className="login-form" style={{ width: "100%" }}>
+                  <Form.List name="certificates" label="Certificates">
                     {(fields, { add, remove }) => (
                       <div
                         style={{
@@ -319,15 +396,28 @@ const Partner = () => {
                             >
                               <Form.Item
                                 label="Certificate"
+                                name={[field.name, "certificate"]}
                                 style={{
                                   display: "inline-block",
                                   width: "calc(50% - 8px)",
                                 }}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Certificate is required",
+                                  },
+                                ]}
                               >
                                 <Input />
                               </Form.Item>
                               <Form.Item
-                                name="price"
+                                name={[field.name, "year"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Year is required",
+                                  },
+                                ]}
                                 label="Year"
                                 style={{
                                   display: "inline-block",
@@ -342,15 +432,15 @@ const Partner = () => {
                               </Form.Item>
                             </Form.Item>
                             <Form.Item
-                              name="upload"
-                              valuePropName="fileList"
-                              getValueFromEvent={normFile}
+                              name={[field.name, "imgCertificate"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Image Certificate is required",
+                                },
+                              ]}
                             >
-                              <Upload
-                                name="logo"
-                                action="/upload.do"
-                                listType="picture"
-                              >
+                              <Upload {...propsUpload}>
                                 <Button icon={<UploadOutlined />}>
                                   Click to upload
                                 </Button>
@@ -369,199 +459,226 @@ const Partner = () => {
 
                 {/* ===== */}
                 <div className="partner-content3__education">
-                  <Checkbox value={isEducation} onChange={(e) => setIsEducation(e.target.checked)} />
+                  <Checkbox
+                    value={isEducation}
+                    onChange={(e) => setIsEducation(e.target.checked)}
+                  />
                   <Typography style={{ fontWeight: 500, fontSize: 20 }}>
                     Educations
                   </Typography>
                 </div>
-                {isEducation && (<Form.Item className="login-form" style={{ width: '100%' }}>
-                  <Form.List name="education" label="Certificates" >
-                    {(fields, { add, remove }) => (
-                      <div
-                        style={{
-                          display: "flex",
-                          rowGap: 16,
-                          flexDirection: "column",
-                        }}
-                      >
-                        {fields.map((field) => (
-                          <Card
-                            size="small"
-                            key={field.key}
-                            extra={
-                              <CloseOutlined
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              />
-                            }
-                          >
-                            <Form.Item
-                              style={{
-                                marginBottom: 0,
-                              }}
+                {isEducation && (
+                  <Form.Item className="login-form" style={{ width: "100%" }}>
+                    <Form.List name="educations" label="Certificates">
+                      {(fields, { add, remove }) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            rowGap: 16,
+                            flexDirection: "column",
+                          }}
+                        >
+                          {fields.map((field) => (
+                            <Card
+                              size="small"
+                              key={field.key}
+                              extra={
+                                <CloseOutlined
+                                  onClick={() => {
+                                    remove(field.name);
+                                  }}
+                                />
+                              }
                             >
                               <Form.Item
-                                label="School Name"
                                 style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
+                                  marginBottom: 0,
                                 }}
                               >
-                                <Input />
+                                <Form.Item
+                                  label="School Name"
+                                  name={[field.name, "schoolName"]}
+                                  style={{
+                                    display: "inline-block",
+                                    width: "calc(50% - 8px)",
+                                  }}
+                                >
+                                  <Input />
+                                </Form.Item>
+                                <Form.Item
+                                  label="Major"
+                                  name={[field.name, "major"]}
+                                  style={{
+                                    display: "inline-block",
+                                    width: "calc(50% - 8px)",
+                                    margin: "0 8px",
+                                  }}
+                                >
+                                  <Input />
+                                </Form.Item>
                               </Form.Item>
                               <Form.Item
-                                label="Major"
                                 style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
-                                  margin: "0 8px",
+                                  marginBottom: 0,
                                 }}
                               >
-                                <Input />
+                                <Form.Item
+                                  name={[field.name, "startYear"]}
+                                  label="Start Year"
+                                  style={{
+                                    display: "inline-block",
+                                    width: "calc(50% - 8px)",
+                                  }}
+                                >
+                                  <DatePicker
+                                    picker="year"
+                                    style={{ width: "100%" }}
+                                  />
+                                </Form.Item>
+                                <Form.Item
+                                  name={[field.name, "endYear"]}
+                                  label="End Year"
+                                  style={{
+                                    display: "inline-block",
+                                    width: "calc(50% - 8px)",
+                                    margin: "0 8px",
+                                  }}
+                                >
+                                  <DatePicker
+                                    picker="year"
+                                    style={{ width: "100%" }}
+                                  />
+                                </Form.Item>
                               </Form.Item>
+                            </Card>
+                          ))}
 
-
-                            </Form.Item>
-                            <Form.Item style={{
-                              marginBottom: 0,
-                            }}>
-                              <Form.Item
-                                name="price"
-                                label="Start Year"
-                                style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
-                                }}
-                              >
-                                <DatePicker
-                                  picker="year"
-                                  style={{ width: "100%" }}
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                name="price"
-                                label="End Year"
-                                style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
-                                  margin: "0 8px",
-                                }}
-                              >
-                                <DatePicker
-                                  picker="year"
-                                  style={{ width: "100%" }}
-                                />
-                              </Form.Item>
-                            </Form.Item>
-                          </Card>
-                        ))}
-
-                        <Button type="dashed" onClick={() => add()} block>
-                          + Add Item
-                        </Button>
-                      </div>
-                    )}
-                  </Form.List>
-                </Form.Item>)}
+                          <Button type="dashed" onClick={() => add()} block>
+                            + Add Item
+                          </Button>
+                        </div>
+                      )}
+                    </Form.List>
+                  </Form.Item>
+                )}
 
                 {/* ====== */}
                 <div className="partner-content3__education">
-                  <Checkbox value={isExperience} onChange={(e) => setIsExperience(e.target.checked)} />
+                  <Checkbox
+                    value={isExperience}
+                    onChange={(e) => setIsExperience(e.target.checked)}
+                  />
                   <Typography style={{ fontWeight: 500, fontSize: 20 }}>
                     Experiences
                   </Typography>
                 </div>
-                {isExperience && (<Form.Item className="login-form" style={{ width: '100%' }}>
-                  <Form.List name="experience" label="Certificates" >
-                    {(fields, { add, remove }) => (
-                      <div
-                        style={{
-                          display: "flex",
-                          rowGap: 16,
-                          flexDirection: "column",
-                        }}
-                      >
-                        {fields.map((field) => (
-                          <Card
-                            size="small"
-                            key={field.key}
-                            extra={
-                              <CloseOutlined
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              />
-                            }
-                          >
-                            <Form.Item
-                              style={{
-                                marginBottom: 0,
-                              }}
+                {isExperience && (
+                  <Form.Item className="login-form" style={{ width: "100%" }}>
+                    <Form.List name="experiences">
+                      {(fields, { add, remove }) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            rowGap: 16,
+                            flexDirection: "column",
+                          }}
+                        >
+                          {fields.map((field) => (
+                            <Card
+                              size="small"
+                              key={field.key}
+                              extra={
+                                <CloseOutlined
+                                  onClick={() => {
+                                    remove(field.name);
+                                  }}
+                                />
+                              }
                             >
                               <Form.Item
-                                label="Workplace"
                                 style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
+                                  marginBottom: 0,
                                 }}
                               >
-                                <Input />
+                                <Form.Item
+                                  label="Workplace"
+                                  name={[field.name, "workPlace"]}
+                                  style={{
+                                    display: "inline-block",
+                                    width: "calc(50% - 8px)",
+                                  }}
+                                >
+                                  <Input />
+                                </Form.Item>
+                                <Form.Item
+                                  label="Position"
+                                  name={[field.name, "position"]}
+                                  style={{
+                                    display: "inline-block",
+                                    width: "calc(50% - 8px)",
+                                    margin: "0 8px",
+                                  }}
+                                >
+                                  <Input />
+                                </Form.Item>
                               </Form.Item>
                               <Form.Item
-                                label="Position"
                                 style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
-                                  margin: "0 8px",
+                                  marginBottom: 0,
                                 }}
                               >
-                                <Input />
+                                <Form.Item
+                                  name={[field.name, "startYear"]}
+                                  label="Start Year"
+                                  style={{
+                                    display: "inline-block",
+                                    width: "calc(50% - 8px)",
+                                  }}
+                                >
+                                  <DatePicker
+                                    picker="year"
+                                    style={{ width: "100%" }}
+                                  />
+                                </Form.Item>
+                                <Form.Item
+                                  name={[field.name, "endYear"]}
+                                  label="End Year"
+                                  style={{
+                                    display: "inline-block",
+                                    width: "calc(50% - 8px)",
+                                    margin: "0 8px",
+                                  }}
+                                >
+                                  <DatePicker
+                                    picker="year"
+                                    style={{ width: "100%" }}
+                                  />
+                                </Form.Item>
                               </Form.Item>
+                            </Card>
+                          ))}
 
+                          <Button type="dashed" onClick={() => add()} block>
+                            + Add Item
+                          </Button>
+                        </div>
+                      )}
+                    </Form.List>
+                  </Form.Item>
+                )}
 
-                            </Form.Item>
-                            <Form.Item style={{
-                              marginBottom: 0,
-                            }}>
-                              <Form.Item
-                                name="price"
-                                label="Start Year"
-                                style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
-                                }}
-                              >
-                                <DatePicker
-                                  picker="year"
-                                  style={{ width: "100%" }}
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                name="price"
-                                label="End Year"
-                                style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
-                                  margin: "0 8px",
-                                }}
-                              >
-                                <DatePicker
-                                  picker="year"
-                                  style={{ width: "100%" }}
-                                />
-                              </Form.Item>
-                            </Form.Item>
-                          </Card>
-                        ))}
-
-                        <Button type="dashed" onClick={() => add()} block>
-                          + Add Item
-                        </Button>
-                      </div>
-                    )}
-                  </Form.List>
-                </Form.Item>)}
+                <Form.Item
+                  style={{
+                    width: "100%",
+                    marginTop: 30,
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Button htmlType="submit" className="partner-button">
+                    Submit
+                  </Button>
+                </Form.Item>
               </Form>
             </div>
           </div>

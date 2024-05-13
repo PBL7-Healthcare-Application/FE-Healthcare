@@ -4,6 +4,7 @@ import "./CardAppointment.scss";
 import location from "../../assets/images/location.png";
 import calender from "../../assets/images/calandar.png";
 import dolar from "../../assets/images/dollar.png";
+import problem from "../../assets/images/problem.png";
 import jam_medical from "../../assets/images/jam_medical.png";
 import doctorDefault from "../../assets/images/doctor.jpeg";
 import { formatDate } from "../../helpers/timeBooking";
@@ -51,34 +52,6 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
           opacity: type === 3 ? 0.2 : 1,
         }}
       >
-        <div className="cardAppointment--item">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 18 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            data-custo="fill"
-          >
-            <path
-              d="M3.75 2.25C2.92275 2.25 2.25 2.92275 2.25 3.75V14.25C2.25 15.0773 2.92275 15.75 3.75 15.75H14.25C15.0773 15.75 15.75 15.0773 15.75 14.25V3.75C15.75 2.92275 15.0773 2.25 14.25 2.25H3.75ZM6.75 5.25H8.25V6.75H9.75V5.25H11.25V6.75H12.75V8.25H11.25V9.75H12.75V11.25H11.25V12.75H9.75V11.25H8.25V12.75H6.75V11.25H5.25V9.75H6.75V8.25H5.25V6.75H6.75V5.25ZM8.25 8.25V9.75H9.75V8.25H8.25Z"
-              fill="#626D7C"
-            ></path>
-          </svg>
-          <span className="cardAppointment--item__text">
-            Booking ID:
-            <span
-              className="cardAppointment--item__text"
-              style={{
-                color: "rgb(38, 38, 38)",
-                fontSize: 14,
-                fontWeight: 500,
-              }}
-            >
-              {"  "}#{appointment?.idAppointment}
-            </span>
-          </span>
-        </div>
         <div className="cardAppointment--item">
           <Image
             src={calender}
@@ -159,6 +132,28 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
             </Typography>
           </div>
         </div>
+
+        <div className="cardAppointment--item">
+          <Image
+            src={problem}
+            width={20}
+            className="appointment-right__content-icon"
+            preview={false}
+          />
+          <div>
+            <Typography
+              className="appointment-font"
+              style={{
+                fontSize: 13,
+                fontWeight: 400,
+                color: "#6c81a0",
+                marginTop: 2,
+              }}
+            >
+              {appointment?.issue ? appointment?.issue : "--"}
+            </Typography>
+          </div>
+        </div>
       </div>
       <div className="cardAppointment--buttonArea">
         <div className="cardAppointment--buttonArea__button">
@@ -206,11 +201,14 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
             </>
           )}
         </div>
-        <div className="cardAppointment--buttonArea__button" onClick={() => {
-          dispatch(setIsSelected(0));
-          dispatch(getDoctorDetail(appointment?.idDoctor));
-          navigate(`/doctor/${appointment?.idDoctor}`)
-        }}>
+        <div
+          className="cardAppointment--buttonArea__button"
+          onClick={() => {
+            dispatch(setIsSelected(0));
+            dispatch(getDoctorDetail(appointment?.idDoctor));
+            navigate(`/doctor/${appointment?.idDoctor}`);
+          }}
+        >
           <svg
             width="16"
             height="16"

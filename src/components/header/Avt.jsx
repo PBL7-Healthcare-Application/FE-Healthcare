@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
 import { useState } from "react";
+import medicalHistory from "../../assets/images/medicalHistory.png";
 import personDefault from "../../assets/images/personDefault.png";
 
 const Avt = (props) => {
@@ -54,10 +55,12 @@ const Avt = (props) => {
           <div className="avt-icon" style={{ position: "relative" }}>
             <CloseOutlined onClick={handleAvatar} className="avt-icon__item" />
             <Space className="avt-popover" direction="vertical">
-              <Space onClick={() => {
-                navigate("/user/profile")
-                setvisible(!visible)
-              }}>
+              <Space
+                onClick={() => {
+                  navigate("/user/profile");
+                  setvisible(!visible);
+                }}
+              >
                 <Image
                   src={props?.profile?.avatar}
                   width={70}
@@ -84,16 +87,32 @@ const Avt = (props) => {
                 </div>
               </Space>
               <div className="avt-popover__box" style={{ marginTop: 20 }}>
-                <Space className="avt-popover__box--item">
-                  <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" preview={false} />
-                  <Typography className="avt-font" style={{ fontSize: 15 }}>
+                <Space
+                  className="avt-popover__box--item"
+                  onClick={() => {
+                    navigate("/user/appointment");
+                    setvisible(!visible);
+                  }}
+                >
+                  <Image
+                    src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg"
+                    preview={false}
+                  />
+                  <Typography className="avt-font" style={{ fontSize: 13 }}>
                     My Appointment
                   </Typography>
                 </Space>
                 <Space className="avt-popover__box--item">
-                  <Image src="https://hhg-common.hellobacsi.com/common/userProfileNav/helloSites/icon-myBooking.svg" preview={false} />
-                  <Typography className="avt-font" style={{ fontSize: 15 }}>
-                    My Appointment
+                  <Image src={medicalHistory} preview={false} width={25} />
+                  <Typography
+                    className="avt-font"
+                    style={{ fontSize: 13 }}
+                    onClick={() => {
+                      navigate("/user/medical-history");
+                      setvisible(!visible);
+                    }}
+                  >
+                    My Medical History
                   </Typography>
                 </Space>
               </div>

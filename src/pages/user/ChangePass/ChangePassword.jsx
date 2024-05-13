@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeUserPassword } from "../../../stores/user/UserThunk";
 import { useEffect } from "react";
 import deleteToken from "../../../helpers/deleteToken";
-import { setStatusCode } from "../../../stores/user/UserSlice";
+import { setError, setStatusCode } from "../../../stores/user/UserSlice";
 import { useNavigate } from "react-router-dom";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { delay } from "lodash";
@@ -14,7 +14,7 @@ import { logOut } from "../../../stores/auth/AuthSlice";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
-  const { statusCode } = useSelector((state) => state.profile);
+  const { statusCode, error } = useSelector((state) => state.profile);
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
   const onSubmit = (values) => {
@@ -37,7 +37,11 @@ const ChangePassword = () => {
         navigate("/");
       }, 1500);
     }
-  }, [statusCode, dispatch, navigate, api]);
+    if (error !== null) {
+      openNotificationWithIcon("error", api, "", "Change Password Failed!");
+      dispatch(setError(null));
+    }
+  }, [statusCode, dispatch, navigate, api, error]);
   return (
     <div className="ChangePass">
       <span className="ChangePass-title">Change Password</span>

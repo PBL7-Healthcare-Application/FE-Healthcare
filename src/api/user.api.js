@@ -23,3 +23,6 @@ export const disableAccount = (data) => {
 export const cancelAppointment = (data) => {
   return http.post("/User/Appointment/CancelAppointment", data);
 };
+export const registerDoctor = (data) => {
+  return http.post("/Partner/StartDoctoring", data);
+};

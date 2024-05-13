@@ -16,10 +16,11 @@ import personDefaults from "../../../assets/images/personDefault.png";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { updateUserProfile } from "../../../stores/user/UserThunk";
 import dayjs from "dayjs";
+import { setError, setStatusCode } from "../../../stores/user/UserSlice";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const { profile } = useSelector((state) => state.profile);
+  const { profile, statusCode, error } = useSelector((state) => state.profile);
   const [profiles, setProfiles] = useState(profile);
   const [isDisabled, setIsDisabled] = useState(true);
   const [api, contextHolder] = notification.useNotification();
@@ -73,6 +74,29 @@ const Profile = () => {
       setProfiles(profile);
     }
   }, [profile]);
+
+  useEffect(() => {
+    if (statusCode === 200) {
+      openNotificationWithIcon(
+        "success",
+        api,
+        "",
+        "The profile has been successfully updated!"
+      );
+      dispatch(setStatusCode(null));
+      localStorage.removeItem("user");
+      localStorage.setItem("user", JSON.stringify(profile));
+    }
+    if (error !== null) {
+      openNotificationWithIcon(
+        "error",
+        api,
+        "",
+        "The profile has been unsuccessfully updated!"
+      );
+      dispatch(setError(null));
+    }
+  }, [statusCode, dispatch, api, profile, error]);
 
   return (
     <div style={{ padding: "20px 0" }}>

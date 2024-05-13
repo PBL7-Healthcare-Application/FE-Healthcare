@@ -6,6 +6,7 @@ import {
   disableAccount,
   getAppointment,
   getProfile,
+  registerDoctor,
   updateProfile,
 } from "../../api/user.api";
 
@@ -84,6 +85,18 @@ export const cancelUserAppointment = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await cancelAppointment(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const regisDoctor = createAsyncThunk(
+  "user/regisDoctor",
+  async (data, thunkApi) => {
+    try {
+      const response = await registerDoctor(data);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);
