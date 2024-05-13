@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import {
@@ -8,9 +9,11 @@ import {
   Form,
   Image,
   Input,
+  Modal,
   Select,
   Typography,
   Upload,
+  notification,
 } from "antd";
 import partner1 from "../../assets/images/partner1.webp";
 import error from "../../assets/images/error.png";
@@ -26,16 +29,29 @@ import "./Partner.scss";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { getAllSpecialty } from "../../api/doctor.api";
-import getImageUpload from "../../helpers/uploadCloudinary";
+import getToken from "../../helpers/getToken";
+import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
+import { delay } from "lodash";
+import { useNavigate } from "react-router-dom";
+import { bodyPartner, customResCertificates, customResExperiences, customResTrainings } from "../../helpers/resHelper";
+import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux";
+import { regisDoctor } from "../../stores/user/UserThunk";
+import { setError, setStatusCode } from "../../stores/user/UserSlice";
 
 const Partner = () => {
   const [isEducation, setIsEducation] = useState(false);
   const [isExperience, setIsExperience] = useState(false);
   const [specialties, setSpecialties] = useState([]);
+  const [api, contextHolder] = notification.useNotification();
   const [form] = Form.useForm();
   const [certificates] = useState([{}]);
-  const [educations] = useState([{}]);
-  const [experiences] = useState([{}]);
+  const [trainingProcesses] = useState([{}]);
+  const [workingProcesses] = useState([{}]);
+  const { statusCode, error } = useSelector((state) => state.profile);
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
   const propsUpload = {
     // action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
     maxCount: 1,
@@ -64,10 +80,10 @@ const Partner = () => {
   useEffect(() => {
     form.setFieldsValue({
       certificates,
-      educations,
-      experiences,
+      trainingProcesses,
+      workingProcesses,
     });
-  }, [form, certificates, educations, experiences]);
+  }, [form, certificates, trainingProcesses, workingProcesses]);
 
   const getSpecialties = async () => {
     try {
@@ -78,22 +94,98 @@ const Partner = () => {
     }
   };
   useEffect(() => {
+
     getSpecialties();
-  }, []);
+    const body = JSON.parse(localStorage.getItem("partner"));
+    if (body !== null) {
+      form.setFieldsValue({
+        idSpecialty: body.idSpecialty,
+        nameClinic: body.nameClinic,
+
+        certificates: customResCertificates(body.certificates),
+        workingProcesses: body.workingProcesses.length > 0 ? customResExperiences(body.workingProcesses) : [{}],
+        trainingProcesses: body.trainingProcesses.length > 0 ? customResTrainings(body.trainingProcesses) : [{}],
+      }
+      );
+      if (body.trainingProcesses.length > 0) {
+        setIsEducation(true);
+      }
+      if (body.workingProcesses.length > 0) {
+        setIsExperience(true);
+      }
+    }
+  }, [form]);
+
+  useEffect(() => {
+    if (statusCode === 200) {
+      dispatch(setStatusCode(null));
+      openNotificationWithIcon(
+        "success",
+        api,
+        "",
+        "Register Successfully!"
+      );
+
+    }
+    if (error !== null) {
+      console.log(error);
+      openNotificationWithIcon(
+        "error",
+        api,
+        "",
+        error
+      );
+      dispatch(setError(null));
+    }
+  }, [statusCode, error, api, dispatch])
 
   const onFinish = async (values) => {
-    console.log(values);
+    const token = getToken();
+    const body = await bodyPartner(values, isEducation, isExperience);
+    console.log(body);
+    localStorage.setItem("partner", JSON.stringify(body));
+    if (token) {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userWithoutAvatar = Object.fromEntries(Object.entries(user).filter(([key]) => key !== 'avatar'));
+      if (userWithoutAvatar && Object.values(userWithoutAvatar).every(value => value !== null && value !== "")) {
+        dispatch(regisDoctor(body));
+        localStorage.removeItem("partner");
+      } else {
+        openNotificationWithIcon(
+          "warning",
+          api,
+          "",
+          "Please update your profile to continue!"
+        );
+        delay(() => {
+          navigate("/user/profile");
+        }, 1500);
+      }
+    }
+    else {
+      openNotificationWithIcon(
+        "warning",
+        api,
+        "",
+        "Please sign in to continue!"
+      );
+      delay(() => {
+        navigate("/auth/sign-in");
+      }, 1500);
+    }
+
     // const res = await getImageUpload(values.businessLicense.file.originFileObj);
     // console.log(res);
     form.resetFields();
     form.setFieldsValue({
       certificates,
-      educations,
-      experiences,
+      workingProcesses,
+      trainingProcesses,
     });
   };
   return (
     <div className="partner">
+      {contextHolder}
       <div className="partner-main">
         <div className="partner-content1">
           <div className="partner-content1__left">
@@ -308,7 +400,7 @@ const Partner = () => {
                   >
                     <Form.Item
                       label="Specialty"
-                      name="specialty"
+                      name="idSpecialty"
                       style={{
                         display: "inline-block",
                         width: "calc(50% - 8px)",
@@ -396,7 +488,7 @@ const Partner = () => {
                             >
                               <Form.Item
                                 label="Certificate"
-                                name={[field.name, "certificate"]}
+                                name={[field.name, "name"]}
                                 style={{
                                   display: "inline-block",
                                   width: "calc(50% - 8px)",
@@ -428,11 +520,12 @@ const Partner = () => {
                                 <DatePicker
                                   picker="year"
                                   style={{ width: "100%" }}
+
                                 />
                               </Form.Item>
                             </Form.Item>
                             <Form.Item
-                              name={[field.name, "imgCertificate"]}
+                              name={[field.name, "image"]}
                               rules={[
                                 {
                                   required: true,
@@ -462,6 +555,7 @@ const Partner = () => {
                   <Checkbox
                     value={isEducation}
                     onChange={(e) => setIsEducation(e.target.checked)}
+                    checked={isEducation}
                   />
                   <Typography style={{ fontWeight: 500, fontSize: 20 }}>
                     Educations
@@ -469,7 +563,7 @@ const Partner = () => {
                 </div>
                 {isEducation && (
                   <Form.Item className="login-form" style={{ width: "100%" }}>
-                    <Form.List name="educations" label="Certificates">
+                    <Form.List name="trainingProcesses" label="Certificates">
                       {(fields, { add, remove }) => (
                         <div
                           style={{
@@ -502,6 +596,12 @@ const Partner = () => {
                                     display: "inline-block",
                                     width: "calc(50% - 8px)",
                                   }}
+                                  rules={[
+                                    {
+                                      required: isEducation,
+                                      message: "School Name is required",
+                                    },
+                                  ]}
                                 >
                                   <Input />
                                 </Form.Item>
@@ -513,6 +613,12 @@ const Partner = () => {
                                     width: "calc(50% - 8px)",
                                     margin: "0 8px",
                                   }}
+                                  rules={[
+                                    {
+                                      required: isEducation,
+                                      message: "Major is required",
+                                    },
+                                  ]}
                                 >
                                   <Input />
                                 </Form.Item>
@@ -529,6 +635,12 @@ const Partner = () => {
                                     display: "inline-block",
                                     width: "calc(50% - 8px)",
                                   }}
+                                  rules={[
+                                    {
+                                      required: isEducation,
+                                      message: "Start year is required",
+                                    },
+                                  ]}
                                 >
                                   <DatePicker
                                     picker="year"
@@ -543,10 +655,17 @@ const Partner = () => {
                                     width: "calc(50% - 8px)",
                                     margin: "0 8px",
                                   }}
+                                  rules={[
+                                    {
+                                      required: isEducation,
+                                      message: "End year is required",
+                                    },
+                                  ]}
                                 >
                                   <DatePicker
                                     picker="year"
                                     style={{ width: "100%" }}
+
                                   />
                                 </Form.Item>
                               </Form.Item>
@@ -567,6 +686,7 @@ const Partner = () => {
                   <Checkbox
                     value={isExperience}
                     onChange={(e) => setIsExperience(e.target.checked)}
+                    checked={isExperience}
                   />
                   <Typography style={{ fontWeight: 500, fontSize: 20 }}>
                     Experiences
@@ -574,7 +694,7 @@ const Partner = () => {
                 </div>
                 {isExperience && (
                   <Form.Item className="login-form" style={{ width: "100%" }}>
-                    <Form.List name="experiences">
+                    <Form.List name="workingProcesses">
                       {(fields, { add, remove }) => (
                         <div
                           style={{
@@ -602,11 +722,17 @@ const Partner = () => {
                               >
                                 <Form.Item
                                   label="Workplace"
-                                  name={[field.name, "workPlace"]}
+                                  name={[field.name, "workplace"]}
                                   style={{
                                     display: "inline-block",
                                     width: "calc(50% - 8px)",
                                   }}
+                                  rules={[
+                                    {
+                                      required: isExperience,
+                                      message: "Workplace is required",
+                                    },
+                                  ]}
                                 >
                                   <Input />
                                 </Form.Item>
@@ -618,6 +744,12 @@ const Partner = () => {
                                     width: "calc(50% - 8px)",
                                     margin: "0 8px",
                                   }}
+                                  rules={[
+                                    {
+                                      required: isExperience,
+                                      message: "Position is required",
+                                    },
+                                  ]}
                                 >
                                   <Input />
                                 </Form.Item>
@@ -634,6 +766,12 @@ const Partner = () => {
                                     display: "inline-block",
                                     width: "calc(50% - 8px)",
                                   }}
+                                  rules={[
+                                    {
+                                      required: isExperience,
+                                      message: "Start year is required",
+                                    },
+                                  ]}
                                 >
                                   <DatePicker
                                     picker="year"
@@ -648,6 +786,12 @@ const Partner = () => {
                                     width: "calc(50% - 8px)",
                                     margin: "0 8px",
                                   }}
+                                  rules={[
+                                    {
+                                      required: isExperience,
+                                      message: "End year is required",
+                                    },
+                                  ]}
                                 >
                                   <DatePicker
                                     picker="year"

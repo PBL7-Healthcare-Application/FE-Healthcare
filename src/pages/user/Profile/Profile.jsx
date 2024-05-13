@@ -17,6 +17,8 @@ import { openNotificationWithIcon } from "../../../components/notification/Custo
 import { updateUserProfile } from "../../../stores/user/UserThunk";
 import dayjs from "dayjs";
 import { setError, setStatusCode } from "../../../stores/user/UserSlice";
+import { useNavigate } from "react-router-dom";
+import { delay } from "lodash";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -25,6 +27,7 @@ const Profile = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleChange = (field) => {
     setIsDisabled(false);
     setProfiles((prev) => ({
@@ -86,6 +89,11 @@ const Profile = () => {
       dispatch(setStatusCode(null));
       localStorage.removeItem("user");
       localStorage.setItem("user", JSON.stringify(profile));
+      delay(() => {
+        if (JSON.parse(localStorage.getItem("partner")) !== null) {
+          navigate("/partner")
+        }
+      }, 1500);
     }
     if (error !== null) {
       openNotificationWithIcon(
@@ -95,8 +103,9 @@ const Profile = () => {
         "The profile has been unsuccessfully updated!"
       );
       dispatch(setError(null));
+      setProfiles(profile);
     }
-  }, [statusCode, dispatch, api, profile, error]);
+  }, [statusCode, dispatch, api, profile, error, navigate]);
 
   return (
     <div style={{ padding: "20px 0" }}>
@@ -147,9 +156,8 @@ const Profile = () => {
               Name
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -166,9 +174,8 @@ const Profile = () => {
               Date Of Birth
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-radio-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
+                }`}
             >
               {!isEdit ? (
                 <input
@@ -196,9 +203,8 @@ const Profile = () => {
               Gender
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-radio-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
+                }`}
             >
               {!isEdit ? (
                 <input
@@ -237,9 +243,8 @@ const Profile = () => {
               Address
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -258,9 +263,8 @@ const Profile = () => {
               Phone Number
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -269,8 +273,8 @@ const Profile = () => {
                   profiles?.phoneNumber
                     ? profiles?.phoneNumber
                     : isEdit
-                    ? ""
-                    : "--"
+                      ? ""
+                      : "--"
                 }
                 onChange={(e) =>
                   handleChange({ name: "phoneNumber", value: e.target.value })

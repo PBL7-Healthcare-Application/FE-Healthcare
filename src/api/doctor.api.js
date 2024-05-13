@@ -9,7 +9,7 @@ export const searchDoctor = (
   IdSpecialty,
   filterAvailable
 ) => {
-  let url = `/Doctor/GetDoctor?`;
+  let url = `User/Doctor/GetDoctor?`;
   if (keyword) {
     url += `&search=${keyword}`;
   }
@@ -37,5 +37,5 @@ export const getAllSpecialty = () => {
   return http.get("/MedicalSpecialty/GetAllMedicalSpecialty");
 };
 export const getDoctorById = (id) => {
-  return http.get(`/Doctor/GetDoctorDetail/${id}`);
+  return http.get(`User/Doctor/GetDoctorDetail/${id}`);
 };

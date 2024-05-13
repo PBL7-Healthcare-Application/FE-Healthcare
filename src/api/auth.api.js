@@ -1,16 +1,16 @@
 import http from "../helpers/http";
 
 export const logInUser = (userData) => {
-  return http.post("/User/SignIn", userData);
+  return http.post("/Auth/SignIn", userData);
 };
 export const registerUser = (userData) => {
-  return http.post("/User/SignUp", userData);
+  return http.post("/Auth/SignUp", userData);
 };
 
 export const verifyEmail = (userData) => {
-  return http.post("/User/ConfirmEmail", userData);
+  return http.post("/Auth/ConfirmEmail", userData);
 };
 
 export const resendOTP = (userData) => {
-  return http.post("/User/ResendOTP", userData);
+  return http.post("/Auth/ResendOTP", userData);
 };
