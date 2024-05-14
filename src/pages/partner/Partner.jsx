@@ -33,7 +33,12 @@ import getToken from "../../helpers/getToken";
 import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
 import { delay } from "lodash";
 import { useNavigate } from "react-router-dom";
-import { bodyPartner, customResCertificates, customResExperiences, customResTrainings } from "../../helpers/resHelper";
+import {
+  bodyPartner,
+  customResCertificates,
+  customResExperiences,
+  customResTrainings,
+} from "../../helpers/resHelper";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import { regisDoctor } from "../../stores/user/UserThunk";
@@ -48,7 +53,7 @@ const Partner = () => {
   const [certificates] = useState([{}]);
   const [trainingProcesses] = useState([{}]);
   const [workingProcesses] = useState([{}]);
-  const { statusCode, error } = useSelector((state) => state.profile);
+  const { statusCode, error, loading } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -94,19 +99,17 @@ const Partner = () => {
     }
   };
   useEffect(() => {
-
     getSpecialties();
     const body = JSON.parse(localStorage.getItem("partner"));
     if (body !== null) {
       form.setFieldsValue({
         idSpecialty: body.idSpecialty,
         nameClinic: body.nameClinic,
-
+        businessLicense: body.businessLicense,
         certificates: customResCertificates(body.certificates),
-        workingProcesses: body.workingProcesses.length > 0 ? customResExperiences(body.workingProcesses) : [{}],
-        trainingProcesses: body.trainingProcesses.length > 0 ? customResTrainings(body.trainingProcesses) : [{}],
-      }
-      );
+        workingProcesses: customResExperiences(body.workingProcesses),
+        trainingProcesses: customResTrainings(body.trainingProcesses),
+      });
       if (body.trainingProcesses.length > 0) {
         setIsEducation(true);
       }
@@ -119,38 +122,39 @@ const Partner = () => {
   useEffect(() => {
     if (statusCode === 200) {
       dispatch(setStatusCode(null));
-      openNotificationWithIcon(
-        "success",
-        api,
-        "",
-        "Register Successfully!"
-      );
-
+      openNotificationWithIcon("success", api, "", "Register Successfully!");
     }
     if (error !== null) {
-      console.log(error);
-      openNotificationWithIcon(
-        "error",
-        api,
-        "",
-        error
-      );
+      openNotificationWithIcon("error", api, "", error);
       dispatch(setError(null));
     }
-  }, [statusCode, error, api, dispatch])
+  }, [statusCode, error, api, dispatch]);
 
   const onFinish = async (values) => {
     const token = getToken();
-    const body = await bodyPartner(values, isEducation, isExperience);
-    console.log(body);
-    localStorage.setItem("partner", JSON.stringify(body));
+    const storedPartner = {
+      idSpecialty: values.idSpecialty,
+      nameClinic: values.nameClinic,
+      businessLicense: values.businessLicense,
+      certificates: values.certificates,
+      workingProcesses: isExperience ? values.workingProcesses : [],
+      trainingProcesses: isEducation ? values.trainingProcesses : [],
+    };
     if (token) {
       const user = JSON.parse(localStorage.getItem("user"));
-      const userWithoutAvatar = Object.fromEntries(Object.entries(user).filter(([key]) => key !== 'avatar'));
-      if (userWithoutAvatar && Object.values(userWithoutAvatar).every(value => value !== null && value !== "")) {
-        dispatch(regisDoctor(body));
+      const userWithoutAvatar = Object.fromEntries(
+        Object.entries(user).filter(([key]) => key !== "avatar")
+      );
+      if (
+        userWithoutAvatar &&
+        Object.values(userWithoutAvatar).every(
+          (value) => value !== null && value !== ""
+        )
+      ) {
+        dispatch(regisDoctor(storedPartner));
         localStorage.removeItem("partner");
       } else {
+        localStorage.setItem("partner", JSON.stringify(storedPartner));
         openNotificationWithIcon(
           "warning",
           api,
@@ -161,8 +165,8 @@ const Partner = () => {
           navigate("/user/profile");
         }, 1500);
       }
-    }
-    else {
+    } else {
+      localStorage.setItem("partner", JSON.stringify(storedPartner));
       openNotificationWithIcon(
         "warning",
         api,
@@ -520,7 +524,6 @@ const Partner = () => {
                                 <DatePicker
                                   picker="year"
                                   style={{ width: "100%" }}
-
                                 />
                               </Form.Item>
                             </Form.Item>
@@ -665,7 +668,6 @@ const Partner = () => {
                                   <DatePicker
                                     picker="year"
                                     style={{ width: "100%" }}
-
                                   />
                                 </Form.Item>
                               </Form.Item>
@@ -819,7 +821,11 @@ const Partner = () => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  <Button htmlType="submit" className="partner-button">
+                  <Button
+                    htmlType="submit"
+                    className="partner-button"
+                    loading={loading}
+                  >
                     Submit
                   </Button>
                 </Form.Item>

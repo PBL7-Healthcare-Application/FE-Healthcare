@@ -1,42 +1,54 @@
 /* eslint-disable no-unused-vars */
-import { CheckCircleOutlined, CloseCircleOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SearchOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import "./Appointment.scss";
 import { Button, Input, Select, Table, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const DoctorAppointment = () => {
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: 2,
+    },
+  });
   const navigate = useNavigate();
   const columns = [
     {
       title: "Id",
       dataIndex: "key",
-      align: 'center'
+      align: "center",
     },
     {
       title: "Name",
       dataIndex: "name",
-      align: 'center'
+      align: "center",
     },
 
     {
       title: "Phone",
       dataIndex: "phone",
-      align: 'center'
+      align: "center",
     },
     {
       title: "Date",
       dataIndex: "date",
-      align: 'center'
+      align: "center",
     },
     {
       title: "Time",
       dataIndex: "time",
-      align: 'center'
+      align: "center",
     },
     {
       title: "Status",
       dataIndex: "status",
-      align: 'center'
+      align: "center",
     },
   ];
   const data = [
@@ -46,9 +58,11 @@ const DoctorAppointment = () => {
       phone: 18889898989,
       date: "2021-10-10",
       time: "09:00 - 10:00",
-      status: <Tag icon={<CheckCircleOutlined />} color="success">
-        Completed
-      </Tag>
+      status: (
+        <Tag icon={<CheckCircleOutlined />} color="success">
+          Completed
+        </Tag>
+      ),
     },
     {
       key: "2",
@@ -56,9 +70,11 @@ const DoctorAppointment = () => {
       phone: 18889898888,
       date: "2021-10-10",
       time: "09:00 - 10:00",
-      status: <Tag icon={<CheckCircleOutlined />} color="success">
-        Completed
-      </Tag>
+      status: (
+        <Tag icon={<CheckCircleOutlined />} color="success">
+          Completed
+        </Tag>
+      ),
     },
     {
       key: "3",
@@ -66,9 +82,11 @@ const DoctorAppointment = () => {
       phone: 18900010002,
       date: "2021-10-10",
       time: "09:00 - 10:00",
-      status: <Tag icon={<SyncOutlined spin />} color="processing">
-        Upcoming
-      </Tag>
+      status: (
+        <Tag icon={<SyncOutlined spin />} color="processing">
+          Upcoming
+        </Tag>
+      ),
     },
     {
       key: "4",
@@ -76,9 +94,11 @@ const DoctorAppointment = () => {
       phone: 18900010002,
       date: "2021-10-10",
       time: "09:00 - 10:00",
-      status: <Tag icon={<SyncOutlined spin />} color="processing">
-        Upcoming
-      </Tag>
+      status: (
+        <Tag icon={<SyncOutlined spin />} color="processing">
+          Upcoming
+        </Tag>
+      ),
     },
     {
       key: "5",
@@ -86,9 +106,11 @@ const DoctorAppointment = () => {
       phone: 18900010002,
       date: "2021-10-10",
       time: "09:00 - 10:00",
-      status: <Tag icon={<CloseCircleOutlined />} color="error">
-        Canceled
-      </Tag>
+      status: (
+        <Tag icon={<CloseCircleOutlined />} color="error">
+          Canceled
+        </Tag>
+      ),
     },
   ];
   return (
@@ -145,13 +167,18 @@ const DoctorAppointment = () => {
         </div>
       </div>
       <div className="DoctorAppointment-filter">
-        <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
-          return {
-            onClick: event => {
-              navigate(`/dr.Enclinic/appointment/${record.key}`)
-            },
-          };
-        }} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                navigate(`/dr.Enclinic/appointment/${record.key}`);
+              },
+            };
+          }}
+          pagination={tableParams.pagination}
+        />
       </div>
     </div>
   );

@@ -39,3 +39,23 @@ export const getAllSpecialty = () => {
 export const getDoctorById = (id) => {
   return http.get(`User/Doctor/GetDoctorDetail/${id}`);
 };
+
+export const getAppointment = (search, status, page = 1, filterAvailable) => {
+  return http.get(`/Doctor/Appointment/ViewAppointment?page=${page}`);
+};
+
+export const getDetailAppointment = (id) => {
+  return http.get(`/Doctor/Appointment/ViewAppointment/${id}`);
+};
+
+export const setSchedule = (data) => {
+  return http.post(`/Doctor/Appointment/SetupSchedule`, data);
+};
+
+export const cancelAppointment = (data) => {
+  return http.post("/Doctor/Appointment/CancelAppointment", data);
+};
+
+export const getProfile = () => {
+  return http.get(`/Doctor/Profile/GetPersonalInfo`);
+};

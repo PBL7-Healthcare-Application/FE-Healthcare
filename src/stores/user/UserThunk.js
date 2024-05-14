@@ -9,6 +9,7 @@ import {
   registerDoctor,
   updateProfile,
 } from "../../api/user.api";
+import { bodyPartner } from "../../helpers/resHelper";
 
 export const getUserProfile = createAsyncThunk(
   "user/getUserProfile",
@@ -96,7 +97,8 @@ export const regisDoctor = createAsyncThunk(
   "user/regisDoctor",
   async (data, thunkApi) => {
     try {
-      const response = await registerDoctor(data);
+      const body = await bodyPartner(data);
+      const response = await registerDoctor(body);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

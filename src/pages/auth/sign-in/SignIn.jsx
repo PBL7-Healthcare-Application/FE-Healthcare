@@ -26,9 +26,16 @@ const SignIn = () => {
           if (localStorage.getItem("appointment") !== null) {
             dispatch(getUserProfile());
             navigate("/booking/doctor");
+          } else if (localStorage.getItem("partner") !== null) {
+            navigate("/partner");
           } else {
             navigate("/");
           }
+        }, 1500);
+      } else if (user.role === "Doctor") {
+        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        delay(() => {
+          navigate("/dr.Enclinic/appointment");
         }, 1500);
       }
     }
