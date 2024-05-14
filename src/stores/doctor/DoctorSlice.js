@@ -36,9 +36,9 @@ const doctorSlice = createSlice({
       .addCase(getDoctorAppointment.fulfilled, (state, action) => {
         state.loading = false;
         state.ListAppointments = action.payload.data;
-        state.TotalItems = action.payload.PagingInfo.totalItems;
-        state.CurrentPage = action.payload.PagingInfo.CurrentPage;
-        state.ItemsPerPage = action.payload.PagingInfo.ItemsPerPage;
+        state.TotalItems = action.payload.pagingInfo.totalItems;
+        state.CurrentPage = action.payload.pagingInfo.CurrentPage;
+        state.ItemsPerPage = action.payload.pagingInfo.ItemsPerPage;
       })
       .addCase(getDoctorAppointment.rejected, (state, action) => {
         state.loading = false;

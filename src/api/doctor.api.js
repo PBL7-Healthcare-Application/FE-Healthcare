@@ -41,7 +41,17 @@ export const getDoctorById = (id) => {
 };
 
 export const getAppointment = (search, status, page = 1, filterAvailable) => {
-  return http.get(`/Doctor/Appointment/ViewAppointment?page=${page}`);
+  let url = `Doctor/Appointment/ViewAppointment?page=${page}`;
+  if (search !== undefined) {
+    url += `&search=${search}`;
+  }
+  if (status !== undefined) {
+    url += `&status=${status}`;
+  }
+  if (filterAvailable !== undefined) {
+    url += `&filterAvailable=${filterAvailable}`;
+  }
+  return http.get(url);
 };
 
 export const getDetailAppointment = (id) => {

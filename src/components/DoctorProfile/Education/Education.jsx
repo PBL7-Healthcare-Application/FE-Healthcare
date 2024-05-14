@@ -1,9 +1,12 @@
-import { Space, Table, Tag } from "antd";
+import { Space, Table } from "antd";
 import "../Certification/Certification.scss"
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, SyncOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
+import { iconCertificate } from "../../../helpers/icon";
+import { useSelector } from "react-redux";
 
 
 const Education = () => {
+    const { profile } = useSelector((state) => state.doctor)
     const columns = [
         {
             title: "Id",
@@ -63,51 +66,23 @@ const Education = () => {
         },
 
     ];
-    const data = [
-        {
-            key: "1",
-            name: "Han hua Chistian Hospital, Đài Loan",
-            major: "Cardiology",
-            startYear: 2010,
-            endYear: 2015,
-            status: <Tag icon={<SyncOutlined spin />} color="processing">
-                Pending
-            </Tag>
 
-        },
-        {
-            key: "2",
-            name: "North Carolina, Mỹ",
-            major: "Tu nghiệp chuyên môn",
-            startYear: 2009,
-            endYear: 2010,
-            status: <Tag icon={<CheckCircleOutlined />} color="success">
-                Approvaled
-            </Tag>
-
-
-        },
-        {
-            key: "3",
-            name: "Đại học Y Dược TP.HCM",
-            major: "Tốt nghiệp Tiến sĩ chuyên khoa Tai Mũi Họng",
-            startYear: 1995,
-            endYear: 2000,
-            status: <Tag icon={<CloseCircleOutlined />} color="error">
-                rejected
-            </Tag>
-
-        },
-
-
-    ];
 
     return (
         <div className="certificate-main">
             <span className="setting-font" style={{ fontSize: 25, fontWeight: 600, color: "#185FA0" }}>Educations</span>
             <div className="certificate">
 
-                <Table columns={columns} dataSource={data} bordered />
+                <Table columns={columns} dataSource={profile.trainingProcess.map((item, index) => ({
+                    id: item.idTrainingProcess,
+                    key: index + 1,
+                    name: item?.schoolName,
+                    major: item?.major,
+                    startYear: item?.startYear,
+                    endYear: item?.endYear,
+                    status: iconCertificate(item?.statusVerified)
+
+                }))} bordered />
             </div>
         </div>
     )

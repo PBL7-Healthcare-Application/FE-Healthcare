@@ -1,9 +1,12 @@
-import { Space, Table, Tag } from "antd";
+import { Space, Table } from "antd";
 import "../Certification/Certification.scss"
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, SyncOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
+import { iconCertificate } from "../../../helpers/icon";
+import { useSelector } from "react-redux";
 
 
 const Experience = () => {
+    const { profile } = useSelector((state) => state.doctor)
     const columns = [
         {
             title: "Id",
@@ -62,51 +65,22 @@ const Experience = () => {
         },
 
     ];
-    const data = [
-        {
-            key: "1",
-            name: "Bệnh viện Đại học Y Dược TP.HCM",
-            position: "Trưởng khoa Tai Mũi Họng",
-            startYear: 2004,
-            endYear: 2024,
-            status: <Tag icon={<CloseCircleOutlined />} color="error">
-                rejected
-            </Tag>
 
-        },
-        {
-            key: "2",
-            name: "Đại học Y Dược TP.HCM",
-            position: "Giảng viên Bộ môn Tai Mũi Họng",
-            startYear: 1995,
-            endYear: 2024,
-            status: <Tag icon={<CheckCircleOutlined />} color="success">
-                Approvaled
-            </Tag>
-
-
-        },
-        {
-            key: "3",
-            name: "Đại học Y Dược TP.HCM",
-            position: "Bác sĩ nội trú Bộ môn Tai Mũi Họng",
-            startYear: 1990,
-            endYear: 1994,
-            status: <Tag icon={<SyncOutlined spin />} color="processing">
-                Pending
-            </Tag>
-
-        },
-
-
-    ];
 
     return (
         <div className="certificate-main">
             <span className="setting-font" style={{ fontSize: 25, fontWeight: 600, color: "#185FA0" }}>Experiences</span>
             <div className="certificate">
 
-                <Table columns={columns} dataSource={data} bordered />
+                <Table columns={columns} dataSource={profile.workingProcess.map((item, index) => ({
+                    id: item.idWorkingProcess,
+                    key: index + 1,
+                    name: item?.workplace,
+                    position: item?.position,
+                    startYear: item?.startYear,
+                    endYear: item?.endYear,
+                    status: iconCertificate(item?.statusVerified)
+                }))} bordered />
             </div>
         </div>
     )

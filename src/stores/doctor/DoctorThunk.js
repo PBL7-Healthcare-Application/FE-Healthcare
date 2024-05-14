@@ -11,6 +11,7 @@ export const getDoctorAppointment = createAsyncThunk(
   "doctor/getDoctorAppointment",
   async (params, thunkApi) => {
     try {
+      console.log("param", params);
       const { search, status, page, filterAvailable } = params;
       const response = await getAppointment(
         search,

@@ -1,9 +1,12 @@
-import { Space, Table, Tag } from "antd";
+import { Space, Table } from "antd";
 import "./Certification.scss"
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, SyncOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import { iconCertificate } from "../../../helpers/icon";
 
 
 const Certification = () => {
+    const { profile } = useSelector((state) => state.doctor)
     const columns = [
         {
             title: "Id",
@@ -52,52 +55,18 @@ const Certification = () => {
         },
 
     ];
-    const data = [
-        {
-            key: "1",
-            name: "Bachelor of Medicine, Bachelor of Surgery (MBBS)",
-            year: 2015,
-            status: <Tag icon={<CheckCircleOutlined />} color="success">
-                Approvaled
-            </Tag>
-
-        },
-        {
-            key: "2",
-            name: "Certificate of Advanced Cardiac Life Support (ACLS)",
-            year: 2015,
-            status: <Tag icon={<SyncOutlined spin />} color="processing">
-                Pending
-            </Tag>
-
-        },
-        {
-            key: "3",
-            name: "Certificate of Advanced Cardiac Life Support (ACLS)",
-            year: 2015,
-            status: <Tag icon={<CloseCircleOutlined />} color="error">
-                rejected
-            </Tag>
-
-        },
-        {
-            key: "4",
-            name: "Fellow of the Royal College of Physicians (FRCP)",
-            year: 2015,
-            status: <Tag icon={<SyncOutlined spin />} color="processing">
-                Pending
-            </Tag>
-
-        },
-
-    ];
-
     return (
         <div className="certificate-main">
             <span className="setting-font" style={{ fontSize: 25, fontWeight: 600, color: "#185FA0" }}>Certificates</span>
             <div className="certificate">
 
-                <Table columns={columns} dataSource={data} bordered />
+                <Table columns={columns} dataSource={profile.certificates.map((item, index) => ({
+                    id: item.idCertificate,
+                    key: index + 1,
+                    name: item?.name,
+                    year: item?.year,
+                    status: iconCertificate(item?.statusVerified)
+                }))} bordered />
             </div>
         </div>
     )
