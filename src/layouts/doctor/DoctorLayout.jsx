@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDoctorProfile } from "../../stores/doctor/DoctorThunk";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
+import { auth } from "../../helpers/firebase";
 const { Header, Sider, Content } = Layout;
 const DoctorLayout = () => {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ const DoctorLayout = () => {
     else navigate(`/dr.Enclinic${e.key}`);
   };
   const handleLogout = () => {
+    auth.signOut();
     dispatch(logOut());
     localStorage.removeItem("doctor");
     deleteToken();

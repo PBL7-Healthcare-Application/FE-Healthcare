@@ -18,6 +18,7 @@ const doctorSlice = createSlice({
     TotalItems: null,
     CurrentPage: 1,
     ItemsPerPage: null,
+    loading: false,
   },
   reducers: {
     setStatusCode: (state, action) => {

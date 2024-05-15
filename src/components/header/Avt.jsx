@@ -14,6 +14,7 @@ import deleteToken from "../../helpers/deleteToken";
 import { useState } from "react";
 import medicalHistory from "../../assets/images/medicalHistory.png";
 import personDefault from "../../assets/images/personDefault.png";
+import { auth } from "../../helpers/firebase";
 
 const Avt = (props) => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Avt = (props) => {
     setvisible(!visible);
   };
   const handleLogout = () => {
+    auth.signOut();
     dispatch(logOut());
     localStorage.removeItem("profile");
     localStorage.removeItem("user");
@@ -32,8 +34,12 @@ const Avt = (props) => {
   };
   return (
     <Space className="avt">
-      <Badge count={3}>
-        <MessageOutlined className="avt-notify" style={{ width: 30 }} />
+      <Badge count={3} style={{ cursor: "pointer" }}>
+        <MessageOutlined
+          className="avt-notify"
+          style={{ width: 30 }}
+          onClick={() => navigate("/chatting")}
+        />
       </Badge>
       <Badge count={5}>
         <BellOutlined className="avt-notify" />

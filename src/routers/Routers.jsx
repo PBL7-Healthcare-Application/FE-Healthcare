@@ -93,11 +93,9 @@ const routers = createBrowserRouter([
         element: <Partner />,
       },
       {
-        path: '/chatting',
-        element:
-          <Chatting />
-
-      }
+        path: "/chatting",
+        element: <Chatting />,
+      },
     ],
   },
   {
@@ -133,8 +131,7 @@ const routers = createBrowserRouter([
             path: ":id",
             element: <AppointmentDetail />,
           },
-
-        ]
+        ],
       },
       {
         path: "calendar",
@@ -149,21 +146,21 @@ const routers = createBrowserRouter([
             children: [
               {
                 path: "personal",
-                element: <ProfileDr />
+                element: <ProfileDr />,
               },
               {
                 path: "certification",
-                element: <Certification />
+                element: <Certification />,
               },
               {
                 path: "education",
-                element: <Education />
+                element: <Education />,
               },
               {
                 path: "experience",
-                element: <Experience />
-              }
-            ]
+                element: <Experience />,
+              },
+            ],
           },
           {
             path: "work-schedule",
@@ -181,13 +178,11 @@ const routers = createBrowserRouter([
                 element: <DisableAccount />,
               },
             ],
-
-          }
-        ]
+          },
+        ],
       },
     ],
   },
-
 ]);
 
 export default routers;

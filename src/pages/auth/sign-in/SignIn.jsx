@@ -11,15 +11,27 @@ import { SetError } from "../../../stores/auth/AuthSlice";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { delay } from "lodash";
 import { getUserProfile } from "../../../stores/user/UserThunk";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../helpers/firebase";
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   // const [messageApi, contextHolder] = message.useMessage();
   const { user, error } = useSelector((state) => state.auth);
   const [api, contextHolder] = notification.useNotification();
+
+  const handleChat = async (email) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, email);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     if (user) {
+      handleChat(user.email);
       if (user.role === "User") {
         openNotificationWithIcon("success", api, "", "Sign In Success!");
         delay(() => {
@@ -40,7 +52,7 @@ const SignIn = () => {
       }
     }
     if (error) {
-      openNotificationWithIcon("error", api, "", error);
+      openNotificationWithIcon("error", api, "", error.message);
       dispatch(SetError());
     }
     return () => {};
