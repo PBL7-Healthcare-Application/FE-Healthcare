@@ -3,9 +3,11 @@ import { Image } from "antd";
 import "./List.scss";
 import personDefault from "../../../assets/images/personDefault.png";
 
-const ItemUser = ({ chat }) => {
+const ItemUser = ({ chat, onSelect }) => {
   return (
-    <div className="listUser-item">
+    <div className="listUser-item" onClick={() => onSelect(chat)} style={{
+      backgroundColor: chat?.isSeen ? "transparent" : "#e3f0ff",
+    }}>
       <Image
         src={chat.user?.avatar}
         fallback={personDefault}

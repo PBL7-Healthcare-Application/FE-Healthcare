@@ -65,12 +65,12 @@ const Verification = () => {
   };
   const createAccountFirebase = async (email, name) => {
     try {
-      const res = await createUserWithEmailAndPassword(auth, email, name);
+      const res = await createUserWithEmailAndPassword(auth, email, email);
       await setDoc(doc(db, "users", res.user.uid), {
         usename: name,
         email,
         id: res.user.uid,
-        blocked: [],
+
       });
       await setDoc(doc(db, "userchats", res.user.uid), {
         chats: [],
@@ -100,7 +100,7 @@ const Verification = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
 
   const minutes = Math.floor(seconds / 60);

@@ -40,7 +40,7 @@ const DoctorLayout = () => {
       setIsLogin(true);
       dispatch(getDoctorProfile());
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const DoctorLayout = () => {
           {isLogin ? (
             <Space className="avt">
               <Badge count={3}>
-                <MessageOutlined className="avt-notify" style={{ width: 30 }} />
+                <MessageOutlined className="avt-notify" style={{ width: 30 }} onClick={() => navigate('/dr.Enclinic/chatting')} />
               </Badge>
               <Badge count={5}>
                 <BellOutlined className="avt-notify" />

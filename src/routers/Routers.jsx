@@ -181,6 +181,11 @@ const routers = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "chatting",
+        element: <Chatting />,
+      },
+
     ],
   },
 ]);

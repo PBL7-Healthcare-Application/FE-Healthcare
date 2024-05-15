@@ -6,8 +6,15 @@ const chatSlice = createSlice({
   initialState: {
     chatUser: null,
     loading: true,
+    user: null,
+    chatId: null,
   },
-  reducers: {},
+  reducers: {
+    changeChat: (state, action) => {
+      state.chatId = action.payload.chatId;
+      state.user = action.payload.user;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getUserChat.pending, (state) => {
@@ -26,4 +33,4 @@ const chatSlice = createSlice({
   },
 });
 export default chatSlice.reducer;
-// export const { setChatUser } = chatSlice.actions;
+export const { changeChat } = chatSlice.actions;
