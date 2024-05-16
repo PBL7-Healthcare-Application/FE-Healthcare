@@ -7,7 +7,7 @@ import {
   MessageOutlined,
   RightOutlined,
 } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
@@ -15,15 +15,18 @@ import { useState } from "react";
 import medicalHistory from "../../assets/images/medicalHistory.png";
 import personDefault from "../../assets/images/personDefault.png";
 import { auth } from "../../helpers/firebase";
+import { handleUpdateStatus } from "../../helpers/chat";
 
 const Avt = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [visible, setvisible] = useState(true);
+  const { chatUser } = useSelector((state) => state.chat);
   const handleAvatar = () => {
     setvisible(!visible);
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await handleUpdateStatus(chatUser.id, false);
     auth.signOut();
     dispatch(logOut());
     localStorage.removeItem("profile");

@@ -14,8 +14,6 @@ td {
   }
 }
 
-
-
 .border {
   &-first {
     border-top-left-radius: 10px;
@@ -54,7 +52,6 @@ td {
       font-family: $font-main;
       font-weight: 600;
       font-size: 16px;
-
     }
   }
 
@@ -81,7 +78,6 @@ td {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-
   }
 
   &-buttonDate {
@@ -100,7 +96,6 @@ td {
     background-color: #3b82f6;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
-
   }
 
   &-prev {
@@ -140,11 +135,8 @@ td {
         color: #fff;
         font-family: $font-main;
         font-weight: 600;
-
       }
     }
-
-
   }
 
   &-status {
@@ -155,7 +147,7 @@ td {
     &-color {
       padding: 10px;
       border-radius: 50%;
-      background-color: #FFC700;
+      background-color: #ffc700;
     }
 
     &-text {
@@ -168,6 +160,5 @@ td {
     font-family: $font-main;
     font-size: 20px;
     margin-top: -20px;
-
   }
 }

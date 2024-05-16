@@ -13,6 +13,7 @@ import { delay } from "lodash";
 import { getUserProfile } from "../../../stores/user/UserThunk";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../helpers/firebase";
+import { handleUpdateStatus } from "../../../helpers/chat";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const SignIn = () => {
   // const [messageApi, contextHolder] = message.useMessage();
   const { user, error } = useSelector((state) => state.auth);
   const [api, contextHolder] = notification.useNotification();
-
+  const { chatUser } = useSelector((state) => state.chat);
   const handleChat = async (email) => {
     try {
       await signInWithEmailAndPassword(auth, email, email);
@@ -29,6 +30,13 @@ const SignIn = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (chatUser !== null) {
+      handleUpdateStatus(chatUser.id, true);
+    }
+  }, [chatUser]);
+
   useEffect(() => {
     if (user) {
       handleChat(user.email);

@@ -12,7 +12,7 @@ import { delay } from "lodash";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getUserProfile } from "../../../stores/user/UserThunk";
 import { auth, db } from "../../../helpers/firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 const otpFields = new Array(6).fill(0);
 const Verification = () => {
   const dispatch = useDispatch();
@@ -70,7 +70,8 @@ const Verification = () => {
         usename: name,
         email,
         id: res.user.uid,
-
+        online: true,
+        lastSeen: serverTimestamp(),
       });
       await setDoc(doc(db, "userchats", res.user.uid), {
         chats: [],
@@ -100,7 +101,7 @@ const Verification = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => { };
+    return () => {};
   }, [user, error, navigate, api, dispatch]);
 
   const minutes = Math.floor(seconds / 60);

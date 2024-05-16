@@ -17,6 +17,7 @@ import { getDoctorProfile } from "../../stores/doctor/DoctorThunk";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
 import { auth } from "../../helpers/firebase";
+import { handleUpdateStatus } from "../../helpers/chat";
 const { Header, Sider, Content } = Layout;
 const DoctorLayout = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const DoctorLayout = () => {
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.doctor);
+  const { chatUser } = useSelector((state) => state.chat);
   useEffect(() => {
     const endpoint = location.pathname;
     setCurrent(`/${endpoint.split("/")[2]}`);
@@ -40,7 +42,7 @@ const DoctorLayout = () => {
       setIsLogin(true);
       dispatch(getDoctorProfile());
     }
-    return () => { };
+    return () => {};
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -58,7 +60,8 @@ const DoctorLayout = () => {
       navigate("/dr.Enclinic/setting/profile/personal");
     else navigate(`/dr.Enclinic${e.key}`);
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await handleUpdateStatus(chatUser.id, false);
     auth.signOut();
     dispatch(logOut());
     localStorage.removeItem("doctor");
@@ -106,7 +109,11 @@ const DoctorLayout = () => {
           {isLogin ? (
             <Space className="avt">
               <Badge count={3}>
-                <MessageOutlined className="avt-notify" style={{ width: 30 }} onClick={() => navigate('/dr.Enclinic/chatting')} />
+                <MessageOutlined
+                  className="avt-notify"
+                  style={{ width: 30 }}
+                  onClick={() => navigate("/dr.Enclinic/chatting")}
+                />
               </Badge>
               <Badge count={5}>
                 <BellOutlined className="avt-notify" />

@@ -22,14 +22,14 @@ const createTimeBooking = (start, end, durationPerAppointment) => {
   return schedule;
 };
 
-const addMinutes = (time, minutesToAdd) => {
+export const addMinutes = (time, minutesToAdd) => {
   var date = new Date();
   date.setHours(parseInt(time), parseInt((time % 1) * 60));
   date.setMinutes(date.getMinutes() + minutesToAdd);
   return date.getHours() + date.getMinutes() / 60;
 };
 
-const formatTime = (time) => {
+export const formatTime = (time) => {
   const hours = Math.floor(time);
   const minutes = Math.round((time % 1) * 60);
   return `${hours.toString().padStart(2, "0")}:${minutes
