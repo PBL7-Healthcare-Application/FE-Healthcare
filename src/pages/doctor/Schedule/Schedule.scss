@@ -5,6 +5,7 @@ th,
 td {
   text-align: center;
   border: 0.25px solid #ddd;
+  max-width: 30px;
   padding: 20px;
 
   &:first-child {
@@ -33,11 +34,11 @@ td {
 }
 
 .selected {
-  background-color: red;
+  background-color: #ddd;
 }
 
 .selectedItem {
-  background-color: yellow;
+  background-color: #ddd;
 }
 
 .Schedule {
@@ -161,4 +162,19 @@ td {
     font-size: 20px;
     margin-top: -20px;
   }
+}
+
+.busy {
+  background-color: #A5ADF3;
+  pointer-events: none;
+}
+
+.examination {
+  background-color: #ffc700;
+  pointer-events: none;
+}
+
+.break {
+  background-color: #FFA996;
+  pointer-events: none;
 }

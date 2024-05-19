@@ -7,17 +7,19 @@ import { Avatar, Badge, Image, Layout, Menu, Space } from "antd";
 import "./DoctorLayout.scss";
 import title from "../../assets/images/title.png";
 import logo from "../../assets/images/logo.png";
+import examination from "../../assets/images/examination.png";
 import { FaRegBookmark, FaRegCalendarAlt, FaRegSun } from "react-icons/fa";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SignInBtn from "../../components/header/SignInBtn";
 import getToken from "../../helpers/getToken";
 import { useDispatch, useSelector } from "react-redux";
-import { getDoctorProfile } from "../../stores/doctor/DoctorThunk";
+import { getDoctorCalendar, getDoctorProfile } from "../../stores/doctor/DoctorThunk";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
-import { auth } from "../../helpers/firebase";
+import { auth, db } from "../../helpers/firebase";
 import { handleUpdateStatus } from "../../helpers/chat";
+import { doc, onSnapshot } from "firebase/firestore";
 const { Header, Sider, Content } = Layout;
 const DoctorLayout = () => {
   const navigate = useNavigate();
@@ -26,6 +28,8 @@ const DoctorLayout = () => {
   const location = useLocation();
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
+  const [countSeen, setCountSeen] = useState("");
+
   const { profile } = useSelector((state) => state.doctor);
   const { chatUser } = useSelector((state) => state.chat);
   useEffect(() => {
@@ -41,8 +45,9 @@ const DoctorLayout = () => {
     if (token) {
       setIsLogin(true);
       dispatch(getDoctorProfile());
+      dispatch(getDoctorCalendar())
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -61,13 +66,31 @@ const DoctorLayout = () => {
     else navigate(`/dr.Enclinic${e.key}`);
   };
   const handleLogout = async () => {
-    await handleUpdateStatus(chatUser.id, false);
-    auth.signOut();
+    console.log("ok")
+    try {
+      await handleUpdateStatus(chatUser.id, false);
+      auth.signOut();
+    } catch (error) {
+      console.log(error);
+    }
     dispatch(logOut());
     localStorage.removeItem("doctor");
     deleteToken();
     navigate("/");
   };
+  useEffect(() => {
+
+    const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setCountSeen(data.chats.filter((item) => item.isSeen === false).length);
+      }
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [chatUser?.id])
 
   return (
     <Layout style={{ backgroundColor: "#fff" }}>
@@ -92,6 +115,11 @@ const DoctorLayout = () => {
               label: "Calendar",
             },
             {
+              key: "/examination",
+              icon: <Image src={examination} preview={false} width={29} />,
+              label: "Examination",
+            },
+            {
               key: "/setting",
               icon: <FaRegSun size={25} color="#b5bad4" />,
               label: "Setting",
@@ -108,7 +136,7 @@ const DoctorLayout = () => {
         <Header className="customSlider__header">
           {isLogin ? (
             <Space className="avt">
-              <Badge count={3}>
+              <Badge count={countSeen}>
                 <MessageOutlined
                   className="avt-notify"
                   style={{ width: 30 }}

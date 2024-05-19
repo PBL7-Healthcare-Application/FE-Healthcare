@@ -1,7 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   cancelAppointment,
+  createTimeOff,
   getAppointment,
+  getCalendar,
   getDetailAppointment,
   getProfile,
   setSchedule,
@@ -65,6 +67,29 @@ export const getDoctorProfile = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await getProfile();
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const getDoctorCalendar = createAsyncThunk(
+  "doctor/getDoctorCalendar",
+  async (data, thunkApi) => {
+    try {
+      const response = await getCalendar();
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const createDoctorTimeOff = createAsyncThunk(
+  "doctor/createDoctorTimeOff",
+  async (data, thunkApi) => {
+    try {
+      const response = await createTimeOff(data);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

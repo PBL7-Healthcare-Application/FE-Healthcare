@@ -61,9 +61,10 @@ const searchSlice = createSlice({
         state.schedule = doctorSchedule(
           convertToInt(action.payload.data?.workingTimeStart),
           convertToInt(action.payload.data?.workingTimeEnd),
-          60,
+          action.payload.data?.durationPerAppointment,
           timeOff,
-          timeBreak
+          timeBreak,
+          action.payload.data?.slotAppointments
         ).map(item => ({
           ...item,
           date: item.date.toString(), // Convert date to ISO string

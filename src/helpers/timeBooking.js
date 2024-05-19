@@ -45,12 +45,13 @@ export const doctorSchedule = (
   end,
   durationPerAppointment,
   timeOff,
-  timeBreak
+  timeBreak,
+  slotAppointments
 ) => {
   const schedule = createTimeBooking(start, end, durationPerAppointment);
   schedule.forEach((time) => {
     timeOff.forEach((off) => {
-      if (new Date(time.date).getDate() === new Date(off.date).getDate()) {
+      if (compareDate(time.date, off.date)) {
         for (var i = time.times.length - 1; i >= 0; i--) {
           var startTime = convertTime(time.times[i].startTime);
           var endTime = convertTime(time.times[i].endTime);
@@ -81,6 +82,35 @@ export const doctorSchedule = (
       }
     });
   });
+  schedule.forEach((time) => {
+    slotAppointments.forEach((slot) => {
+      if (compareDate(time.date, slot.date)) {
+        for (var i = time.times.length - 1; i >= 0; i--) {
+          var startTime = convertTime(time.times[i].startTime);
+          var endTime = convertTime(time.times[i].endTime);
+
+          if (
+            startTime === convertTime(slot.startTime) &&
+            endTime === convertTime(slot.endTime)
+          ) {
+            time.times.splice(i, 1);
+          }
+        }
+      }
+    });
+  })
+  var current = new Date();
+  var currentDate = new Date(current);
+  schedule.forEach((time) => {
+    if (compareDate(time.date, currentDate)) {
+      for (var i = time.times.length - 1; i >= 0; i--) {
+        var startTime = convertTime(time.times[i].startTime);
+        if (startTime - current.getHours() < 5) {
+          time.times.splice(i, 1);
+        }
+      }
+    }
+  })
   return schedule;
 };
 export const convertToInt = (time) => {
@@ -148,3 +178,153 @@ export const formatDate = (gmtDateString) => {
   const convertDate = data.toLocaleDateString("en-US", options);
   return convertDate;
 };
+
+
+export const timeSchedule = (start, end, durationPerAppointment) => {
+
+
+  const timeArr = [];
+  var currentTime = start;
+  while (currentTime < end) {
+    const time = {
+      startTime: formatTime(currentTime),
+      endTime: formatTime(addMinutes(currentTime, durationPerAppointment)),
+    };
+    timeArr.push(time);
+    currentTime = addMinutes(currentTime, durationPerAppointment);
+  }
+
+
+  return timeArr;
+};
+
+export const viewSchedule = (timeOff, appointment, day, time) => {
+  const schedule = [
+    ...timeOff,
+    ...appointment
+  ]
+
+
+  let newDate = null;
+  if (day) {
+    newDate = day.split("T")[0];
+  }
+  const timeArr = time.split(" - ");
+  const item = schedule.find((item) => {
+    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
+      return item;
+    }
+  })
+  if (item) {
+    if (item.idTimeOff) {
+      if (item.status === 1) {
+        return "busy"
+      }
+      else {
+        return "break"
+      }
+    }
+    else {
+      return "examination"
+
+    }
+  }
+  else {
+    return null;
+  }
+
+}
+
+export const viewInforSchedule = (appointment, day, time) => {
+
+
+
+  let newDate = null;
+  if (day) {
+    newDate = day.split("T")[0];
+  }
+
+  const timeArr = time.split(" - ");
+  const item = appointment.find((item) => {
+    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
+      return item;
+    }
+  })
+  if (item) {
+    //
+    return item.namePatient
+  }
+  else {
+    return null;
+  }
+
+}
+
+export const viewBreakTime = (timeOff, time) => {
+
+
+
+
+  const timeArr = time.split(" - ");
+  const item = timeOff.find((item) => {
+    if (item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
+      return item;
+    }
+  })
+  if (item) {
+    //
+    if (item.status === 2) {
+      return "break"
+    }
+    else {
+      return null
+    }
+  }
+  else {
+    return null;
+  }
+
+}
+
+export const viewInforTimeOff = (timeOff, day, time) => {
+
+
+
+  let newDate = null;
+  if (day) {
+    newDate = day.split("T")[0];
+  }
+
+  const timeArr = time.split(" - ");
+  const item = timeOff.find((item) => {
+    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
+      return item;
+    }
+  })
+  if (item) {
+
+    if (item.status === 1) {
+      return item.reason
+    }
+    else {
+      return null
+    }
+
+
+  }
+  else {
+    return null;
+  }
+
+}
+
+const compareDate = (date1, date2) => {
+  const newDate1 = new Date(date1);
+  const newDate2 = new Date(date2);
+  if (newDate1.getDate() === newDate2.getDate() && newDate1.getMonth() === newDate2.getMonth() && newDate1.getFullYear() === newDate2.getFullYear()) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}

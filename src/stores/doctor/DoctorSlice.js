@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   cancelDoctorAppointment,
+  createDoctorTimeOff,
   getDetailDoctorAppointment,
   getDoctorAppointment,
+  getDoctorCalendar,
   getDoctorProfile,
   setDoctorSchedule,
 } from "./DoctorThunk";
@@ -10,6 +12,7 @@ import {
 const doctorSlice = createSlice({
   name: "doctor",
   initialState: {
+    calendar: null,
     profile: null,
     appointmentDetail: null,
     statusCode: null,
@@ -109,7 +112,38 @@ const doctorSlice = createSlice({
       .addCase(cancelDoctorAppointment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
-      });
+      })
+      //=====================================
+      .addCase(getDoctorCalendar.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDoctorCalendar.fulfilled, (state, action) => {
+        state.loading = false;
+        state.calendar = action.payload.data;
+      })
+      .addCase(getDoctorCalendar.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
+      //=====================================
+      .addCase(createDoctorTimeOff.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createDoctorTimeOff.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(createDoctorTimeOff.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
   },
 });
 export default doctorSlice.reducer;

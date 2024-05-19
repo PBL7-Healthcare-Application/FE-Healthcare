@@ -11,7 +11,9 @@ export const getUserChat = createAsyncThunk(
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          return docSnap.data();
+          const data = docSnap.data();
+          data.lastSeen = data.lastSeen.toDate();
+          return data;
         } else {
           return null;
         }

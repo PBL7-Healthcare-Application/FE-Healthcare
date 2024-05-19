@@ -5,7 +5,7 @@ import "./Schedule.scss";
 import { useEffect, useMemo, useState } from "react";
 import { FaRegClock } from "react-icons/fa";
 import { useTable } from "react-table";
-import { Button, Select } from "antd";
+import { Button, Input, Modal, Select, notification } from "antd";
 
 import {
   format,
@@ -15,73 +15,121 @@ import {
   subWeeks,
   endOfWeek,
 } from "date-fns";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  addMinutes,
-  convertTime,
-  formatTime,
+  convertToInt,
+  timeSchedule,
+  viewBreakTime,
+  viewInforSchedule,
+  viewInforTimeOff,
+  viewSchedule,
 } from "../../../helpers/timeBooking";
+import { se } from "date-fns/locale";
+import { createDoctorTimeOff, getDoctorCalendar } from "../../../stores/doctor/DoctorThunk";
+import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
+import { delay, set } from "lodash";
+import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
+
 const Schedule = () => {
-  const { profile } = useSelector((state) => state.doctor);
-  let temp = convertTime(profile.workingTimeStart);
+  const { profile, calendar, statusCode, error } = useSelector((state) => state.doctor);
+  const dispatch = useDispatch();
+
 
   const data = useMemo(
-    () =>
-      new Array(
-        parseInt(profile.workingTimeEnd.split(":")[0]) -
-          parseInt(profile.workingTimeStart.split(":")[0]) -
-          1
-      )
-        .fill(0)
-        .map((_, i) => {
-          const result = {
-            time: `${formatTime(
-              addMinutes(temp, profile.durationPerAppointment)
-            )} - ${formatTime(
-              addMinutes(temp + 1, profile.durationPerAppointment)
-            )}`,
-            Mon: "",
-            Tue: "",
-            Wed: "",
-            Thu: "",
-            Fri: "",
-            Sat: "",
-            Sun: "",
-          };
-
-          temp = addMinutes(temp, profile.durationPerAppointment);
-
-          return result;
-        }),
-    []
+    () => {
+      const times = timeSchedule(convertToInt(profile.workingTimeStart), convertToInt(profile.workingTimeEnd), profile.durationPerAppointment);
+      return times.map((item, i) => (
+        {
+          time: `${item.startTime} - ${item.endTime}`,
+          Mon: "",
+          Tue: "",
+          Wed: "",
+          Thu: "",
+          Fri: "",
+          Sat: "",
+          Sun: "",
+        }
+      ))
+    },
+    [profile.workingTimeStart, profile.workingTimeEnd, profile.durationPerAppointment]
   );
+
   const [selectedRow, setSelectedRow] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
   const [date, setDate] = useState(new Date());
+  const [status, setStatus] = useState("");
+  const [api, contextHolder] = notification.useNotification();
   const handleItemClick = (rowIndex, index) => {
-    console.log(rowIndex, index);
     if (index === 0) {
-      setSelectedRow((prev) => [
-        ...prev,
-        {
-          row: rowIndex,
-          index: index,
-        },
-      ]);
+      const indexFind = selectedRow.findIndex(item => item.row === rowIndex);
+      if (indexFind === -1) {
+        setSelectedRow((prev) => [
+          ...prev,
+          {
+            row: rowIndex,
+            index: index,
+          },
+        ]);
+      }
+      else {
+        const newSelectedRow = selectedRow.filter(item => item.row !== rowIndex);
+        setSelectedRow(newSelectedRow);
+      }
+
     } else {
-      setSelectedItem((prev) => [
-        ...prev,
-        {
-          row: rowIndex,
-          index: index,
-        },
-      ]);
+      const indexFind = selectedItem.findIndex(item => item.row === rowIndex && item.index === index);
+      if (indexFind === -1) {
+        setSelectedItem((prev) => [
+          ...prev,
+          {
+            row: rowIndex,
+            index: index,
+          },
+        ]);
+      }
+      else {
+        const newSelectedItem = selectedItem.filter(item => item.row !== rowIndex && item.index !== index);
+        setSelectedItem(newSelectedItem);
+      }
+
     }
   };
+  useEffect(() => {
+    if (statusCode === 200) {
+      openNotificationWithIcon(
+        "success",
+        api,
+        "",
+        "Create time off successfully!"
+      );
+      delay(() => {
+        setSelectedItem([]);
+        setSelectedRow([]);
+        dispatch(getDoctorCalendar());
+        dispatch(setStatusCode(null));
+        //  setIsModalOpen(!isModalOpen);
+      }, 1500);
+    }
+    if (error !== null) {
+      openNotificationWithIcon(
+        "error",
+        api,
+        "",
+        "Create time off unuccessfully!"
+      );
+
+      setSelectedItem([]);
+      setSelectedRow([]);
+      dispatch(setError(null));
+      //   setIsModalOpen(!isModalOpen);
+
+    }
+  }, [statusCode, api, error, dispatch]);
 
   useEffect(() => {
-    console.log(date);
-  }, [date]);
+    dispatch(getDoctorCalendar());
+  }, [dispatch])
+
   const goToNextWeek = (date) => {
     return startOfWeek(addWeeks(date, 1), { weekStartsOn: 1 });
   };
@@ -99,6 +147,23 @@ const Schedule = () => {
     const nextWeek = goToNextWeek(date);
     setDate(nextWeek);
   };
+  const handleAction = () => {
+    if (status === "busy") {
+      setIsModalOpen(true);
+    }
+    else {
+      const body = selectedRow.map((item) => {
+        return {
+          date: columns[item.index].date,
+          startTime: data[item.row].time.split(" - ")[0],
+          endTime: data[item.row].time.split(" - ")[1],
+          status: 2,
+          reason: "break time",
+        }
+      })
+      dispatch(createDoctorTimeOff(body));
+    }
+  }
 
   const columns = useMemo(() => {
     const startOfCurrentWeek = startOfWeek(date, { weekStartsOn: 1 });
@@ -107,6 +172,7 @@ const Schedule = () => {
       const date = addDays(startOfCurrentWeek, i);
       const dayName = format(date, "EEEE");
       const dayNumber = format(date, "d");
+      const newDay = format(date, "yyyy-MM-dd");
 
       // Tạo Header cho mỗi ngày
       const header = (
@@ -118,6 +184,7 @@ const Schedule = () => {
       daysOfWeek.push({
         Header: header,
         accessor: dayName.slice(0, 3),
+        date: newDay,
       });
     }
 
@@ -129,18 +196,48 @@ const Schedule = () => {
       ...daysOfWeek,
     ];
   }, [date]);
+  console.log(columns.map((item) => item.date));
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reason, setReason] = useState("");
+
+
+  const handleOk = () => {
+    const body = selectedItem.map((item) => {
+      return {
+        date: columns[item.index].date,
+        startTime: data[item.row].time.split(" - ")[0],
+        endTime: data[item.row].time.split(" - ")[1],
+        status: 1,
+        reason: reason,
+      }
+    })
+    dispatch(createDoctorTimeOff(body));
+    setReason("");
+    setIsModalOpen(false);
+
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setReason("");
+  };
+
 
   return (
     <div className="Schedule-main">
       <span className="Schedule-title">Doctor Calendar</span>
+      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', fontSize: 20 }} className="Schedule-title" >Add Reason</div>
+        <Input onChange={(e) => setReason(e.target.value)} />
+      </Modal>
       <div className="Schedule-content">
+        {contextHolder}
         <div className="Schedule-content__left">
           <div className="Schedule-content__left-action">
             <Select
-              placeholder="-- select --"
+              placeholder="-- Select --"
               style={{
                 width: "100%",
                 height: 40,
@@ -151,12 +248,13 @@ const Schedule = () => {
                   label: "Busy",
                 },
                 {
-                  value: "Break time",
+                  value: "break",
                   label: "Break time",
                 },
               ]}
+              onChange={(value) => setStatus(value)}
             />
-            <Button className="Schedule-content__left-button">Action</Button>
+            <Button className="Schedule-content__left-button" disabled={status === ""} onClick={() => handleAction()}>Action</Button>
           </div>
           <div
             style={{
@@ -242,9 +340,8 @@ const Schedule = () => {
                     <th
                       {...column.getHeaderProps()}
                       key={index}
-                      className={`Schedule-header__text ${
-                        index === 0 ? "border-first" : ""
-                      }  ${index === 7 ? "border-second" : ""}`}
+                      className={`Schedule-header__text ${index === 0 ? "border-first" : ""
+                        }  ${index === 7 ? "border-second" : ""}`}
                     >
                       {column.render("Header")}
                     </th>
@@ -264,35 +361,37 @@ const Schedule = () => {
                           key={index}
                           onClick={() => handleItemClick(row.index, index)}
                           className={`
-                    ${
-                      selectedRow.some((item) => item.row === row.index) &&
-                      index !== 0
-                        ? "selected"
-                        : ""
-                    }
+                    ${selectedRow.some((item) => item.row === row.index) &&
+                              index !== 0
+                              ? "selected"
+                              : ""
+                            }
 
-                        ${
-                          selectedItem.some(
-                            (item) =>
-                              item.row === row.index && item.index === index
-                          )
-                            ? "selectedItem"
-                            : ""
-                        }
-                         ${
-                           row.index === row.cells.length + 1 && index === 0
-                             ? "border-third"
-                             : ""
-                         }
-                          ${
-                            row.index === row.cells.length + 1 && index === 7
+                        ${selectedItem.some(
+                              (item) =>
+                                item.row === row.index && item.index === index
+                            )
+                              ? "selectedItem"
+                              : ""
+                            }
+                         ${row.index === row.cells.length + 1 && index === 0
+                              ? "border-third"
+                              : ""
+                            }
+                          ${row.index === row.cells.length + 1 && index === 7
                               ? "border-fourth"
                               : ""
-                          }
-                       
+                            }
+                          ${viewSchedule(calendar.timeOffs, calendar.appointments, columns[index].date, data[row.index].time.toString())}
+
+                          ${index !== 0 && viewBreakTime(calendar.timeOffs, data[row.index].time.toString())}
                     `}
+
+
                         >
                           {cell.render("Cell")}
+                          <label style={{ fontSize: 12, fontWeight: 500 }}>{viewInforSchedule(calendar.appointments, columns[index].date, data[row.index].time.toString())}</label>
+                          {index !== 0 && viewSchedule(calendar.timeOffs, calendar.appointments, columns[index].date, data[row.index].time.toString()) === "busy" && viewInforTimeOff(calendar.timeOffs, columns[index].date, data[row.index].time.toString())}
                         </td>
                       );
                     })}

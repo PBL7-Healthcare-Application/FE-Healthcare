@@ -60,10 +60,10 @@ const SignIn = () => {
       }
     }
     if (error) {
-      openNotificationWithIcon("error", api, "", error.message);
+      openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
 
   const onFinish = (values) => {
@@ -71,7 +71,9 @@ const SignIn = () => {
   };
 
   return (
+
     <Space className="in-main">
+
       <Space className="in-left">
         <Space className="in-left_title">
           <Typography className="in-left_title--main">
@@ -84,6 +86,7 @@ const SignIn = () => {
         <Feature />
       </Space>
       <Space className="in-right">
+        {contextHolder}
         <Form
           name="normal_login"
           className="login-form"
@@ -92,7 +95,7 @@ const SignIn = () => {
           }}
           onFinish={onFinish}
         >
-          {contextHolder}
+
           <Typography className="in-right__title--main">
             Welcome Back
           </Typography>

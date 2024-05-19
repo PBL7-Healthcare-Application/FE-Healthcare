@@ -11,16 +11,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import medicalHistory from "../../assets/images/medicalHistory.png";
 import personDefault from "../../assets/images/personDefault.png";
-import { auth } from "../../helpers/firebase";
+import { auth, db } from "../../helpers/firebase";
 import { handleUpdateStatus } from "../../helpers/chat";
+import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 
 const Avt = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [visible, setvisible] = useState(true);
+  const [countSeen, setCountSeen] = useState("");
   const { chatUser } = useSelector((state) => state.chat);
   const handleAvatar = () => {
     setvisible(!visible);
@@ -35,9 +37,22 @@ const Avt = (props) => {
     setvisible(!visible);
     navigate("/");
   };
+  useEffect(() => {
+
+    const unSub = onSnapshot(doc(db, "userchats", chatUser.id), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setCountSeen(data.chats.filter((item) => item.isSeen === false).length);
+      }
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [chatUser?.id])
   return (
     <Space className="avt">
-      <Badge count={3} style={{ cursor: "pointer" }}>
+      <Badge count={countSeen} style={{ cursor: "pointer" }}>
         <MessageOutlined
           className="avt-notify"
           style={{ width: 30 }}
@@ -111,7 +126,10 @@ const Avt = (props) => {
                     My Appointment
                   </Typography>
                 </Space>
-                <Space className="avt-popover__box--item">
+                <Space className="avt-popover__box--item" onClick={() => {
+                  navigate("/user/medical-history");
+                  setvisible(!visible);
+                }}>
                   <Image src={medicalHistory} preview={false} width={25} />
                   <Typography
                     className="avt-font"

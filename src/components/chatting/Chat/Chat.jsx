@@ -1,4 +1,4 @@
-import { Badge, Image, Spin } from "antd";
+import { Badge, Image, Spin, Upload } from "antd";
 import "./Chat.scss";
 import personDefault from "../../../assets/images/personDefault.png";
 import { IoImages, IoSend, IoVideocam } from "react-icons/io5";
@@ -12,17 +12,19 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
 import { useDispatch, useSelector } from "react-redux";
-import getImageUpload from "../../../helpers/uploadCloudinary";
+import getImageUpload, { uploadImageForChating } from "../../../helpers/uploadCloudinary";
 import { format } from "timeago.js";
 import { setUser } from "../../../stores/Chat/ChatSlice";
+import { PlusOutlined } from "@ant-design/icons";
 const Chat = () => {
   const [chat, setChat] = useState();
   const [text, setText] = useState("");
   const endRef = useRef(null);
-  const [img, setImg] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const { chatId, user, chatUser } = useSelector((state) => state.chat);
+  const [fileList, setFileList] = useState([]);
+  const [urlList, setUrlList] = useState([]);
+  const [isUploadImg, setIsUploadImg] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
@@ -44,7 +46,9 @@ const Chat = () => {
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "users", user.id), (doc) => {
       if (doc.exists()) {
-        dispatch(setUser(doc.data()));
+        const data = doc.data();
+        data.lastSeen = data.lastSeen.toDate();
+        dispatch(setUser(data));
       } else {
         console.log("No such document!");
       }
@@ -54,15 +58,20 @@ const Chat = () => {
     return unsubscribe;
   }, [user.id]);
 
+  useEffect(() => {
+    console.log(urlList);
+    console.log(fileList);
+  }, [urlList, fileList])
+
   const handleSend = async () => {
-    if (text === "") return;
+    if (text === "" && urlList.length <= 0) return;
     try {
       await updateDoc(doc(db, "chats", chatId), {
         messages: arrayUnion({
           senderId: chatUser.id,
           text,
           createdAt: new Date(),
-          ...(img && { img: img }),
+          img: urlList.length > 0 ? urlList : [],
         }),
       });
 
@@ -93,10 +102,11 @@ const Chat = () => {
     } catch (err) {
       console.log(err);
     } finally {
-      setImg("");
-
+      setFileList([]);
+      setUrlList([]);
       setText("");
-      setIsSuccess(false);
+      setIsUploadImg(true);
+
     }
   };
 
@@ -104,14 +114,47 @@ const Chat = () => {
     try {
       setLoading(true);
       const res = await getImageUpload(e.target.files[0]);
-      setImg(res);
+      setUrlList(prev => [...prev, res]);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
-      setIsSuccess(true);
+      setIsUploadImg(false);
+      setFileList(prev => [...prev, e.target.files[0]]);
     }
+
   };
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: 'none',
+      }}
+      type="button"
+    >
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 5,
+        }}
+      >
+        Upload
+      </div>
+    </button>
+  );
+  useEffect(() => {
+    if (fileList.length === 0) setIsUploadImg(true);
+  }, [fileList])
+  const handleCustomRequest = async (options) => {
+
+    try {
+      const res = await uploadImageForChating(options);
+      setUrlList(prev => [...prev, res]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="chat">
       <div className="chat-top">
@@ -141,7 +184,7 @@ const Chat = () => {
                   className="listUser-item__name"
                   style={{ fontWeight: 500, fontSize: 12, marginTop: 1 }}
                 >
-                  {format(user.lastSeen.toDate())}
+                  {format(user?.lastSeen)}
                 </span>
               )}
             </div>
@@ -173,10 +216,12 @@ const Chat = () => {
               />
             )}
             <div className="texts">
-              {item.img && (
-                <Image src={item.img} preview={false} className="img" />
+              {item.img?.length > 0 && (
+                item.img.map((img, index) => (
+                  <Image src={img} preview={false} className="img" key={index} />
+                ))
               )}
-              <p className="chat-middle__content">{item.text}</p>
+              {item.text && <p className="chat-middle__content">{item.text}</p>}
               <span className="chat-middle__time">
                 {format(item.createdAt.toDate())}
               </span>
@@ -187,36 +232,51 @@ const Chat = () => {
         <div ref={endRef}></div>
       </div>
       <div className="chat-bottom">
-        <div>
-          <label htmlFor="file">
-            {loading ? (
-              <Spin />
-            ) : (
-              <Badge dot={isSuccess}>
-                <IoImages size={25} className="chat-bottom__icon" />
-              </Badge>
-            )}
-          </label>
+        {!isUploadImg && <Upload
+          customRequest={handleCustomRequest}
+          listType="picture-card"
+          fileList={fileList}
+          onChange={handleChange}
+          onRemove={() => urlList.pop()}
+          style={{
+            width: 10
+          }}
+          accept="image/*"
+        >
+          {fileList.length >= 3 ? null : uploadButton}
+        </Upload>}
+        <div className="chat-bottom__content">
+          {isUploadImg && (<div >
+            <label htmlFor="file">
+              {loading ? (
+                <Spin />
+              ) : (
+                <Badge >
+                  <IoImages size={25} className="chat-bottom__icon" />
+                </Badge>
+              )}
+            </label>
+            <input
+              type="file"
+              id="file"
+              style={{ display: "none" }}
+              onChange={handleImg}
+              accept="image/*"
+            />
+          </div>)}
           <input
-            type="file"
-            id="file"
-            style={{ display: "none" }}
-            onChange={handleImg}
-            accept="image/*"
+            placeholder="Type a message"
+            className="chat-bottom__input"
+            onChange={(e) => setText(e.target.value)}
+            value={text}
+          />
+          <IoSend
+            size={25}
+            className="chat-bottom__icon"
+            style={{ marginRight: 10 }}
+            onClick={handleSend}
           />
         </div>
-        <input
-          placeholder="Type a message"
-          className="chat-bottom__input"
-          onChange={(e) => setText(e.target.value)}
-          value={text}
-        />
-        <IoSend
-          size={25}
-          className="chat-bottom__icon"
-          style={{ marginRight: 10 }}
-          onClick={handleSend}
-        />
       </div>
     </div>
   );

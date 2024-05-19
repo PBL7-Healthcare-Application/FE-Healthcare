@@ -1,0 +1,43 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+.medical {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 20px;
+
+    &-height {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+
+    }
+
+    &-weight {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+
+    }
+
+    &-temperature {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+
+    }
+
+    &-content {
+        margin-top: 10px;
+        border-radius: 10px;
+        padding: 20px;
+        border: 2px solid rgb(228, 232, 236);
+    }
+}

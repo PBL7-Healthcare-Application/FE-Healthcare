@@ -148,15 +148,17 @@ const MyAppointment = () => {
             </Modal>
           </TabPane>
           <TabPane tab="Completed" key={3}>
-            {ListAppointments !== null ? (
-              ListAppointments.map((item, index) => {
-                return (
-                  <CardAppointment key={index} appointment={item} type={2} />
-                );
-              })
-            ) : (
-              <NotFound />
-            )}
+            <div className="myAppointment">
+              {ListAppointments !== null ? (
+                ListAppointments.map((item, index) => {
+                  return (
+                    <CardAppointment key={index} appointment={item} type={2} />
+                  );
+                })
+              ) : (
+                <NotFound />
+              )}
+            </div>
           </TabPane>
           <TabPane tab="Canceled" key={2}>
             <div className="myAppointment">

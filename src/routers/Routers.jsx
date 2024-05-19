@@ -27,6 +27,7 @@ import Experience from "../components/DoctorProfile/Experience/Experience";
 import { AppointmentDetail } from "../components/Doctor/appointmentDetail/AppointmentDetail";
 import SetUpSchedule from "../components/DoctorProfile/SetUpSchedule/SetUpSchedule";
 import Chatting from "../pages/chatting/Chatting";
+import Examination from "../pages/doctor/Examination/Examination";
 
 const routers = createBrowserRouter([
   {
@@ -136,6 +137,10 @@ const routers = createBrowserRouter([
       {
         path: "calendar",
         element: <Schedule />,
+      },
+      {
+        path: "examination",
+        element: <Examination />,
       },
       {
         path: "setting",

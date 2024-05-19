@@ -251,3 +251,110 @@
 .ant-tabs-ink-bar {
     background-color: $background-primary !important;
 }
+
+.contact {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    border: 1px solid #dbdfe5;
+    width: 90%;
+    padding: 20px;
+    border-radius: 10px;
+
+
+    &__text {
+        font-family: $font-main;
+        font-weight: 600;
+        font-style: normal;
+        font-size: 18px;
+        color: #404040;
+    }
+
+    &__phone {
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #dbdfe5;
+        width: fit-content;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+}
+
+.rate {
+    border-radius: 10px;
+    padding: 16px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    background-color: #F5FAFF;
+    border: 1px solid #E3F0FF;
+
+    &__box {
+        flex: 1;
+        display: flex;
+        gap: 10px;
+        flex-direction: column;
+
+        &__child {
+            display: flex;
+            gap: 2px;
+            flex-direction: column;
+        }
+    }
+
+    &__text {
+        font-family: $font-main;
+        color: #404040;
+    }
+
+    &__totalPoint {
+        font-weight: 700;
+        font-size: 26px;
+        line-height: 42px;
+    }
+
+    &__scale-point {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 24px;
+        letter-spacing: 1px;
+        color: rgb(89, 89, 89);
+    }
+
+    &__review {
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 22px;
+        margin: 4px 0px 16px;
+        color: rgb(89, 89, 89);
+        letter-spacing: 0.5px;
+    }
+
+    &__item {
+        height: 20px;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+
+    }
+
+    &__star {
+        border-radius: 5px;
+        margin-bottom: 8px;
+        height: 6px;
+        width: 60%;
+        background-color: rgb(255, 181, 33);
+    }
+
+    &__op {
+        opacity: 0.15;
+    }
+
+}
