@@ -38,8 +38,7 @@ const Avt = (props) => {
     navigate("/");
   };
   useEffect(() => {
-
-    const unSub = onSnapshot(doc(db, "userchats", chatUser.id), (doc) => {
+    const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
       if (doc.exists()) {
         const data = doc.data();
         setCountSeen(data.chats.filter((item) => item.isSeen === false).length);
@@ -49,7 +48,7 @@ const Avt = (props) => {
     return () => {
       unSub();
     };
-  }, [chatUser?.id])
+  }, [chatUser?.id]);
   return (
     <Space className="avt">
       <Badge count={countSeen} style={{ cursor: "pointer" }}>
@@ -126,10 +125,13 @@ const Avt = (props) => {
                     My Appointment
                   </Typography>
                 </Space>
-                <Space className="avt-popover__box--item" onClick={() => {
-                  navigate("/user/medical-history");
-                  setvisible(!visible);
-                }}>
+                <Space
+                  className="avt-popover__box--item"
+                  onClick={() => {
+                    navigate("/user/medical-history");
+                    setvisible(!visible);
+                  }}
+                >
                   <Image src={medicalHistory} preview={false} width={25} />
                   <Typography
                     className="avt-font"

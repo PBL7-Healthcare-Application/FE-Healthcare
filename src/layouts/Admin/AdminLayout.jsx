@@ -4,11 +4,11 @@ import {
   MessageOutlined,
 } from "@ant-design/icons";
 import { Avatar, Badge, Image, Layout, Menu, Space } from "antd";
-import "./DoctorLayout.scss";
+import "../doctor/DoctorLayout.scss";
 import title from "../../assets/images/title.png";
 import logo from "../../assets/images/logo.png";
 import examination from "../../assets/images/examination.png";
-import { FaRegBookmark, FaRegCalendarAlt, FaRegSun } from "react-icons/fa";
+import { FaRegBookmark, FaRegCalendarAlt, FaUsers } from "react-icons/fa";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SignInBtn from "../../components/header/SignInBtn";
@@ -20,21 +20,19 @@ import {
 } from "../../stores/doctor/DoctorThunk";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
-import { auth, db } from "../../helpers/firebase";
-import { handleUpdateStatus } from "../../helpers/chat";
-import { doc, onSnapshot } from "firebase/firestore";
+import "./AdminLayout.scss";
+import { FaListCheck } from "react-icons/fa6";
+import { TiThList } from "react-icons/ti";
 const { Header, Sider, Content } = Layout;
-const DoctorLayout = () => {
+const AdminLayout = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [current, setCurrent] = useState("/appointment");
   const location = useLocation();
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
-  const [countSeen, setCountSeen] = useState("");
 
   const { profile } = useSelector((state) => state.doctor);
-  const { chatUser } = useSelector((state) => state.chat);
   useEffect(() => {
     const endpoint = location.pathname;
     setCurrent(`/${endpoint.split("/")[2]}`);
@@ -64,39 +62,23 @@ const DoctorLayout = () => {
 
   const onNavItemClick = (e) => {
     setCurrent(e.key);
-    if (e.key.trim() === "/setting")
-      navigate("/dr.Enclinic/setting/profile/personal");
-    else navigate(`/dr.Enclinic${e.key}`);
+    navigate(`/admin${e.key}`);
   };
   const handleLogout = async () => {
-    console.log("ok");
-    try {
-      await handleUpdateStatus(chatUser.id, false);
-      auth.signOut();
-    } catch (error) {
-      console.log(error);
-    }
     dispatch(logOut());
     localStorage.removeItem("doctor");
     deleteToken();
     navigate("/");
   };
-  useEffect(() => {
-    const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
-      if (doc.exists()) {
-        const data = doc.data();
-        setCountSeen(data.chats.filter((item) => item.isSeen === false).length);
-      }
-    });
-
-    return () => {
-      unSub();
-    };
-  }, [chatUser?.id]);
 
   return (
     <Layout style={{ backgroundColor: "#fff" }}>
-      <Sider trigger={null} collapsible className="customSlider">
+      <Sider
+        trigger={null}
+        collapsible
+        className="adminSlider"
+        style={{ width: 310 }}
+      >
         <div className="customSlider__logo">
           <Image src={logo} preview={false} width="60%" />
           <Image src={title} preview={false} width="70%" />
@@ -107,24 +89,19 @@ const DoctorLayout = () => {
           selectedKeys={[current]}
           items={[
             {
-              key: "/appointment",
+              key: "/users",
+              icon: <FaUsers size={25} color="#b5bad4" />,
+              label: "Users",
+            },
+            {
+              key: "/appointments",
               icon: <FaRegBookmark size={25} color="#b5bad4" />,
-              label: "Appointment",
+              label: "Appointments",
             },
             {
-              key: "/calendar",
-              icon: <FaRegCalendarAlt size={25} color="#b5bad4" />,
-              label: "Calendar",
-            },
-            {
-              key: "/examination",
-              icon: <Image src={examination} preview={false} width={29} />,
-              label: "Examination",
-            },
-            {
-              key: "/setting",
-              icon: <FaRegSun size={25} color="#b5bad4" />,
-              label: "Setting",
+              key: "/requests",
+              icon: <TiThList size={25} color="#b5bad4" />,
+              label: "Requests",
             },
           ]}
           onClick={onNavItemClick}
@@ -138,17 +115,6 @@ const DoctorLayout = () => {
         <Header className="customSlider__header">
           {isLogin ? (
             <Space className="avt">
-              <Badge count={countSeen}>
-                <MessageOutlined
-                  className="avt-notify"
-                  style={{ width: 30 }}
-                  onClick={() =>
-                    navigate("/dr.Enclinic/chatting", {
-                      state: "Doctor",
-                    })
-                  }
-                />
-              </Badge>
               <Badge count={5}>
                 <BellOutlined className="avt-notify" />
               </Badge>
@@ -183,4 +149,4 @@ const DoctorLayout = () => {
     </Layout>
   );
 };
-export default DoctorLayout;
+export default AdminLayout;

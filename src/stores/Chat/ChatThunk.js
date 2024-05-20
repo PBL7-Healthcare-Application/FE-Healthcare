@@ -12,8 +12,11 @@ export const getUserChat = createAsyncThunk(
 
         if (docSnap.exists()) {
           const data = docSnap.data();
-          data.lastSeen = data.lastSeen.toDate();
-          return data;
+          const newData = {
+            ...data,
+            lastSeen: data.lastSeen.toDate(),
+          };
+          return newData;
         } else {
           return null;
         }
@@ -25,7 +28,3 @@ export const getUserChat = createAsyncThunk(
     }
   }
 );
-
-
-
-

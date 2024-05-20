@@ -1,33 +1,43 @@
 @import "../../../assets/scss/font.scss";
 @import "../../../assets/scss/variable.scss";
 
-
-
 .certificate {
-    &-main {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+  &-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
+  // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-top: 30px;
+  // padding: 10px 20px;
+  width: 90%;
+
+  &-iconEdit {
+    &:hover {
+      cursor: pointer;
     }
-
-    // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    margin-top: 30px;
-    // padding: 10px 20px;
-    width: 90%;
-
-    &-iconEdit {
-        &:hover {
-            cursor: pointer;
-        }
-
+  }
+  &-modal {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    &__item {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
     }
-
+    &__infor {
+      flex: 1;
+    }
+  }
 }
 
 td {
-    font-family: $font-main;
-    font-size: 15px;
-    font-weight: 400;
+  font-family: $font-main;
+  font-size: 15px;
+  font-weight: 400;
 }

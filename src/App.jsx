@@ -11,6 +11,7 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
+      console.log(user);
       dispatch(getUserChat(user));
     });
 

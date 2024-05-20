@@ -68,7 +68,7 @@ const Verification = () => {
       const res = await createUserWithEmailAndPassword(auth, email, email);
       await setDoc(doc(db, "users", res.user.uid), {
         usename: name,
-        email,
+        email: email,
         id: res.user.uid,
         online: true,
         lastSeen: serverTimestamp(),

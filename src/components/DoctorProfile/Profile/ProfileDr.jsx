@@ -84,7 +84,10 @@ const ProfileDr = () => {
               <Typography className="label">Name</Typography>
               <Input
                 value={profile?.name}
-                className="input__username input"
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
+                disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
                 }}
@@ -109,7 +112,10 @@ const ProfileDr = () => {
               <Typography className="label">Year Of Experience</Typography>
               <Input
                 value={profile?.yearExperience}
-                className="input__username input"
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
+                disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
                 }}
@@ -131,6 +137,7 @@ const ProfileDr = () => {
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
                 }}
+                disabled={!isEdit}
               />
             </Form.Item>
           </Form.Item>
@@ -155,6 +162,7 @@ const ProfileDr = () => {
                 className="profile-datePicker"
                 style={{ marginTop: 10 }}
                 value={dayjs(new Date(profile?.dob))}
+                disabled={!isEdit}
               />
             </Form.Item>
             <Form.Item
@@ -173,6 +181,7 @@ const ProfileDr = () => {
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
                 }}
+                disabled={!isEdit}
               />
             </Form.Item>
           </Form.Item>
@@ -192,7 +201,10 @@ const ProfileDr = () => {
               <Typography className="label">Phone Number</Typography>
               <Input
                 value={profile?.phoneNumber}
-                className="input__username input"
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
+                disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
                 }}
@@ -208,7 +220,11 @@ const ProfileDr = () => {
               }}
             >
               <Typography className="label">Fees</Typography>
-              <Select
+              <Input
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
+                disabled={!isEdit}
                 defaultValue={profile?.price?.toLocaleString("vi-VN")}
                 style={{ margin: "8px 0", height: 46 }}
                 onChange={(e) => {
@@ -227,7 +243,10 @@ const ProfileDr = () => {
               <Typography className="label">Enclinic Name</Typography>
               <Input
                 value={profile?.nameClinic}
-                className="input__username input"
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
+                disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
                 }}
@@ -244,7 +263,10 @@ const ProfileDr = () => {
               <Typography className="label">Address</Typography>
               <Input
                 value={profile?.address}
-                className="input__username input"
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
+                disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
                 }}
@@ -256,12 +278,13 @@ const ProfileDr = () => {
             <Typography className="label">Desciption</Typography>
             <TextArea
               value={profile?.description}
-              className="profileDr-font"
+              className={`profileDr-font ${!isEdit && "profileDr-input"}`}
               placeholder="Controlled autosize"
               autoSize={{ minRows: 3, maxRows: 5 }}
               style={{
                 marginTop: 10,
               }}
+              disabled={!isEdit}
             />
           </Form.Item>
           {/* <Form.Item>
