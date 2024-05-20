@@ -107,7 +107,7 @@ const ManagementUser = () => {
             <EditOutlined
               className="certificate-iconEdit"
               style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-              //   onClick={handleShowDeleteModal}
+            //   onClick={handleShowDeleteModal}
             />
             <DeleteTwoTone
               twoToneColor="#EB1B36"
@@ -119,8 +119,8 @@ const ManagementUser = () => {
     },
   ];
 
-  const handleStatusChange = (value) => {};
-  const handleAvailableChange = (value) => {};
+  const handleStatusChange = (value) => { };
+  const handleAvailableChange = (value) => { };
 
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
@@ -132,9 +132,9 @@ const ManagementUser = () => {
       dispatch();
     }, 500)
   ).current;
-  const handleClick = () => {};
+  const handleClick = () => { };
 
-  useEffect(() => {}, [dispatch]);
+  useEffect(() => { }, [dispatch]);
   return (
     <div className="DoctorAppointment">
       <div
@@ -206,13 +206,13 @@ const ManagementUser = () => {
             created: item.created,
             role: tabRole(item.role),
             status: statusAccount(item.status),
+            r: item.role
           }))}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
                 // dispatch(getDetailDoctorAppointment(record.id));
-                // navigate(`/dr.Enclinic/appointment/${record.id}`);
-                console.log("record");
+                navigate(`/admin/users/detail/${record.id}`, { state: { role: record.r } })
               },
             };
           }}

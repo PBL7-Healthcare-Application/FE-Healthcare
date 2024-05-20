@@ -57,7 +57,7 @@ const Experience = () => {
           <EditOutlined
             className="certificate-iconEdit"
             style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-            //   onClick={handleShowDeleteModal}
+          //   onClick={handleShowDeleteModal}
           />
           <DeleteTwoTone
             twoToneColor="#EB1B36"
@@ -79,7 +79,7 @@ const Experience = () => {
       <div className="certificate">
         <Table
           columns={columns}
-          dataSource={profile.workingProcess.map((item, index) => ({
+          dataSource={profile?.workingProcess.map((item, index) => ({
             id: item.idWorkingProcess,
             key: index + 1,
             name: item?.workplace,

@@ -30,6 +30,8 @@ import Chatting from "../pages/chatting/Chatting";
 import Examination from "../pages/doctor/Examination/Examination";
 import AdminLayout from "../layouts/Admin/AdminLayout";
 import ManagementUser from "../pages/admin/ManagementUser";
+import DetailUser from "../components/admin/user/DetailUser";
+import ManagementAppointment from "../pages/admin/ManagementAppointment";
 
 const routers = createBrowserRouter([
   {
@@ -200,34 +202,22 @@ const routers = createBrowserRouter([
     children: [
       {
         path: "users",
-        element: <ManagementUser />,
+
         children: [
           {
-            path: "detail",
-            children: [
-              {
-                path: "profile",
-                element: <ProfileDr />,
-              },
-              {
-                path: "certification",
-                element: <Certification />,
-              },
-              {
-                path: "education",
-                element: <Education />,
-              },
-              {
-                path: "experience",
-                element: <Experience />,
-              },
-            ],
+            path: "",
+            element: <ManagementUser />,
+          },
+          {
+            path: "detail/:id",
+            element: <DetailUser />,
+
           },
         ],
       },
       {
         path: "appointments",
-        element: <div>appointments</div>,
+        element: <ManagementAppointment />,
       },
       {
         path: "requests",

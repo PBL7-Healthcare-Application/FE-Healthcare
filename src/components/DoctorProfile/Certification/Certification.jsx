@@ -61,7 +61,7 @@ const Certification = () => {
             <EditOutlined
               className="certificate-iconEdit"
               style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-              //   onClick={handleShowDeleteModal}
+            //   onClick={handleShowDeleteModal}
             />
             <DeleteTwoTone
               twoToneColor="#EB1B36"
@@ -175,7 +175,7 @@ const Certification = () => {
       <div className="certificate">
         <Table
           columns={columns}
-          dataSource={profile.certificates.map((item, index) => ({
+          dataSource={profile?.certificates.map((item, index) => ({
             id: item.idCertificate,
             key: index + 1,
             name: item?.name,

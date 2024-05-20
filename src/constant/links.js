@@ -32,3 +32,24 @@ export const linksAccount =
 
 
     ]
+
+export const linksAdmin =
+    [
+        {
+            label: "Information",
+            href: "/admin/users/detail/profile",
+        },
+        {
+            label: "Certification",
+            href: "/admin/users/detail/certification",
+        },
+
+        {
+            label: "Education",
+            href: "/admin/users/detail/education",
+        },
+        {
+            label: "Experience",
+            href: "/admin/users/detail/experience",
+        },
+    ]
