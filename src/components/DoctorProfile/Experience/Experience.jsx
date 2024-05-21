@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import { Space, Table } from "antd";
 import "../Certification/Certification.scss";
 import { DeleteTwoTone, EditOutlined } from "@ant-design/icons";
 import { iconCertificate } from "../../../helpers/icon";
 import { useSelector } from "react-redux";
 
-const Experience = () => {
+const Experience = ({ type }) => {
   const { profile } = useSelector((state) => state.doctor);
   const columns = [
     {
@@ -57,7 +58,7 @@ const Experience = () => {
           <EditOutlined
             className="certificate-iconEdit"
             style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-          //   onClick={handleShowDeleteModal}
+            //   onClick={handleShowDeleteModal}
           />
           <DeleteTwoTone
             twoToneColor="#EB1B36"
@@ -70,12 +71,14 @@ const Experience = () => {
 
   return (
     <div className="certificate-main">
-      <span
-        className="setting-font"
-        style={{ fontSize: 25, fontWeight: 600, color: "#185FA0" }}
-      >
-        Experiences
-      </span>
+      {type === "DOCTOR" && (
+        <span
+          className="setting-font"
+          style={{ fontSize: 25, fontWeight: 600, color: "#185FA0" }}
+        >
+          Experiences
+        </span>
+      )}
       <div className="certificate">
         <Table
           columns={columns}

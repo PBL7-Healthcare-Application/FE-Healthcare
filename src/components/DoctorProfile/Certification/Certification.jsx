@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Form, Image, Input, Modal, Space, Table } from "antd";
 import "./Certification.scss";
 import { DeleteTwoTone, EditOutlined } from "@ant-design/icons";
@@ -7,7 +8,7 @@ import { useState } from "react";
 import certificate from "../../../assets/images/certificate.png";
 import calandar from "../../../assets/images/calandar.png";
 
-const Certification = () => {
+const Certification = ({ type }) => {
   const { profile } = useSelector((state) => state.doctor);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [key, setKey] = useState(0);
@@ -61,7 +62,7 @@ const Certification = () => {
             <EditOutlined
               className="certificate-iconEdit"
               style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-            //   onClick={handleShowDeleteModal}
+              //   onClick={handleShowDeleteModal}
             />
             <DeleteTwoTone
               twoToneColor="#EB1B36"
@@ -74,12 +75,14 @@ const Certification = () => {
   ];
   return (
     <div className="certificate-main">
-      <span
-        className="setting-font"
-        style={{ fontSize: 25, fontWeight: 600, color: "#185FA0" }}
-      >
-        Certificates
-      </span>
+      {type === "DOCTOR" && (
+        <span
+          className="setting-font"
+          style={{ fontSize: 25, fontWeight: 600, color: "#185FA0" }}
+        >
+          Certificates
+        </span>
+      )}
       <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <div className="certificate-modal">
           <span

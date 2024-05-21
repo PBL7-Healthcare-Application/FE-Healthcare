@@ -4,6 +4,7 @@
 .certificate {
   &-main {
     width: 100%;
+    padding: 0 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,7 +13,7 @@
   // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   margin-top: 30px;
   // padding: 10px 20px;
-  width: 90%;
+  width: 100%;
 
   &-iconEdit {
     &:hover {

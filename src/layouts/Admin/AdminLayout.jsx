@@ -1,27 +1,17 @@
-import {
-  BellOutlined,
-  LogoutOutlined,
-  MessageOutlined,
-} from "@ant-design/icons";
+import { BellOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Avatar, Badge, Image, Layout, Menu, Space } from "antd";
 import "../doctor/DoctorLayout.scss";
 import title from "../../assets/images/title.png";
 import logo from "../../assets/images/logo.png";
-import examination from "../../assets/images/examination.png";
-import { FaRegBookmark, FaRegCalendarAlt, FaUsers } from "react-icons/fa";
+import { FaRegBookmark, FaUsers } from "react-icons/fa";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SignInBtn from "../../components/header/SignInBtn";
 import getToken from "../../helpers/getToken";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getDoctorCalendar,
-  getDoctorProfile,
-} from "../../stores/doctor/DoctorThunk";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
 import "./AdminLayout.scss";
-import { FaListCheck } from "react-icons/fa6";
 import { TiThList } from "react-icons/ti";
 const { Header, Sider, Content } = Layout;
 const AdminLayout = () => {
@@ -42,23 +32,23 @@ const AdminLayout = () => {
     setToken(token);
   }, []);
 
-  useEffect(() => {
-    if (token) {
-      setIsLogin(true);
-      dispatch(getDoctorProfile());
-      dispatch(getDoctorCalendar());
-    }
-    return () => {};
-  }, [token, dispatch]);
+  // useEffect(() => {
+  //   if (token) {
+  //     setIsLogin(true);
+  //     dispatch(getDoctorProfile());
+  //     dispatch(getDoctorCalendar());
+  //   }
+  //   return () => {};
+  // }, [token, dispatch]);
 
-  useEffect(() => {
-    if (profile === null) {
-      const token = getToken();
-      if (!token) {
-        setIsLogin(false);
-      }
-    }
-  }, [profile]);
+  // useEffect(() => {
+  //   if (profile === null) {
+  //     const token = getToken();
+  //     if (!token) {
+  //       setIsLogin(false);
+  //     }
+  //   }
+  // }, [profile]);
 
   const onNavItemClick = (e) => {
     setCurrent(e.key);
@@ -99,9 +89,9 @@ const AdminLayout = () => {
               label: "Appointments",
             },
             {
-              key: "/requests",
+              key: "/partners",
               icon: <TiThList size={25} color="#b5bad4" />,
-              label: "Requests",
+              label: "Partners",
             },
           ]}
           onClick={onNavItemClick}
@@ -115,10 +105,13 @@ const AdminLayout = () => {
         <Header className="customSlider__header">
           {isLogin ? (
             <Space className="avt">
-              <Badge count={5}>
-                <BellOutlined className="avt-notify" />
-              </Badge>
               <div style={{ position: "relative" }}>
+                <span
+                  style={{ marginRight: 10, color: "#404040", marginTop: 5 }}
+                  className="sidebar__logout__text"
+                >
+                  Bui Van Huy
+                </span>
                 <Avatar
                   className="avt-avatar"
                   size="large"
@@ -130,6 +123,9 @@ const AdminLayout = () => {
                   {profile?.name[0]}
                 </Avatar>
               </div>
+              <Badge count={5}>
+                <BellOutlined className="avt-notify" />
+              </Badge>
             </Space>
           ) : (
             <SignInBtn />
