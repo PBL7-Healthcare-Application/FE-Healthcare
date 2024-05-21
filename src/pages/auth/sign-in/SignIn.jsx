@@ -14,6 +14,7 @@ import { getUserProfile } from "../../../stores/user/UserThunk";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../helpers/firebase";
 import { handleUpdateStatus } from "../../../helpers/chat";
+import { notify } from "../../../helpers/notifyConfig";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,16 @@ const SignIn = () => {
   const handleChat = async (email) => {
     try {
       await signInWithEmailAndPassword(auth, email, email);
+      notify.get().then((doc) => {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+        } else {
+          console.log("No such document!");
+        }
+      }).catch((error) => {
+        console.log("Error getting document:", error);
+      });;
+      console.log(test);
     } catch (error) {
       console.log(error);
     }

@@ -15,6 +15,7 @@ const searchSlice = createSlice({
     doctorDetail: null,
     error: null,
     loading: false,
+    pagingpagination: {}
   },
   reducers: {
     setIsSelected: (state, action) => {
@@ -42,6 +43,7 @@ const searchSlice = createSlice({
 
         state.loading = false;
         state.searchResult = action.payload.data;
+        state.pagingpagination = action.payload.pagingInfo;
       })
       .addCase(getSearchResult.rejected, (state, action) => {
         state.loading = false;

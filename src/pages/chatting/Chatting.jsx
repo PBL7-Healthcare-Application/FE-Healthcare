@@ -44,8 +44,15 @@ const Chatting = () => {
             await updateDoc(userChatsRef, {
               chats: userChats,
             });
+            const lastSeen = chats[0].user.lastSeen.toDate().toISOString();
+
             dispatch(
-              changeChat({ chatId: chats[0].chatId, user: chats[0].user })
+              changeChat({
+                chatId: chats[0].chatId, user: {
+                  ...chats[0].user,
+                  lastSeen,
+                }
+              })
             );
           } catch (err) {
             console.log(err);
@@ -56,7 +63,7 @@ const Chatting = () => {
         unsub();
       };
     }
-  }, [chatUser.id, state]);
+  }, [chatUser?.id, state, dispatch]);
   return (
     <div className="chatting">
       <div className="chatting-container">

@@ -15,7 +15,11 @@ const chatSlice = createSlice({
       state.user = action.payload.user;
     },
     setUser: (state, action) => {
-      state.user = action.payload;
+      const lastSeen = action.payload.lastSeen.toISOString();
+      state.user = {
+        ...action.payload,
+        lastSeen,
+      };
     },
   },
   extraReducers: (builder) => {

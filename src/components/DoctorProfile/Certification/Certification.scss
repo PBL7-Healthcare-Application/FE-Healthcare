@@ -4,6 +4,7 @@
 .certificate {
   &-main {
     width: 100%;
+    padding: 0 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,27 +13,38 @@
   // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   margin-top: 30px;
   // padding: 10px 20px;
-  width: 90%;
+  width: 100%;
 
   &-iconEdit {
     &:hover {
       cursor: pointer;
     }
   }
+
   &-modal {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-around;
     flex-direction: column;
+
     &__item {
       display: flex;
       flex-direction: row;
       gap: 20px;
     }
+
     &__infor {
       flex: 1;
     }
+  }
+
+  &-button {
+    font-family: $font-main;
+    color: $text-color;
+    font-weight: 500;
+    border: 1px solid $text-color;
+
   }
 }
 

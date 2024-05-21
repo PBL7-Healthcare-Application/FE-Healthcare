@@ -21,7 +21,7 @@ import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
 import { useNavigate, useParams } from "react-router-dom";
 import { setIdSpecialty } from "../../stores/search-doctor/SearchSlice";
 const Search = () => {
-  const { searchResult, loading, keyword, id_Specialty } = useSelector(
+  const { searchResult, loading, keyword, id_Specialty, pagingpagination } = useSelector(
     (state) => state.search
   );
   const [inputValue, setInputValue] = useState(keyword);
@@ -461,7 +461,7 @@ const Search = () => {
                                 keyword: inputValue,
                                 IdSpecialty:
                                   specialty === "All specialties" ||
-                                  specialty === 0
+                                    specialty === 0
                                     ? undefined
                                     : specialty,
                                 sortBy: "exp_desc",
@@ -536,8 +536,8 @@ const Search = () => {
       {searchResult.length > 0 && (
         <div className="search-pagination">
           <Pagination
-            defaultCurrent={3}
-            total={500}
+            current={pagingpagination?.currentPage}
+            total={pagingpagination?.totalPages}
             showTotal={false}
             showSizeChanger={false}
           />

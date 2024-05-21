@@ -139,7 +139,7 @@ const CardResult = ({ doctor }) => {
           <Space className="result-second__address">
             <DollarOutlined className="result-second__address-icon" />
             <Typography className="result-second__specialty">
-              {doctor.price.toLocaleString("vi-VN")} ₫
+              {doctor?.price?.toLocaleString("vi-VN")} ₫
             </Typography>
           </Space>
         </div>

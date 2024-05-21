@@ -38,16 +38,21 @@ const Avt = (props) => {
     navigate("/");
   };
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
-      if (doc.exists()) {
-        const data = doc.data();
-        setCountSeen(data.chats.filter((item) => item.isSeen === false).length);
-      }
-    });
+    if (chatUser?.id) {
+      const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
+        if (doc.exists()) {
+          console.log(`test`, doc.data());
+          const data = doc.data();
+          if (data?.chats) {
+            setCountSeen(data?.chats.filter((item) => item.isSeen === false)?.length);
+          }
+        }
+      });
 
-    return () => {
-      unSub();
-    };
+      return () => {
+        unSub();
+      };
+    }
   }, [chatUser?.id]);
   return (
     <Space className="avt">

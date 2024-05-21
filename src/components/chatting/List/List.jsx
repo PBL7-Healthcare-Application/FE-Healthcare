@@ -25,12 +25,19 @@ const ListUser = () => {
 
     userChats[chatIndex].isSeen = true;
 
-    const userChatsRef = doc(db, "userchats", chatUser.id);
+    const userChatsRef = doc(db, "userchats", chatUser?.id);
     try {
       await updateDoc(userChatsRef, {
         chats: userChats,
       });
-      dispatch(changeChat({ chatId: chat.chatId, user: chat.user }))
+      const lastSeen = chat.user.lastSeen.toDate().toISOString();
+      dispatch(changeChat({
+        chatId: chat.chatId, user: {
+          ...chat.user,
+          lastSeen,
+
+        }
+      }))
     } catch (err) {
       console.log(err);
     }
@@ -38,23 +45,25 @@ const ListUser = () => {
   }
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "userchats", chatUser.id), async (res) => {
-      const items = res.data().chats;
+    if (chatUser?.id) {
+      const unsub = onSnapshot(doc(db, "userchats", chatUser?.id), async (res) => {
+        const items = res.data().chats;
 
-      const promisses = items.map(async (item) => {
-        const userRef = doc(db, "users", item.receiverId);
-        const userDocSnap = await getDoc(userRef);
-        const user = userDocSnap.data();
-        return { ...item, user };
+        const promisses = items.map(async (item) => {
+          const userRef = doc(db, "users", item.receiverId);
+          const userDocSnap = await getDoc(userRef);
+          const user = userDocSnap.data();
+          return { ...item, user };
+        });
+        const chatData = await Promise.all(promisses);
+        setChats(chatData.sort((a, b) => b.updateAt - a.updateAt));
       });
-      const chatData = await Promise.all(promisses);
-      setChats(chatData.sort((a, b) => b.updateAt - a.updateAt));
-    });
 
-    return () => {
-      unsub();
-    };
-  }, [chatUser.id]);
+      return () => {
+        unsub();
+      };
+    }
+  }, [chatUser?.id]);
 
   console.log(chats);
   return (

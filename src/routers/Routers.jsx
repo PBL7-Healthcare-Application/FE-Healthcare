@@ -32,6 +32,7 @@ import AdminLayout from "../layouts/Admin/AdminLayout";
 import ManagementUser from "../pages/admin/ManagementUser";
 import DetailUser from "../components/admin/user/DetailUser";
 import ManagementAppointment from "../pages/admin/ManagementAppointment";
+import ManagementPartner from "../pages/admin/ManagementPartner";
 
 const routers = createBrowserRouter([
   {
@@ -159,15 +160,15 @@ const routers = createBrowserRouter([
               },
               {
                 path: "certification",
-                element: <Certification />,
+                element: <Certification type={"DOCTOR"} />,
               },
               {
                 path: "education",
-                element: <Education />,
+                element: <Education type={"DOCTOR"} />,
               },
               {
                 path: "experience",
-                element: <Experience />,
+                element: <Experience type={"DOCTOR"} />,
               },
             ],
           },
@@ -211,7 +212,6 @@ const routers = createBrowserRouter([
           {
             path: "detail/:id",
             element: <DetailUser />,
-
           },
         ],
       },
@@ -220,8 +220,17 @@ const routers = createBrowserRouter([
         element: <ManagementAppointment />,
       },
       {
-        path: "requests",
-        element: <div>requests</div>,
+        path: "partners",
+        children: [
+          {
+            path: "",
+            element: <ManagementPartner />,
+          },
+          {
+            path: ":id",
+            element: <DetailUser partner={"partner"} />,
+          },
+        ],
       },
     ],
   },

@@ -78,7 +78,7 @@ export const statusAccount = (status) => {
     case "BAN":
       return (
         <Tag color="#f50" style={{ fontWeight: 500 }}>
-          BAN
+          BANED
         </Tag>
       );
     case "ACTIVE":

@@ -3,57 +3,41 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DeleteTwoTone,
-  EditOutlined,
   SearchOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
-
-import { Button, Input, Select, Space, Table, Tag } from "antd";
+import "./admin.scss";
+import {
+  Button,
+  DatePicker,
+  Image,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { debounce } from "lodash";
-import { statusAccount, tabRole } from "../../helpers/icon";
-import { BiSolidLock } from "react-icons/bi";
-import { RiDeleteBin6Fill } from "react-icons/ri";
+import { icon } from "../../helpers/icon";
 
-const ManagementUser = () => {
+import doctorDefault from "../../assets/images/doctor.jpeg";
+import calender from "../../assets/images/calandar.png";
+import dolar from "../../assets/images/dollar.png";
+import personDefault from "../../assets/images/personDefault.png";
+import location from "../../assets/images/location.png";
+import problem from "../../assets/images/problem.png";
+const ManagementPartner = () => {
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
     },
   });
-  const data = [
-    {
-      key: "1",
-      name: "Nguyễn Văn A",
-      created: "2021-09-01",
-      role: "DOCTOR",
-      status: "ACTIVE",
-    },
-    {
-      key: "2",
-      name: "Trần Thị B",
-      created: "2021-08-01",
-      role: "USER",
-      status: "BAN",
-    },
-    {
-      key: "3",
-      name: "Lê Văn C",
-      created: "2021-07-01",
-      role: "USER",
-      status: "ACTIVE",
-    },
-    {
-      key: "4",
-      name: "Phạm Thị D",
-      created: "2021-06-01",
-      role: "DOCTOR",
-      status: "ACTIVE",
-    },
-  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputSearch, setInputSearch] = useState("");
   const [status, setStatus] = useState(null);
   const [filterAvailable, setFilterAvailable] = useState(null);
@@ -69,19 +53,19 @@ const ManagementUser = () => {
       align: "center",
     },
     {
-      title: "Name",
-      dataIndex: "name",
+      title: "Doctor",
+      dataIndex: "doctor",
       align: "center",
     },
 
     {
-      title: "Created Date",
-      dataIndex: "created",
+      title: "Specialty",
+      dataIndex: "specialty",
       align: "center",
     },
     {
-      title: "Role",
-      dataIndex: "role",
+      title: "Created Date",
+      dataIndex: "created",
       align: "center",
     },
     {
@@ -105,26 +89,40 @@ const ManagementUser = () => {
       },
       render: () => (
         <>
-          <Space size={"middle"} align="center" direction="horizontal">
-            <BiSolidLock
+          <Space size={"middle"}>
+            <DeleteTwoTone
+              twoToneColor="#EB1B36"
               className="function-box__delete"
-              size={30}
-              style={{ cursor: "pointer" }}
-              color="#ff4d4f"
-            />
-            <RiDeleteBin6Fill
-              color="#ff7875"
-              size={28}
-              style={{ cursor: "pointer" }}
             />
           </Space>
         </>
       ),
     },
   ];
+  const data = [
+    {
+      key: 1,
+      doctor: "Dr. Smith",
+      specialty: "Dentistry",
+      created: "2022-01-01",
+      status: 1,
+    },
+    {
+      key: 2,
+      doctor: "Dr. Johnson",
+      specialty: "Dentistry",
+      created: "2022-01-02",
+      status: 2,
+    },
+  ];
+  //
 
-  const handleStatusChange = (value) => {};
-  const handleAvailableChange = (value) => {};
+  const handleStatusChange = (value) => {
+    setStatus(value);
+  };
+  const handleAvailableChange = (value) => {
+    setFilterAvailable(value);
+  };
 
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
@@ -132,9 +130,7 @@ const ManagementUser = () => {
     debounceInputKey(newValue, status, 1, filterAvailable);
   };
   const debounceInputKey = useRef(
-    debounce((nextValue, status, page, filterAvailable) => {
-      dispatch();
-    }, 500)
+    debounce((nextValue, status, page, filterAvailable) => {}, 500)
   ).current;
   const handleClick = () => {};
 
@@ -161,7 +157,7 @@ const ManagementUser = () => {
             <Input
               type="text"
               className="search__input-text"
-              placeholder="Search ..."
+              placeholder="Search for a patient..."
               style={{ border: "1px solid #a1a1aa" }}
               onChange={handleChangeInput}
             />
@@ -174,30 +170,22 @@ const ManagementUser = () => {
           </div>
         </div>
         <div className="DoctorAppointment-select">
-          <span className="DoctorAppointment-text">Role</span>
+          <span className="DoctorAppointment-text">Status</span>
           <Select
             placeholder="-- select --"
             style={{ width: 150, height: 46, color: "#6c81a0" }}
             onChange={handleStatusChange}
             options={[
               { value: 0, label: "All" },
-              { value: "USER", label: "User" },
-              { value: "DOCTOR", label: "Doctor" },
+              { value: 1, label: "Booked" },
+              { value: 3, label: "Completed" },
+              { value: 2, label: "Canceled" },
             ]}
           />
         </div>
         <div className="DoctorAppointment-select">
-          <span className="DoctorAppointment-text">Status</span>
-          <Select
-            placeholder="-- select --"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
-            onChange={handleAvailableChange}
-            options={[
-              { value: "All", label: "All" },
-              { value: "ACTIVE", label: "Active" },
-              { value: "BAN", label: "Ban" },
-            ]}
-          />
+          <span className="DoctorAppointment-text">Date</span>
+          <DatePicker style={{ width: 150, height: 46, color: "#6c81a0" }} />
         </div>
       </div>
       <div className="DoctorAppointment-filter">
@@ -205,19 +193,17 @@ const ManagementUser = () => {
           columns={columns}
           dataSource={data.map((item, index) => ({
             id: item.key,
-            key: item.key,
-            name: item.name,
+            key: index + 1,
+            doctor: item.doctor,
+            specialty: item.specialty,
             created: item.created,
-            role: tabRole(item.role),
-            status: statusAccount(item.status),
-            r: item.role,
+            status: icon(item.status),
           }))}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
-                // dispatch(getDetailDoctorAppointment(record.id));
-                navigate(`/admin/users/detail/${record.id}`, {
-                  state: { role: record.r },
+                navigate(`/admin/partners/${record.id}`, {
+                  state: { role: "DOCTOR" },
                 });
               },
             };
@@ -233,4 +219,4 @@ const ManagementUser = () => {
   );
 };
 
-export default ManagementUser;
+export default ManagementPartner;
