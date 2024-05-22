@@ -14,7 +14,7 @@ export const getUserChat = createAsyncThunk(
           const data = docSnap.data();
           const newData = {
             ...data,
-            lastSeen: data.lastSeen.toDate(),
+            lastSeen: data.lastSeen.toDate().toISOString(),
           };
           return newData;
         } else {

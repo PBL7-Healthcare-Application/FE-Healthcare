@@ -30,31 +30,35 @@ const ListUser = () => {
       await updateDoc(userChatsRef, {
         chats: userChats,
       });
-      dispatch(changeChat({ chatId: chat.chatId, user: chat.user }))
+      dispatch(changeChat({ chatId: chat.chatId, user: chat.user }));
     } catch (err) {
       console.log(err);
     }
-
-  }
+  };
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "userchats", chatUser.id), async (res) => {
-      const items = res.data().chats;
+    if (chatUser?.id) {
+      const unsub = onSnapshot(
+        doc(db, "userchats", chatUser.id),
+        async (res) => {
+          const items = res.data().chats;
 
-      const promisses = items.map(async (item) => {
-        const userRef = doc(db, "users", item.receiverId);
-        const userDocSnap = await getDoc(userRef);
-        const user = userDocSnap.data();
-        return { ...item, user };
-      });
-      const chatData = await Promise.all(promisses);
-      setChats(chatData.sort((a, b) => b.updateAt - a.updateAt));
-    });
+          const promisses = items.map(async (item) => {
+            const userRef = doc(db, "users", item.receiverId);
+            const userDocSnap = await getDoc(userRef);
+            const user = userDocSnap.data();
+            return { ...item, user };
+          });
+          const chatData = await Promise.all(promisses);
+          setChats(chatData.sort((a, b) => b.updateAt - a.updateAt));
+        }
+      );
 
-    return () => {
-      unsub();
-    };
-  }, [chatUser.id]);
+      return () => {
+        unsub();
+      };
+    }
+  }, [chatUser?.id]);
 
   console.log(chats);
   return (
@@ -62,7 +66,13 @@ const ListUser = () => {
       <span className="listUser-font">List Messages</span>
       <div className="listUser-list">
         {chats.length > 0 ? (
-          chats.map((chat) => <ItemUser key={chat.chatId} chat={chat} onSelect={(data) => handleSelect(data)} />)
+          chats.map((chat) => (
+            <ItemUser
+              key={chat.chatId}
+              chat={chat}
+              onSelect={(data) => handleSelect(data)}
+            />
+          ))
         ) : (
           <Empty style={{ marginTop: 30 }} />
         )}

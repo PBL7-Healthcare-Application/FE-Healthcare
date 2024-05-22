@@ -1,12 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Avatar, Badge, Button, Image, Space, Typography } from "antd";
 import "./Avt.scss";
-import {
-  BellOutlined,
-  CloseOutlined,
-  MessageOutlined,
-  RightOutlined,
-} from "@ant-design/icons";
+import { CloseOutlined, RightOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../../stores/auth/AuthSlice";
@@ -16,12 +11,17 @@ import medicalHistory from "../../assets/images/medicalHistory.png";
 import personDefault from "../../assets/images/personDefault.png";
 import { auth, db } from "../../helpers/firebase";
 import { handleUpdateStatus } from "../../helpers/chat";
-import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
+import Notify from "../notify/Notify";
+import { FaFacebookMessenger } from "react-icons/fa";
+import { IoNotifications } from "react-icons/io5";
+import CardNotify from "../notify/CardNotify";
 
 const Avt = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [visible, setvisible] = useState(true);
+  const [visible, setvisible] = useState(false);
+  const [isNoti, setIsNoti] = useState(false);
   const [countSeen, setCountSeen] = useState("");
   const { chatUser } = useSelector((state) => state.chat);
   const handleAvatar = () => {
@@ -38,33 +38,97 @@ const Avt = (props) => {
     navigate("/");
   };
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
-      if (doc.exists()) {
-        const data = doc.data();
-        setCountSeen(data.chats.filter((item) => item.isSeen === false).length);
-      }
-    });
+    if (chatUser?.id) {
+      const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          setCountSeen(
+            data.chats.filter((item) => item.isSeen === false).length
+          );
+        }
+      });
 
-    return () => {
-      unSub();
-    };
+      return () => {
+        unSub();
+      };
+    }
   }, [chatUser?.id]);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isNoti && event.target.closest(".notification-icon") === null) {
+        setIsNoti(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isNoti]);
+  useEffect(() => {
+    const handleClickOutsideAvatar = (event) => {
+      if (visible && event.target.closest(".profile-icon") === null) {
+        setvisible(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutsideAvatar);
+    return () => {
+      document.removeEventListener("click", handleClickOutsideAvatar);
+    };
+  }, [visible]);
+
   return (
     <Space className="avt">
-      <Badge count={countSeen} style={{ cursor: "pointer" }}>
-        <MessageOutlined
-          className="avt-notify"
-          style={{ width: 30 }}
+      <Badge
+        count={countSeen}
+        style={{ cursor: "pointer" }}
+        size="large"
+        offset={[-5, 3]}
+      >
+        <div
+          style={{
+            padding: 10,
+            paddingBottom: 5,
+            backgroundColor: "#E4E6EB",
+            borderRadius: "50%",
+          }}
           onClick={() => navigate("/chatting")}
-        />
+        >
+          {/* <MessageOutlined className="avt-notify" style={{ width: 25 }} /> */}
+          <FaFacebookMessenger size={25} color="#404040" />
+        </div>
       </Badge>
-      <Badge count={5}>
-        <BellOutlined className="avt-notify" />
+
+      <Badge
+        count={countSeen}
+        style={{ cursor: "pointer" }}
+        size="large"
+        offset={[-5, 3]}
+      >
+        <div
+          className="notification-icon"
+          onClick={() => setIsNoti(!isNoti)}
+          style={{
+            position: "relative",
+            cursor: "pointer",
+            padding: 10,
+            paddingBottom: 5,
+            backgroundColor: isNoti ? "#E3F2FE" : "#E4E6EB",
+            borderRadius: "50%",
+          }}
+        >
+          <IoNotifications
+            size={26}
+            color={`${isNoti ? "#4096ff" : "#404040"}`}
+          />
+          {isNoti && <Notify onClose={() => setIsNoti(!isNoti)} />}
+        </div>
       </Badge>
       <div style={{ position: "relative" }}>
-        {visible ? (
+        {!visible ? (
           <Avatar
-            className="avt-avatar"
+            className="avt-avatar profile-icon"
             size="large"
             style={{
               backgroundColor: "#fde3cf",
@@ -129,7 +193,6 @@ const Avt = (props) => {
                   className="avt-popover__box--item"
                   onClick={() => {
                     navigate("/user/medical-history");
-                    setvisible(!visible);
                   }}
                 >
                   <Image src={medicalHistory} preview={false} width={25} />
@@ -138,7 +201,6 @@ const Avt = (props) => {
                     style={{ fontSize: 13 }}
                     onClick={() => {
                       navigate("/user/medical-history");
-                      setvisible(!visible);
                     }}
                   >
                     My Medical History

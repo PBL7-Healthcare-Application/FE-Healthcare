@@ -82,16 +82,20 @@ const DoctorLayout = () => {
     navigate("/");
   };
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
-      if (doc.exists()) {
-        const data = doc.data();
-        setCountSeen(data.chats.filter((item) => item.isSeen === false).length);
-      }
-    });
+    if (chatUser?.id) {
+      const unSub = onSnapshot(doc(db, "userchats", chatUser?.id), (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          setCountSeen(
+            data.chats.filter((item) => item.isSeen === false).length
+          );
+        }
+      });
 
-    return () => {
-      unSub();
-    };
+      return () => {
+        unSub();
+      };
+    }
   }, [chatUser?.id]);
 
   return (

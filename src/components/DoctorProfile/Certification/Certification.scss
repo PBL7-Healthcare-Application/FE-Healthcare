@@ -35,6 +35,12 @@
       flex: 1;
     }
   }
+  &-button {
+    font-family: $font-main;
+    color: $text-color;
+    font-weight: 500;
+    border: 1px solid $text-color;
+  }
 }
 
 td {

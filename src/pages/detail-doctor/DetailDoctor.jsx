@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-import 'mapbox-gl/dist/mapbox-gl.css';
+import "mapbox-gl/dist/mapbox-gl.css";
 
 import {
   Button,
@@ -38,11 +38,9 @@ import getToken from "../../helpers/getToken";
 import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
 import { delay } from "lodash";
 import doctorDefault from "../../assets/images/doctor.jpeg";
-
-import axios from "axios";
-import ReactMapGL, { Marker } from 'react-map-gl';
-import { MdPhone } from 'react-icons/md';
-import Rating from '../../components/Rate/Rate';
+import ReactMapGL, { Marker } from "react-map-gl";
+import { MdPhone } from "react-icons/md";
+import Rating from "../../components/Rate/Rate";
 const DetailDoctor = () => {
   const { doctorDetail, schedule } = useSelector((state) => state.search);
   const [times, setTimes] = useState(schedule[0]?.times);
@@ -50,27 +48,24 @@ const DetailDoctor = () => {
   const [chooseTime, setChooseTime] = useState(null);
   const [chooseDate, setChooseDate] = useState(schedule[0]?.date);
   const [chooseType, setChooseType] = useState(1);
-  const [addressData, setAddressData] = useState(null)
+  const [addressData, setAddressData] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
-
-  const handleGetLocation = async (address) => {
-    const res = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=pk.eyJ1IjoiaHV5YnVpMTIzIiwiYSI6ImNsd2J3ZndtNzB0MmEya2todnh6NnN3NmcifQ.vNBtsp330gjfTNlBOrlA-g`)
-    setAddressData({
-      latitude: res.data.features[0].center[1],
-      longitude: res.data.features[0].center[0]
-    })
-    console.log(res.data.features[0].center[0])
-    return res;
-  }
+  // const handleGetLocation = async (address) => {
+  //   const res = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=pk.eyJ1IjoiaHV5YnVpMTIzIiwiYSI6ImNsd2J3ZndtNzB0MmEya2todnh6NnN3NmcifQ.vNBtsp330gjfTNlBOrlA-g`)
+  //   setAddressData({
+  //     latitude: res.data.features[0].center[1],
+  //     longitude: res.data.features[0].center[0]
+  //   })
+  //   console.log(res.data.features[0].center[0])
+  //   return res;
+  // }
 
   // useEffect(() => {
   //   handleGetLocation("45 Đường Thành Thái, phường 14, Quận 10, Thành phố Hồ Chí Minh, Vietnam")
 
   // }, [])
-
 
   const handleCardClick = (cardId, item) => {
     setChooseDate(item.date);
@@ -154,18 +149,18 @@ const DetailDoctor = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(setIsTimeSelected(null));
-    setTimes(schedule[0]?.times);
-    setChooseDate(schedule[0]?.date);
-  }, [schedule, dispatch]);
+  // useEffect(() => {
+  //   dispatch(setIsTimeSelected(null));
+  //   setTimes(schedule[0]?.times);
+  //   setChooseDate(schedule[0]?.date);
+  // }, [schedule, dispatch]);
 
   const [viewport, setViewport] = useState({
     width: "200px",
     height: "100px",
     latitude: 16.062371862000077,
     longitude: 108.17229941300008,
-    zoom: 16
+    zoom: 16,
   });
   const { TabPane } = Tabs;
   return (
@@ -450,62 +445,170 @@ const DetailDoctor = () => {
                 {/*  */}
                 <div className="detailDr-content__left-information__profile">
                   <div style={{ display: "flex", flexDirection: "row" }}>
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="16" fill="#BCDEFF"></rect><path fillRule="evenodd" clipRule="evenodd" d="M26 11.143A2.141 2.141 0 0023.857 9H8.143A2.142 2.142 0 006 11.143v10a2.143 2.143 0 002.143 2.143h15.714A2.142 2.142 0 0026 21.143v-10z" fill="#2D87F3"></path><path fillRule="evenodd" clipRule="evenodd" d="M23.857 9v9.565a2.142 2.142 0 01-2.143 2.143H6v.435a2.143 2.143 0 002.143 2.143h15.714A2.142 2.142 0 0026 21.143v-10A2.141 2.141 0 0023.857 9z" fill="#2C74DF"></path><path d="M12.429 16.145a2.143 2.143 0 100-4.286 2.143 2.143 0 000 4.286z" fill="#fff"></path><path fillRule="evenodd" clipRule="evenodd" d="M8.857 19.716c0 .395.32.714.715.714h5.714c.395 0 .714-.32.714-.714 0-1.971-1.6-3.572-3.571-3.572a3.573 3.573 0 00-3.572 3.572zM17.429 15.43h4.976a.715.715 0 000-1.428H17.43a.715.715 0 000 1.429zM17.429 18.288h3.572a.715.715 0 000-1.429h-3.572a.714.714 0 000 1.429z" fill="#fff"></path></svg>
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        width="32"
+                        height="32"
+                        rx="16"
+                        fill="#BCDEFF"
+                      ></rect>
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M26 11.143A2.141 2.141 0 0023.857 9H8.143A2.142 2.142 0 006 11.143v10a2.143 2.143 0 002.143 2.143h15.714A2.142 2.142 0 0026 21.143v-10z"
+                        fill="#2D87F3"
+                      ></path>
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M23.857 9v9.565a2.142 2.142 0 01-2.143 2.143H6v.435a2.143 2.143 0 002.143 2.143h15.714A2.142 2.142 0 0026 21.143v-10A2.141 2.141 0 0023.857 9z"
+                        fill="#2C74DF"
+                      ></path>
+                      <path
+                        d="M12.429 16.145a2.143 2.143 0 100-4.286 2.143 2.143 0 000 4.286z"
+                        fill="#fff"
+                      ></path>
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M8.857 19.716c0 .395.32.714.715.714h5.714c.395 0 .714-.32.714-.714 0-1.971-1.6-3.572-3.571-3.572a3.573 3.573 0 00-3.572 3.572zM17.429 15.43h4.976a.715.715 0 000-1.428H17.43a.715.715 0 000 1.429zM17.429 18.288h3.572a.715.715 0 000-1.429h-3.572a.714.714 0 000 1.429z"
+                        fill="#fff"
+                      ></path>
+                    </svg>
                     <Typography className="detailDr-content__left-information__profile-title">
                       Clinic's information
                     </Typography>
                   </div>
 
                   <div style={{ width: "90%", height: 300, marginTop: 20 }}>
-                    <ReactMapGL {...viewport} mapStyle="mapbox://styles/mapbox/streets-v12" mapboxAccessToken="pk.eyJ1IjoiaHV5YnVpMTIzIiwiYSI6ImNsd2MxZm1oZzBobGYyaW1xb3J3M3AybzcifQ.XMOzdgG1jBifx7ztUeR4kw" onViewportChange={nextViewport => setViewport(nextViewport)}>
-                      <Marker longitude={108.17229941300008} latitude={16.062371862000077} >
-                        <img width={20} height={20} src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png" alt="marker" />
+                    <ReactMapGL
+                      {...viewport}
+                      mapStyle="mapbox://styles/mapbox/streets-v12"
+                      mapboxAccessToken="pk.eyJ1IjoiaHV5YnVpMTIzIiwiYSI6ImNsd2MxZm1oZzBobGYyaW1xb3J3M3AybzcifQ.XMOzdgG1jBifx7ztUeR4kw"
+                      onViewportChange={(nextViewport) =>
+                        setViewport(nextViewport)
+                      }
+                    >
+                      <Marker
+                        longitude={108.17229941300008}
+                        latitude={16.062371862000077}
+                      >
+                        <img
+                          width={20}
+                          height={20}
+                          src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
+                          alt="marker"
+                        />
                       </Marker>
                     </ReactMapGL>
                   </div>
-                  <div className='contact'>
-                    <span className='contact__text'> {doctorDetail?.nameClinic}</span>
-                    <span className='contact__text' style={{ fontSize: 14, fontWeight: 400 }}> {doctorDetail?.address ? doctorDetail?.address : "--"}</span>
-                    <div className='contact__phone'>
+                  <div className="contact">
+                    <span className="contact__text">
+                      {" "}
+                      {doctorDetail?.nameClinic}
+                    </span>
+                    <span
+                      className="contact__text"
+                      style={{ fontSize: 14, fontWeight: 400 }}
+                    >
+                      {" "}
+                      {doctorDetail?.address ? doctorDetail?.address : "--"}
+                    </span>
+                    <div className="contact__phone">
                       <MdPhone size={20} />
-                      <span className='contact__text' style={{ fontSize: 14, fontWeight: 400 }}> {doctorDetail?.phoneNumber}</span>
+                      <span
+                        className="contact__text"
+                        style={{ fontSize: 14, fontWeight: 400 }}
+                      >
+                        {" "}
+                        {doctorDetail?.phoneNumber}
+                      </span>
                     </div>
                   </div>
                 </div>
               </TabPane>
               <TabPane tab="Review" key="2">
                 <div className="detailDr-content__left-information__profile rate">
-                  <div className='rate__box'>
-                    <div className='rate__box__child'>
-                      <span className='rate__text rate__totalPoint'>5.0<span className='rate__text rate__scale-point'>/5</span></span>
-                      <span className='rate__text rate__review'>21 reviews</span>
+                  <div className="rate__box">
+                    <div className="rate__box__child">
+                      <span className="rate__text rate__totalPoint">
+                        5.0
+                        <span className="rate__text rate__scale-point">/5</span>
+                      </span>
+                      <span className="rate__text rate__review">
+                        21 reviews
+                      </span>
                     </div>
-                    <div><Rate value={5} /></div>
+                    <div>
+                      <Rate value={5} />
+                    </div>
                   </div>
-                  <div style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <div className='rate__item'>
-                      <span className='rate__text rate__review' style={{ fontSize: 14, fontWeight: 400 }}>5 star</span>
-                      <div className='rate__star'></div>
+                  <div
+                    style={{
+                      width: "100%",
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 10,
+                    }}
+                  >
+                    <div className="rate__item">
+                      <span
+                        className="rate__text rate__review"
+                        style={{ fontSize: 14, fontWeight: 400 }}
+                      >
+                        5 star
+                      </span>
+                      <div className="rate__star"></div>
                     </div>
-                    <div className='rate__item'>
-                      <span className='rate__text rate__review' style={{ fontSize: 14, fontWeight: 400 }}>4 star</span>
-                      <div className='rate__star rate__op'></div>
+                    <div className="rate__item">
+                      <span
+                        className="rate__text rate__review"
+                        style={{ fontSize: 14, fontWeight: 400 }}
+                      >
+                        4 star
+                      </span>
+                      <div className="rate__star rate__op"></div>
                     </div>
-                    <div className='rate__item'>
-                      <span className='rate__text rate__review' style={{ fontSize: 14, fontWeight: 400 }}>3 star</span>
-                      <div className='rate__star rate__op'></div>
+                    <div className="rate__item">
+                      <span
+                        className="rate__text rate__review"
+                        style={{ fontSize: 14, fontWeight: 400 }}
+                      >
+                        3 star
+                      </span>
+                      <div className="rate__star rate__op"></div>
                     </div>
-                    <div className='rate__item'>
-                      <span className='rate__text rate__review' style={{ fontSize: 14, fontWeight: 400 }}>2 star</span>
-                      <div className='rate__star rate__op'></div>
+                    <div className="rate__item">
+                      <span
+                        className="rate__text rate__review"
+                        style={{ fontSize: 14, fontWeight: 400 }}
+                      >
+                        2 star
+                      </span>
+                      <div className="rate__star rate__op"></div>
                     </div>
-                    <div className='rate__item'>
-                      <span className='rate__text rate__review' style={{ fontSize: 14, fontWeight: 400 }}>1 star</span>
-                      <div className='rate__star rate__op'></div>
+                    <div className="rate__item">
+                      <span
+                        className="rate__text rate__review"
+                        style={{ fontSize: 14, fontWeight: 400 }}
+                      >
+                        1 star
+                      </span>
+                      <div className="rate__star rate__op"></div>
                     </div>
                   </div>
                 </div>
-                <div className="detailDr-content__left-information__profile" style={{ marginTop: 50 }}>
+                <div
+                  className="detailDr-content__left-information__profile"
+                  style={{ marginTop: 50 }}
+                >
                   <Rating />
                   <Rating />
                   <Rating />

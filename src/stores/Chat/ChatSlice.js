@@ -12,10 +12,18 @@ const chatSlice = createSlice({
   reducers: {
     changeChat: (state, action) => {
       state.chatId = action.payload.chatId;
-      state.user = action.payload.user;
+      const lastSeen = action.payload.user.lastSeen.toDate().toISOString();
+      state.user = {
+        ...action.payload.user,
+        lastSeen,
+      };
     },
     setUser: (state, action) => {
-      state.user = action.payload;
+      const lastSeen = action.payload.lastSeen.toDate().toISOString();
+      state.user = {
+        ...action.payload,
+        lastSeen,
+      };
     },
   },
   extraReducers: (builder) => {

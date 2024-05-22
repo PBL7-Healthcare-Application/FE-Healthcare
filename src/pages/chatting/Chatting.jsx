@@ -16,47 +16,49 @@ const Chatting = () => {
   const state = location?.state;
   useEffect(() => {
     if (state) {
-      const unsub = onSnapshot(
-        doc(db, "userchats", chatUser.id),
-        async (res) => {
-          const items = res.data().chats;
-          const promisses = items.map(async (item) => {
-            const userRef = doc(db, "users", item.receiverId);
-            const userDocSnap = await getDoc(userRef);
-            const user = userDocSnap.data();
-            return { ...item, user };
-          });
-          const chatData = await Promise.all(promisses);
-          const chats = chatData.sort((a, b) => b.updateAt - a.updateAt);
-          const userChats = chats.map((item) => {
-            const { user, ...rest } = item;
-            return rest;
-          });
-
-          const chatIndex = userChats.findIndex(
-            (item) => item.chatId === chats[0].chatId
-          );
-
-          userChats[chatIndex].isSeen = true;
-
-          const userChatsRef = doc(db, "userchats", chatUser.id);
-          try {
-            await updateDoc(userChatsRef, {
-              chats: userChats,
+      if (chatUser?.id) {
+        const unsub = onSnapshot(
+          doc(db, "userchats", chatUser?.id),
+          async (res) => {
+            const items = res.data().chats;
+            const promisses = items.map(async (item) => {
+              const userRef = doc(db, "users", item.receiverId);
+              const userDocSnap = await getDoc(userRef);
+              const user = userDocSnap.data();
+              return { ...item, user };
             });
-            dispatch(
-              changeChat({ chatId: chats[0].chatId, user: chats[0].user })
+            const chatData = await Promise.all(promisses);
+            const chats = chatData.sort((a, b) => b.updateAt - a.updateAt);
+            const userChats = chats.map((item) => {
+              const { user, ...rest } = item;
+              return rest;
+            });
+
+            const chatIndex = userChats.findIndex(
+              (item) => item.chatId === chats[0].chatId
             );
-          } catch (err) {
-            console.log(err);
+
+            userChats[chatIndex].isSeen = true;
+
+            const userChatsRef = doc(db, "userchats", chatUser.id);
+            try {
+              await updateDoc(userChatsRef, {
+                chats: userChats,
+              });
+              dispatch(
+                changeChat({ chatId: chats[0].chatId, user: chats[0].user })
+              );
+            } catch (err) {
+              console.log(err);
+            }
           }
-        }
-      );
-      return () => {
-        unsub();
-      };
+        );
+        return () => {
+          unsub();
+        };
+      }
     }
-  }, [chatUser.id, state]);
+  }, [chatUser?.id, state]);
   return (
     <div className="chatting">
       <div className="chatting-container">

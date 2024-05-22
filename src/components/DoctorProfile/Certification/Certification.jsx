@@ -1,20 +1,62 @@
 /* eslint-disable react/prop-types */
-import { Form, Image, Input, Modal, Space, Table } from "antd";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Form,
+  Image,
+  Input,
+  Modal,
+  Space,
+  Table,
+  Upload,
+} from "antd";
 import "./Certification.scss";
-import { DeleteTwoTone, EditOutlined } from "@ant-design/icons";
+import {
+  CloseOutlined,
+  DeleteTwoTone,
+  EditOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { iconCertificate } from "../../../helpers/icon";
 import { useState } from "react";
-import certificate from "../../../assets/images/certificate.png";
+import certificateImg from "../../../assets/images/certificate.png";
 import calandar from "../../../assets/images/calandar.png";
 
 const Certification = ({ type }) => {
   const { profile } = useSelector((state) => state.doctor);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [key, setKey] = useState(0);
-
+  const [isAdd, setIsAdd] = useState(false);
+  const [certificate, setCertificate] = useState([{}]);
   const handleOk = () => {
     setIsModalOpen(false);
+  };
+  const propsUpload = {
+    // action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+    maxCount: 1,
+    accept: "image/* ",
+    onChange({ file, fileList }) {
+      if (file.status === "error") {
+        return { ...file, status: "error" };
+      }
+
+      if (file.status === "removed") {
+        return undefined;
+      }
+      if (file.status === "done") {
+        return { ...file, status: "done" };
+      }
+      return file;
+    },
+    beforeUpload: (file) => {
+      const isImage = file.type.startsWith("image/");
+      if (!isImage) {
+        console.log("Not an image file!");
+      }
+      return isImage || Upload.LIST_IGNORE;
+    },
   };
 
   const handleCancel = () => {
@@ -83,7 +125,13 @@ const Certification = ({ type }) => {
           Certificates
         </span>
       )}
-      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
+      >
         <div className="certificate-modal">
           <span
             className="setting-font"
@@ -108,7 +156,7 @@ const Certification = ({ type }) => {
               <Form>
                 <Form.Item>
                   <div>
-                    <Image src={certificate} preview={false} width={30} />
+                    <Image src={certificateImg} preview={false} width={30} />
                     <span className="setting-font" style={{ color: "#696862" }}>
                       Name
                     </span>
@@ -175,8 +223,135 @@ const Certification = ({ type }) => {
           </div>
         </div>
       </Modal>
+      <Modal onCancel={() => setIsAdd(false)} open={isAdd}>
+        <div
+          style={{ width: "100%", justifyContent: "center", display: "flex" }}
+        >
+          <span
+            className="setting-font"
+            style={{
+              fontSize: 18,
+              fontWeight: 600,
+              color: "#185FA0",
+            }}
+          >
+            Certificate
+          </span>
+        </div>
+        <Form
+          style={{ marginTop: 20 }}
+          initialValues={{
+            certificate,
+          }}
+        >
+          <Form.Item style={{ width: "100%" }}>
+            <Form.List name="certificate" label="Certificates">
+              {(fields, { add, remove }) => (
+                <div
+                  style={{
+                    display: "flex",
+                    rowGap: 16,
+                    flexDirection: "column",
+                  }}
+                >
+                  {fields.map((field) => (
+                    <Card
+                      size="small"
+                      key={field.key}
+                      extra={
+                        <CloseOutlined
+                          onClick={() => {
+                            remove(field.name);
+                          }}
+                        />
+                      }
+                    >
+                      <Form.Item
+                        style={{
+                          marginBottom: 0,
+                        }}
+                      >
+                        <Form.Item
+                          label="Certificate"
+                          name={[field.name, "name"]}
+                          style={{
+                            display: "inline-block",
+                            width: "calc(50% - 8px)",
+                          }}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Certificate is required",
+                            },
+                          ]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          name={[field.name, "year"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Year is required",
+                            },
+                          ]}
+                          label="Year"
+                          style={{
+                            display: "inline-block",
+                            width: "calc(50% - 8px)",
+                            margin: "0 8px",
+                          }}
+                        >
+                          <DatePicker picker="year" style={{ width: "100%" }} />
+                        </Form.Item>
+                      </Form.Item>
+                      <Form.Item
+                        name={[field.name, "image"]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Image Certificate is required",
+                          },
+                        ]}
+                      >
+                        <Upload {...propsUpload} listType="picture">
+                          <Button icon={<UploadOutlined />}>
+                            Click to upload
+                          </Button>
+                        </Upload>
+                      </Form.Item>
+                    </Card>
+                  ))}
+
+                  <Button type="dashed" onClick={() => add()} block>
+                    + Add Item
+                  </Button>
+                </div>
+              )}
+            </Form.List>
+          </Form.Item>
+        </Form>
+      </Modal>
       <div className="certificate">
+        {type === "DOCTOR" && (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: 10,
+            }}
+          >
+            <Button
+              className="certificate-button"
+              onClick={() => setIsAdd(true)}
+            >
+              Add Certificate
+            </Button>
+          </div>
+        )}
         <Table
+          pagination={false}
           columns={columns}
           dataSource={profile?.certificates.map((item, index) => ({
             id: item.idCertificate,

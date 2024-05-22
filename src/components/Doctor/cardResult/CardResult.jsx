@@ -33,9 +33,10 @@ const CardResult = ({ doctor }) => {
   const navigate = useNavigate();
   const handleDetail = () => {
     // eslint-disable-next-line react/prop-types
+    console.log(doctor);
     dispatch(setIsSelected(0));
     dispatch(getDoctorDetail(doctor?.idDoctor));
-    navigate(`/doctor/{doctor.idDoctor}`);
+    navigate(`/doctor/${doctor.idDoctor}`);
   };
   const { chatUser } = useSelector((state) => state.chat);
 

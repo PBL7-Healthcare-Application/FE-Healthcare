@@ -12,7 +12,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
 import { useDispatch, useSelector } from "react-redux";
-import getImageUpload, { uploadImageForChating } from "../../../helpers/uploadCloudinary";
+import getImageUpload, {
+  uploadImageForChating,
+} from "../../../helpers/uploadCloudinary";
 import { format } from "timeago.js";
 import { setUser } from "../../../stores/Chat/ChatSlice";
 import { PlusOutlined } from "@ant-design/icons";
@@ -47,7 +49,6 @@ const Chat = () => {
     const unsubscribe = onSnapshot(doc(db, "users", user.id), (doc) => {
       if (doc.exists()) {
         const data = doc.data();
-        data.lastSeen = data.lastSeen.toDate();
         dispatch(setUser(data));
       } else {
         console.log("No such document!");
@@ -56,12 +57,12 @@ const Chat = () => {
 
     // Clean up the listener when the component unmounts
     return unsubscribe;
-  }, [user.id]);
+  }, [user.id, dispatch]);
 
   useEffect(() => {
     console.log(urlList);
     console.log(fileList);
-  }, [urlList, fileList])
+  }, [urlList, fileList]);
 
   const handleSend = async () => {
     if (text === "" && urlList.length <= 0) return;
@@ -106,7 +107,6 @@ const Chat = () => {
       setUrlList([]);
       setText("");
       setIsUploadImg(true);
-
     }
   };
 
@@ -114,22 +114,21 @@ const Chat = () => {
     try {
       setLoading(true);
       const res = await getImageUpload(e.target.files[0]);
-      setUrlList(prev => [...prev, res]);
+      setUrlList((prev) => [...prev, res]);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
       setIsUploadImg(false);
-      setFileList(prev => [...prev, e.target.files[0]]);
+      setFileList((prev) => [...prev, e.target.files[0]]);
     }
-
   };
   const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
   const uploadButton = (
     <button
       style={{
         border: 0,
-        background: 'none',
+        background: "none",
       }}
       type="button"
     >
@@ -145,16 +144,15 @@ const Chat = () => {
   );
   useEffect(() => {
     if (fileList.length === 0) setIsUploadImg(true);
-  }, [fileList])
+  }, [fileList]);
   const handleCustomRequest = async (options) => {
-
     try {
       const res = await uploadImageForChating(options);
-      setUrlList(prev => [...prev, res]);
+      setUrlList((prev) => [...prev, res]);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <div className="chat">
       <div className="chat-top">
@@ -195,14 +193,14 @@ const Chat = () => {
         </div>
       </div>
       <div className="chat-middle">
-        {chat?.messages?.map((item) => (
+        {chat?.messages?.map((item, index) => (
           <div
             className={
               item.senderId === chatUser.id
                 ? "chat-middle__message own"
                 : "chat-middle__message"
             }
-            key={item?.createAt}
+            key={index}
           >
             {item.senderId === chatUser.id ? (
               ""
@@ -216,11 +214,15 @@ const Chat = () => {
               />
             )}
             <div className="texts">
-              {item.img?.length > 0 && (
+              {item.img?.length > 0 &&
                 item.img.map((img, index) => (
-                  <Image src={img} preview={false} className="img" key={index} />
-                ))
-              )}
+                  <Image
+                    src={img}
+                    preview={false}
+                    className="img"
+                    key={index}
+                  />
+                ))}
               {item.text && <p className="chat-middle__content">{item.text}</p>}
               <span className="chat-middle__time">
                 {format(item.createdAt.toDate())}
@@ -232,38 +234,42 @@ const Chat = () => {
         <div ref={endRef}></div>
       </div>
       <div className="chat-bottom">
-        {!isUploadImg && <Upload
-          customRequest={handleCustomRequest}
-          listType="picture-card"
-          fileList={fileList}
-          onChange={handleChange}
-          onRemove={() => urlList.pop()}
-          style={{
-            width: 10
-          }}
-          accept="image/*"
-        >
-          {fileList.length >= 3 ? null : uploadButton}
-        </Upload>}
+        {!isUploadImg && (
+          <Upload
+            customRequest={handleCustomRequest}
+            listType="picture-card"
+            fileList={fileList}
+            onChange={handleChange}
+            onRemove={() => urlList.pop()}
+            style={{
+              width: 10,
+            }}
+            accept="image/*"
+          >
+            {fileList.length >= 3 ? null : uploadButton}
+          </Upload>
+        )}
         <div className="chat-bottom__content">
-          {isUploadImg && (<div >
-            <label htmlFor="file">
-              {loading ? (
-                <Spin />
-              ) : (
-                <Badge >
-                  <IoImages size={25} className="chat-bottom__icon" />
-                </Badge>
-              )}
-            </label>
-            <input
-              type="file"
-              id="file"
-              style={{ display: "none" }}
-              onChange={handleImg}
-              accept="image/*"
-            />
-          </div>)}
+          {isUploadImg && (
+            <div>
+              <label htmlFor="file">
+                {loading ? (
+                  <Spin />
+                ) : (
+                  <Badge>
+                    <IoImages size={25} className="chat-bottom__icon" />
+                  </Badge>
+                )}
+              </label>
+              <input
+                type="file"
+                id="file"
+                style={{ display: "none" }}
+                onChange={handleImg}
+                accept="image/*"
+              />
+            </div>
+          )}
           <input
             placeholder="Type a message"
             className="chat-bottom__input"
