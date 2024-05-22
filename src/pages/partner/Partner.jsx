@@ -192,16 +192,15 @@ const Partner = () => {
       {contextHolder}
       <div className="partner-main">
         <div className="partner-content1">
-          <div className="partner-content1__left">
+          <div className="partner-content1__left" style={{ alignItems: 'flex-start' }}>
             <div style={{ width: "100%" }}>
-              <span className="partner-font">Enclinic</span>
+              <span className="partner-font" style={{ fontSize: 38 }}>If you are a dedicated doctor </span>
             </div>
             <span
               className="partner-font"
-              style={{ fontSize: 40, color: "#000", fontWeight: 600 }}
+              style={{ fontSize: 30, color: "#000", fontWeight: 600 }}
             >
-              {" "}
-              need dedicated doctors like you
+              don't hesitate to join Enclinic
             </span>
             <div style={{ width: "100%", marginTop: 40 }}>
               <a href="#form" className="partner-content1__left-button">
@@ -337,7 +336,7 @@ const Partner = () => {
                     className="partner-content3__left-content__text"
                     style={{ maxWidth: 300, fontWeight: 400 }}
                   >
-                    Enclinic verifies profiles.
+                    Verify your profile.
                   </span>
                 </div>
               </div>

@@ -149,11 +149,11 @@ const DetailDoctor = () => {
     }
   };
 
-  // useEffect(() => {
-  //   dispatch(setIsTimeSelected(null));
-  //   setTimes(schedule[0]?.times);
-  //   setChooseDate(schedule[0]?.date);
-  // }, [schedule, dispatch]);
+  useEffect(() => {
+    dispatch(setIsTimeSelected(null));
+    setTimes(schedule[0]?.times);
+    setChooseDate(schedule[0]?.date);
+  }, [schedule, dispatch]);
 
   const [viewport, setViewport] = useState({
     width: "200px",
@@ -203,7 +203,7 @@ const DetailDoctor = () => {
           </div>
           <div style={{ marginTop: 20 }}>
             <Tabs>
-              <TabPane tab="Basic Information" key="1">
+              <TabPane tab="Information" key="1">
                 <div className="detailDr-content__left-information__profile">
                   <div className="detailDr-divider"></div>
                   <Typography className="detailDr-content__left-information__profile-title">
@@ -620,7 +620,7 @@ const DetailDoctor = () => {
         <div className="detailDr-content__right">
           <div className="detailDr-content__right-appointment">
             <Typography className="detailDr-content__right-appointment--titleType">
-              Choose the type of appointment
+              Type of appointment
             </Typography>
 
             <Radio.Group
@@ -672,7 +672,7 @@ const DetailDoctor = () => {
               className="detailDr-content__right-appointment--titleType"
               style={{ marginTop: 16, marginBottom: 12 }}
             >
-              Choose Time Slot
+              Availability
             </Typography>
             <div style={{ width: 315, marginBottom: 8 }}>
               <div className="slider-container">

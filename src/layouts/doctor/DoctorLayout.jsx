@@ -1,14 +1,12 @@
 import {
-  BellOutlined,
   LogoutOutlined,
-  MessageOutlined,
 } from "@ant-design/icons";
-import { Avatar, Badge, Image, Layout, Menu, Space } from "antd";
+import { Avatar, Badge, Image, Layout, Menu, Space, Typography } from "antd";
 import "./DoctorLayout.scss";
 import title from "../../assets/images/title.png";
 import logo from "../../assets/images/logo.png";
 import examination from "../../assets/images/examination.png";
-import { FaRegBookmark, FaRegCalendarAlt, FaRegSun } from "react-icons/fa";
+import { FaFacebookMessenger, FaRegBookmark, FaRegCalendarAlt, FaRegSun } from "react-icons/fa";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SignInBtn from "../../components/header/SignInBtn";
@@ -20,9 +18,13 @@ import {
 } from "../../stores/doctor/DoctorThunk";
 import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
-import { auth, db } from "../../helpers/firebase";
+import { auth, db, dbNotify } from "../../helpers/firebase";
 import { handleUpdateStatus } from "../../helpers/chat";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import { IoNotifications } from "react-icons/io5";
+import Notify from "../../components/notify/Notify";
+import { orderBy } from "lodash";
+import { setNotify } from "../../stores/Chat/ChatSlice";
 const { Header, Sider, Content } = Layout;
 const DoctorLayout = () => {
   const navigate = useNavigate();
@@ -32,7 +34,8 @@ const DoctorLayout = () => {
   const [token, setToken] = useState("");
   const dispatch = useDispatch();
   const [countSeen, setCountSeen] = useState("");
-
+  const [countNoti, setCountNoti] = useState("");
+  const [isNoti, setIsNoti] = useState(false);
   const { profile } = useSelector((state) => state.doctor);
   const { chatUser } = useSelector((state) => state.chat);
   useEffect(() => {
@@ -50,7 +53,7 @@ const DoctorLayout = () => {
       dispatch(getDoctorProfile());
       dispatch(getDoctorCalendar());
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -97,7 +100,44 @@ const DoctorLayout = () => {
       };
     }
   }, [chatUser?.id]);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isNoti && event.target.closest(".notification-icon") === null) {
+        setIsNoti(false);
+      }
+    };
 
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isNoti]);
+
+
+  useEffect(() => {
+    const notifyCollection = collection(dbNotify, "notifications");
+    const q = query(notifyCollection, orderBy("createAt", "desc")); // replace 'yourCollectionName' with the name of your collection
+    const unSub = onSnapshot(q, (snapshot) => {
+      const notifyData = snapshot.docs.map((doc) => ({
+        id: doc.id, // get the id of the document
+        ...doc.data() // get the data of the document
+      }));
+      const listFilter = notifyData.filter((item) => {
+        if (item?.idDoctor) {
+          return item.idDoctor === profile.idDoctor && !item.isRead;
+        }
+        if (item?.idReceiver) {
+          return item.idReceiver === profile.idDoctor && !item.isRead;
+        }
+      });
+      setCountNoti(listFilter?.length);
+      dispatch(setNotify(listFilter));
+    });
+
+    return () => {
+      unSub();
+    };
+  }, []);
   return (
     <Layout style={{ backgroundColor: "#fff" }}>
       <Sider trigger={null} collapsible className="customSlider">
@@ -141,33 +181,69 @@ const DoctorLayout = () => {
       <Layout style={{ backgroundColor: "#f1f5f9" }}>
         <Header className="customSlider__header">
           {isLogin ? (
-            <Space className="avt">
-              <Badge count={countSeen}>
-                <MessageOutlined
-                  className="avt-notify"
-                  style={{ width: 30 }}
-                  onClick={() =>
-                    navigate("/dr.Enclinic/chatting", {
-                      state: "Doctor",
-                    })
-                  }
-                />
-              </Badge>
-              <Badge count={5}>
-                <BellOutlined className="avt-notify" />
-              </Badge>
-              <div style={{ position: "relative" }}>
+            <Space className="avt" style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Space>
                 <Avatar
-                  className="avt-avatar"
+                  className="avt-avatar profile-icon"
                   size="large"
                   style={{
                     backgroundColor: "#fde3cf",
                     color: "#f56a00",
                   }}
+
                 >
-                  {profile?.name[0]}
+                  {profile && profile?.name[0]}
                 </Avatar>
-              </div>
+                <Typography className="sidebar__logout__text" style={{ color: '#404040' }}>{profile && profile?.name}</Typography>
+              </Space>
+              <Space style={{ display: 'flex', gap: 30 }}>
+                <Badge
+                  count={countSeen}
+                  style={{ cursor: "pointer" }}
+                  size="large"
+                  offset={[-5, 3]}
+                >
+                  <div
+                    style={{
+                      padding: 10,
+                      paddingBottom: 5,
+                      backgroundColor: "#E4E6EB",
+                      borderRadius: "50%",
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => navigate("/chatting")}
+                  >
+                    {/* <MessageOutlined className="avt-notify" style={{ width: 25 }} /> */}
+                    <FaFacebookMessenger size={25} color="#404040" />
+                  </div>
+                </Badge>
+
+                <Badge
+                  count={countNoti}
+                  style={{ cursor: "pointer" }}
+                  size="large"
+                  offset={[-5, 3]}
+                >
+                  <div
+                    className="notification-icon"
+                    onClick={() => setIsNoti(!isNoti)}
+                    style={{
+                      position: "relative",
+                      cursor: "pointer",
+                      padding: 10,
+                      paddingBottom: 5,
+                      backgroundColor: isNoti ? "#E3F2FE" : "#E4E6EB",
+                      borderRadius: "50%",
+                    }}
+                  >
+                    <IoNotifications
+                      size={26}
+                      color={`${isNoti ? "#4096ff" : "#404040"}`}
+                    />
+                    {isNoti && <Notify onClose={() => setIsNoti(!isNoti)} />}
+                  </div>
+                </Badge>
+              </Space>
             </Space>
           ) : (
             <SignInBtn />

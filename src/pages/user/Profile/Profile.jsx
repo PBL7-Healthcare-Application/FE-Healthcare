@@ -153,7 +153,7 @@ const Profile = () => {
         <div className="profile-content">
           <div style={{ width: "100%" }}>
             <Typography className="profile-header__font profile-header__label">
-              Name
+              Full Name
             </Typography>
             <div
               className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""

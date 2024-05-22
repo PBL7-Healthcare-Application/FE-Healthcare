@@ -26,7 +26,7 @@ export const searchDoctor = (
     url += `&sortBy=${sortBy}`;
   }
   if (IdSpecialty) {
-    url += `&id_specialty=${IdSpecialty}`;
+    url += `&idSpecialty=${IdSpecialty}`;
   }
   if (filterAvailable) {
     url += `&filterAvailable=${filterAvailable}`;

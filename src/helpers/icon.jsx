@@ -3,8 +3,9 @@ import {
   CloseCircleOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
-import { Tag } from "antd";
-
+import { Image, Tag } from "antd";
+import appointmentIcon from "../assets/images/appointmentIcon.png";
+import cancel from "../assets/images/cancel.png";
 export const icon = (status) => {
   switch (status) {
     case 1:
@@ -91,3 +92,19 @@ export const statusAccount = (status) => {
       return <SyncOutlined spin />;
   }
 };
+
+
+export const statusNotify = (status) => {
+  switch (status) {
+    case "New Appointment":
+      return (
+        <Image src={appointmentIcon} width={45} preview={false} />
+      );
+    case "Cancel Appointment":
+      return (
+        <Image src={cancel} width={45} preview={false} />
+      );
+    default:
+      return <SyncOutlined spin />;
+  }
+}

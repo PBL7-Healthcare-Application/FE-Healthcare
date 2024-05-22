@@ -29,6 +29,10 @@ const searchSlice = createSlice({
     },
     setIdSpecialty: (state, action) => {
       state.id_Specialty = action.payload.id;
+    },
+    resetTime: (state) => {
+
+      // state.schedule = [];
     }
 
   },
@@ -78,4 +82,4 @@ const searchSlice = createSlice({
 });
 
 export default searchSlice.reducer;
-export const { setIsSelected, setIsTimeSelected, setSearch, setIdSpecialty } = searchSlice.actions;
+export const { setIsSelected, setIsTimeSelected, setSearch, setIdSpecialty, resetTime } = searchSlice.actions;

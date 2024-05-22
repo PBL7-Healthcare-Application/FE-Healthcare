@@ -9,13 +9,14 @@ import deleteToken from "../../helpers/deleteToken";
 import { useEffect, useState } from "react";
 import medicalHistory from "../../assets/images/medicalHistory.png";
 import personDefault from "../../assets/images/personDefault.png";
-import { auth, db } from "../../helpers/firebase";
+import { auth, db, dbNotify } from "../../helpers/firebase";
 import { handleUpdateStatus } from "../../helpers/chat";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import Notify from "../notify/Notify";
 import { FaFacebookMessenger } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 import CardNotify from "../notify/CardNotify";
+import { setNotify } from "../../stores/Chat/ChatSlice";
 
 const Avt = (props) => {
   const dispatch = useDispatch();
@@ -23,6 +24,8 @@ const Avt = (props) => {
   const [visible, setvisible] = useState(false);
   const [isNoti, setIsNoti] = useState(false);
   const [countSeen, setCountSeen] = useState("");
+  const [countNoti, setCountNoti] = useState("");
+  const { profile } = useSelector((state) => state.profile);
   const { chatUser } = useSelector((state) => state.chat);
   const handleAvatar = () => {
     setvisible(!visible);
@@ -53,6 +56,26 @@ const Avt = (props) => {
       };
     }
   }, [chatUser?.id]);
+  useEffect(() => {
+    const notifyCollection = collection(dbNotify, "notifications");
+    const unSub = onSnapshot(notifyCollection, (snapshot) => {
+      const notifyData = snapshot.docs.map((doc) => ({
+        id: doc.id, // get the id of the document
+        ...doc.data() // get the data of the document
+      }));
+      const listFilter = notifyData.filter((item) => {
+        if (item?.idReceiver) {
+          return item.idReceiver === profile.idUser && !item.isRead;
+        }
+      });
+      setCountNoti(listFilter?.length);
+      dispatch(setNotify(listFilter));
+    });
+
+    return () => {
+      unSub();
+    };
+  }, []);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isNoti && event.target.closest(".notification-icon") === null) {
@@ -92,6 +115,7 @@ const Avt = (props) => {
             paddingBottom: 5,
             backgroundColor: "#E4E6EB",
             borderRadius: "50%",
+            cursor: 'pointer'
           }}
           onClick={() => navigate("/chatting")}
         >
@@ -101,7 +125,7 @@ const Avt = (props) => {
       </Badge>
 
       <Badge
-        count={countSeen}
+        count={countNoti}
         style={{ cursor: "pointer" }}
         size="large"
         offset={[-5, 3]}

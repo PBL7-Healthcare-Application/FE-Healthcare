@@ -77,10 +77,10 @@ const SignIn = () => {
       <Space className="in-left">
         <Space className="in-left_title">
           <Typography className="in-left_title--main">
-            The Next Generation
+            Take Care Of
           </Typography>
           <Typography className="in-left_title--sub">
-            Of Any Health Concern
+            Your Health Mission
           </Typography>
         </Space>
         <Feature />
@@ -100,7 +100,7 @@ const SignIn = () => {
             Welcome Back
           </Typography>
           <Typography className="in-right__title--sub">
-            Please enter your details below to continue
+            Enter your details below
           </Typography>
 
           <Typography className="label">Email</Typography>

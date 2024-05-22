@@ -101,7 +101,7 @@ const Verification = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
 
   const minutes = Math.floor(seconds / 60);
@@ -118,10 +118,10 @@ const Verification = () => {
       <Space className="in-left">
         <Space className="in-left_title">
           <Typography className="in-left_title--main">
-            The Next Generation
+            Take Care Of
           </Typography>
           <Typography className="in-left_title--sub">
-            Of Any Health Concern
+            Your Health Mission
           </Typography>
         </Space>
         <Feature />

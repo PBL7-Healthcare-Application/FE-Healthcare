@@ -121,9 +121,7 @@ const MyAppointment = () => {
                     className="myAppointment-cancel__content-text"
                     style={{ fontSize: 14, fontWeight: 400 }}
                   >
-                    Please help us understand more about the reason behind
-                    canceling your appointment so we can improve our service in
-                    the future.
+                    Please tell me your reason behind canceling your appointment for my future service improvement.
                   </span>
                 </div>
                 <div

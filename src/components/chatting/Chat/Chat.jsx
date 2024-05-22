@@ -34,6 +34,7 @@ const Chat = () => {
 
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+      console.log(`chat`, res.data());
       setChat(res.data());
     });
     return () => {

@@ -19,7 +19,7 @@ const Feature = () => {
           ></Image>
         </Space>
         <Typography className="left__content-item-name">
-          Search Doctor
+          Doctor Searching
         </Typography>
       </Space>
 
@@ -47,7 +47,7 @@ const Feature = () => {
           ></Image>
         </Space>
         <Typography className="left__content-item-name">
-          Video Consult
+          Video Consultation
         </Typography>
       </Space>
 

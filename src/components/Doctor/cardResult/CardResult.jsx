@@ -10,7 +10,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDoctorDetail } from "../../../stores/search-doctor/SearchThunk";
-import { setIsSelected } from "../../../stores/search-doctor/SearchSlice";
+import { resetTime, setIsSelected } from "../../../stores/search-doctor/SearchSlice";
 
 import doctorDefault from "../../../assets/images/doctor.jpeg";
 import {
@@ -33,7 +33,6 @@ const CardResult = ({ doctor }) => {
   const navigate = useNavigate();
   const handleDetail = () => {
     // eslint-disable-next-line react/prop-types
-    console.log(doctor);
     dispatch(setIsSelected(0));
     dispatch(getDoctorDetail(doctor?.idDoctor));
     navigate(`/doctor/${doctor.idDoctor}`);

@@ -8,6 +8,7 @@ const chatSlice = createSlice({
     loading: true,
     user: null,
     chatId: null,
+    notify: []
   },
   reducers: {
     changeChat: (state, action) => {
@@ -24,6 +25,9 @@ const chatSlice = createSlice({
         ...action.payload,
         lastSeen,
       };
+    },
+    setNotify: (state, action) => {
+      state.notify = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -44,4 +48,4 @@ const chatSlice = createSlice({
   },
 });
 export default chatSlice.reducer;
-export const { changeChat, setUser } = chatSlice.actions;
+export const { changeChat, setUser, setNotify } = chatSlice.actions;

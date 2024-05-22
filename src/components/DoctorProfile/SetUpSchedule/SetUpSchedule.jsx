@@ -81,7 +81,7 @@ const SetUpSchedule = () => {
               className="setting-font"
               style={{ fontSize: 25, fontWeight: 600, color: "#185FA0" }}
             >
-              Set Up Your Schedule
+              Schedule Setting
             </span>
           </div>
 

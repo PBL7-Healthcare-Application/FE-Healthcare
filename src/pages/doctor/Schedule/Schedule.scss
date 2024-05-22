@@ -3,6 +3,7 @@
 
 th,
 td {
+
   text-align: center;
   border: 0.25px solid #ddd;
   max-width: 30px;
@@ -165,6 +166,8 @@ td {
 }
 
 .busy {
+  font-size: 12px;
+  font-family: $font-main;
   background-color: #A5ADF3;
   pointer-events: none;
 }
