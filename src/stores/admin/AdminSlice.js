@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { disableAccountUser, getAdminUser } from "./AdminThunk";
+import { disableAccountUser, getAdminPartner, getAdminPartnerDetail, getAdminUser } from "./AdminThunk";
 
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
     listUser: [],
+    partner: [],
+    partnerDetail: null,
     paging: null,
     statusCode: null,
     error: null,
@@ -46,6 +48,34 @@ const adminSlice = createSlice({
         state.statusCode = action.payload.statusCode;
       })
       .addCase(disableAccountUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //======================================
+      .addCase(getAdminPartner.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAdminPartner.fulfilled, (state, action) => {
+        state.loading = false;
+        state.partner = action.payload.data;
+        state.paging = action.payload.pagingInfo;
+      })
+      .addCase(getAdminPartner.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //======================================
+      .addCase(getAdminPartnerDetail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAdminPartnerDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.partnerDetail = action.payload.data;
+
+      })
+      .addCase(getAdminPartnerDetail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
       });

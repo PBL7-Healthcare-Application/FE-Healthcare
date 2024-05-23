@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
-import { icon } from "../../helpers/icon";
+import { icon, iconPartner } from "../../helpers/icon";
 
 import doctorDefault from "../../assets/images/doctor.jpeg";
 import calender from "../../assets/images/calandar.png";
@@ -31,18 +31,16 @@ import dolar from "../../assets/images/dollar.png";
 import personDefault from "../../assets/images/personDefault.png";
 import location from "../../assets/images/location.png";
 import problem from "../../assets/images/problem.png";
+import Specialty from "../../components/specialty/Specialty";
+import { getAdminPartner } from "../../stores/admin/AdminThunk";
 const ManagementPartner = () => {
-  const [tableParams, setTableParams] = useState({
-    pagination: {
-      current: 1,
-    },
-  });
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { partner, paging } =
+    useSelector((state) => state.admin);
   const [inputSearch, setInputSearch] = useState("");
-  const [status, setStatus] = useState(null);
-  const [filterAvailable, setFilterAvailable] = useState(null);
-  const { ListAppointments, TotalItems, CurrentPage, ItemsPerPage } =
-    useSelector((state) => state.doctor);
+  const [specialty, setSpecialty] = useState(null);
+  const [typePartner, setTypePartner] = useState(null);
+  const [page, setPage] = useState(paging?.currentPage);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const contentRef = useRef(null);
@@ -117,25 +115,68 @@ const ManagementPartner = () => {
   ];
   //
 
-  const handleStatusChange = (value) => {
-    setStatus(value);
+  const handleSpecialty = (value) => {
+    setSpecialty(value !== 0 ? value : null);
+    dispatch(
+      getAdminPartner({
+        page: 1,
+        idSpecialty: value !== 0 ? value : undefined,
+        TypePartner: typePartner !== null ? typePartner : undefined,
+        search: inputSearch !== "" ? inputSearch : undefined,
+
+      })
+    )
   };
-  const handleAvailableChange = (value) => {
-    setFilterAvailable(value);
+  const handleTypePartnerChange = (value) => {
+    setTypePartner(value !== "All" ? value : null);
+    dispatch(
+      getAdminPartner({
+        page: page,
+        idSpecialty: specialty !== null ? specialty : undefined,
+        TypePartner: value !== "All" ? value : undefined,
+        search: inputSearch !== "" ? inputSearch : undefined,
+
+      })
+    )
   };
 
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
     setInputSearch(newValue);
-    debounceInputKey(newValue, status, 1, filterAvailable);
+    debounceInputKey(newValue, specialty, page, typePartner);
   };
   const debounceInputKey = useRef(
-    debounce((nextValue, status, page, filterAvailable) => {}, 500)
+    debounce((nextValue, idSpecialty, page, typePartner) => {
+      dispatch(
+        getAdminPartner({
+          page: page,
+          idSpecialty: idSpecialty !== null ? idSpecialty : undefined,
+          TypePartner: typePartner !== null ? typePartner : undefined,
+          search: nextValue !== "" ? nextValue : undefined,
+        })
+      );
+    }, 500)
   ).current;
-  const handleClick = () => {};
+  const handleClick = () => {
+    dispatch(
+      getAdminPartner({
+        page: page,
+        idSpecialty: specialty !== null ? specialty : undefined,
+        TypePartner: typePartner !== null ? typePartner : undefined,
+        search: inputSearch !== "" ? inputSearch : undefined,
+      })
+    );
+  };
 
-  useEffect(() => {}, [dispatch]);
+  useEffect(() => {
+    dispatch(
+      getAdminPartner({
+        page: 1,
+      })
+    );
+  }, [dispatch]);
   return (
+
     <div className="DoctorAppointment">
       <div
         className="DoctorAppointment-filter"
@@ -169,35 +210,36 @@ const ManagementPartner = () => {
             </Button>
           </div>
         </div>
-        <div className="DoctorAppointment-select">
-          <span className="DoctorAppointment-text">Status</span>
-          <Select
-            placeholder="-- select --"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
-            onChange={handleStatusChange}
-            options={[
-              { value: 0, label: "All" },
-              { value: 1, label: "Booked" },
-              { value: 3, label: "Completed" },
-              { value: 2, label: "Canceled" },
-            ]}
-          />
+        <div className="DoctorAppointment-select" >
+          <span className="DoctorAppointment-text" >Specialty</span>
+          <div style={{ width: 200 }}>
+            <Specialty onChange={(value) => handleSpecialty(value)} />
+          </div>
         </div>
         <div className="DoctorAppointment-select">
-          <span className="DoctorAppointment-text">Date</span>
-          <DatePicker style={{ width: 150, height: 46, color: "#6c81a0" }} />
+          <span className="DoctorAppointment-text">Type</span>
+          <Select
+            placeholder="-- select --"
+            style={{ width: 150, height: 32, color: "#6c81a0" }}
+            onChange={handleTypePartnerChange}
+            options={[
+              { value: "All", label: "All" },
+              { value: 1, label: "New Partner" },
+              { value: 2, label: "Old Partner" },
+            ]}
+          />
         </div>
       </div>
       <div className="DoctorAppointment-filter">
         <Table
           columns={columns}
-          dataSource={data.map((item, index) => ({
-            id: item.key,
+          dataSource={partner?.map((item, index) => ({
+            id: item.idDoctor,
             key: index + 1,
-            doctor: item.doctor,
-            specialty: item.specialty,
-            created: item.created,
-            status: icon(item.status),
+            doctor: item.name,
+            specialty: item.medicalSpecialty,
+            created: item.created ? item.created : "N/A",
+            status: iconPartner(item.statusVerified),
           }))}
           onRow={(record, rowIndex) => {
             return {
@@ -209,9 +251,20 @@ const ManagementPartner = () => {
             };
           }}
           pagination={{
-            pageSize: ItemsPerPage,
-            total: TotalItems,
-            current: CurrentPage,
+            pageSize: paging?.itemsPerPage,
+            total: paging?.totalItems,
+            current: paging?.currentPage,
+          }}
+          onChange={(pagination) => {
+            setPage(pagination.current);
+            dispatch(
+              getAdminPartner({
+                page: pagination.current,
+                idSpecialty: specialty !== null ? specialty : undefined,
+                TypePartner: typePartner !== null ? typePartner : undefined,
+                search: inputSearch !== "" ? inputSearch : undefined,
+              })
+            );
           }}
         />
       </div>

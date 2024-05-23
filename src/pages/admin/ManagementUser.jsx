@@ -173,7 +173,12 @@ const ManagementUser = () => {
     if (statusCode === 200) {
       openNotificationWithIcon("success", api, "", "Disable Account Success!");
       dispatch(setStatusCode(null));
-      dispatch(getAdminUser({ page: 1 }));
+      dispatch(getAdminUser({
+        page: 1,
+        search: inputSearch !== null ? inputSearch : undefined,
+        status: status !== null ? status : undefined,
+        role: role !== null ? role : undefined,
+      }));
     }
     if (error !== null) {
       openNotificationWithIcon("error", api, "", "Disable Account Failed!");
@@ -315,7 +320,7 @@ const ManagementUser = () => {
             id: item?.email,
             key: index,
             name: item?.email,
-            created: item?.createdDate ? item?.createdDate.split("T")[0] : "--",
+            created: item?.createdDate ? item?.createdDate.split("T")[0] : "N/A",
             role: tabRole(item?.role),
             status: statusAccount(item?.isLocked),
             email: item?.email,
@@ -335,6 +340,15 @@ const ManagementUser = () => {
             pageSize: paging?.itemsPerPage,
             total: paging?.totalItems,
             current: paging?.currentPage,
+          }}
+          onChange={(pagination) => {
+            setPage(pagination.current);
+            dispatch(getAdminUser({
+              page: pagination.current,
+              search: inputSearch !== "" ? inputSearch : undefined,
+              status: status !== null ? status : undefined,
+              role: role !== null ? role : undefined,
+            }));
           }}
         />
       </div>

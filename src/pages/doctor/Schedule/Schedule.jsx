@@ -103,6 +103,7 @@ const Schedule = () => {
         "Create time off successfully!"
       );
       delay(() => {
+        setReason("");
         setSelectedItem([]);
         setSelectedRow([]);
         dispatch(getDoctorCalendar());
@@ -117,7 +118,7 @@ const Schedule = () => {
         "",
         "Create time off unuccessfully!"
       );
-
+      setReason("");
       setSelectedItem([]);
       setSelectedRow([]);
       dispatch(setError(null));
@@ -228,9 +229,14 @@ const Schedule = () => {
   return (
     <div className="Schedule-main">
       <span className="Schedule-title">Doctor Calendar</span>
-      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okButtonProps={{
+        disabled: reason === "",
+      }}
+        cancelButtonProps={{
+          disabled: reason === "",
+        }}>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', fontSize: 20 }} className="Schedule-title" >Add Reason</div>
-        <Input onChange={(e) => setReason(e.target.value)} />
+        <Input value={reason} onChange={(e) => setReason(e.target.value)} />
       </Modal>
       <div className="Schedule-content">
         {contextHolder}

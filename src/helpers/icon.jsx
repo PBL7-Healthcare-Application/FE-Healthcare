@@ -103,3 +103,28 @@ export const statusNotify = (status) => {
       return <SyncOutlined spin />;
   }
 };
+
+export const iconPartner = (status) => {
+  switch (status) {
+    case 1:
+      return (
+        <Tag icon={<CheckCircleOutlined />} color="success" >
+          Approved
+        </Tag>
+      );
+    case 2:
+      return (
+        <Tag icon={<CloseCircleOutlined />} color="error">
+          Rejected
+        </Tag>
+      );
+    case 0:
+      return (
+        <Tag icon={<SyncOutlined spin />} color="processing">
+          Pending
+        </Tag>
+      );
+    default:
+      return <SyncOutlined spin />;
+  }
+};
