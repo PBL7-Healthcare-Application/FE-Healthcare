@@ -39,8 +39,8 @@ const SignIn = () => {
 
   useEffect(() => {
     if (user) {
-      handleChat(user.email);
       if (user.role === "User") {
+        handleChat(user.email);
         openNotificationWithIcon("success", api, "", "Sign In Success!");
         delay(() => {
           if (localStorage.getItem("appointment") !== null) {
@@ -53,9 +53,15 @@ const SignIn = () => {
           }
         }, 1500);
       } else if (user.role === "Doctor") {
+        handleChat(user.email);
         openNotificationWithIcon("success", api, "", "Sign In Success!");
         delay(() => {
           navigate("/dr.Enclinic/appointment");
+        }, 1500);
+      } else if (user.role === "Admin") {
+        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        delay(() => {
+          navigate("/admin/users");
         }, 1500);
       }
     }
@@ -63,7 +69,7 @@ const SignIn = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => { };
+    return () => {};
   }, [user, error, navigate, api, dispatch]);
 
   const onFinish = (values) => {
@@ -71,14 +77,10 @@ const SignIn = () => {
   };
 
   return (
-
     <Space className="in-main">
-
       <Space className="in-left">
         <Space className="in-left_title">
-          <Typography className="in-left_title--main">
-            Take Care Of
-          </Typography>
+          <Typography className="in-left_title--main">Take Care Of</Typography>
           <Typography className="in-left_title--sub">
             Your Health Mission
           </Typography>
@@ -95,7 +97,6 @@ const SignIn = () => {
           }}
           onFinish={onFinish}
         >
-
           <Typography className="in-right__title--main">
             Welcome Back
           </Typography>

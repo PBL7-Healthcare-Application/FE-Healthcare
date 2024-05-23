@@ -1,12 +1,15 @@
-import {
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { LogoutOutlined } from "@ant-design/icons";
 import { Avatar, Badge, Image, Layout, Menu, Space, Typography } from "antd";
 import "./DoctorLayout.scss";
 import title from "../../assets/images/title.png";
 import logo from "../../assets/images/logo.png";
 import examination from "../../assets/images/examination.png";
-import { FaFacebookMessenger, FaRegBookmark, FaRegCalendarAlt, FaRegSun } from "react-icons/fa";
+import {
+  FaFacebookMessenger,
+  FaRegBookmark,
+  FaRegCalendarAlt,
+  FaRegSun,
+} from "react-icons/fa";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SignInBtn from "../../components/header/SignInBtn";
@@ -53,7 +56,7 @@ const DoctorLayout = () => {
       dispatch(getDoctorProfile());
       dispatch(getDoctorCalendar());
     }
-    return () => { };
+    return () => {};
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -113,21 +116,20 @@ const DoctorLayout = () => {
     };
   }, [isNoti]);
 
-
   useEffect(() => {
     const notifyCollection = collection(dbNotify, "notifications");
-    const q = query(notifyCollection, orderBy("createAt", "desc")); // replace 'yourCollectionName' with the name of your collection
+    const q = query(notifyCollection, orderBy("createAt", "asc")); // replace 'yourCollectionName' with the name of your collection
     const unSub = onSnapshot(q, (snapshot) => {
       const notifyData = snapshot.docs.map((doc) => ({
         id: doc.id, // get the id of the document
-        ...doc.data() // get the data of the document
+        ...doc.data(), // get the data of the document
       }));
       const listFilter = notifyData.filter((item) => {
         if (item?.idDoctor) {
-          return item.idDoctor === profile.idDoctor && !item.isRead;
+          return item.idDoctor === profile?.idDoctor && !item.isRead;
         }
         if (item?.idReceiver) {
-          return item.idReceiver === profile.idDoctor && !item.isRead;
+          return item.idReceiver === profile?.idDoctor && !item.isRead;
         }
       });
       setCountNoti(listFilter?.length);
@@ -181,7 +183,14 @@ const DoctorLayout = () => {
       <Layout style={{ backgroundColor: "#f1f5f9" }}>
         <Header className="customSlider__header">
           {isLogin ? (
-            <Space className="avt" style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <Space
+              className="avt"
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
               <Space>
                 <Avatar
                   className="avt-avatar profile-icon"
@@ -190,13 +199,17 @@ const DoctorLayout = () => {
                     backgroundColor: "#fde3cf",
                     color: "#f56a00",
                   }}
-
                 >
                   {profile && profile?.name[0]}
                 </Avatar>
-                <Typography className="sidebar__logout__text" style={{ color: '#404040' }}>{profile && profile?.name}</Typography>
+                <Typography
+                  className="sidebar__logout__text"
+                  style={{ color: "#404040" }}
+                >
+                  {profile && profile?.name}
+                </Typography>
               </Space>
-              <Space style={{ display: 'flex', gap: 30 }}>
+              <Space style={{ display: "flex", gap: 30 }}>
                 <Badge
                   count={countSeen}
                   style={{ cursor: "pointer" }}
@@ -209,7 +222,7 @@ const DoctorLayout = () => {
                       paddingBottom: 5,
                       backgroundColor: "#E4E6EB",
                       borderRadius: "50%",
-                      cursor: 'pointer'
+                      cursor: "pointer",
                     }}
                     onClick={() => navigate("/chatting")}
                   >

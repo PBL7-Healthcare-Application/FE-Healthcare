@@ -1,4 +1,4 @@
-import { BellOutlined, LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined } from "@ant-design/icons";
 import { Avatar, Badge, Image, Layout, Menu, Space } from "antd";
 import "../doctor/DoctorLayout.scss";
 import title from "../../assets/images/title.png";
@@ -13,6 +13,9 @@ import { logOut } from "../../stores/auth/AuthSlice";
 import deleteToken from "../../helpers/deleteToken";
 import "./AdminLayout.scss";
 import { TiThList } from "react-icons/ti";
+import { getUserProfile } from "../../stores/user/UserThunk";
+import { IoNotifications } from "react-icons/io5";
+import Notify from "../../components/notify/Notify";
 const { Header, Sider, Content } = Layout;
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -20,9 +23,11 @@ const AdminLayout = () => {
   const [current, setCurrent] = useState("/appointment");
   const location = useLocation();
   const [token, setToken] = useState("");
+  const [isNoti, setIsNoti] = useState(false);
+  const [countNoti, setCountNoti] = useState("");
   const dispatch = useDispatch();
 
-  const { profile } = useSelector((state) => state.doctor);
+  const { profile } = useSelector((state) => state.profile);
   useEffect(() => {
     const endpoint = location.pathname;
     setCurrent(`/${endpoint.split("/")[2]}`);
@@ -32,23 +37,35 @@ const AdminLayout = () => {
     setToken(token);
   }, []);
 
-  // useEffect(() => {
-  //   if (token) {
-  //     setIsLogin(true);
-  //     dispatch(getDoctorProfile());
-  //     dispatch(getDoctorCalendar());
-  //   }
-  //   return () => {};
-  // }, [token, dispatch]);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isNoti && event.target.closest(".notification-icon") === null) {
+        setIsNoti(false);
+      }
+    };
 
-  // useEffect(() => {
-  //   if (profile === null) {
-  //     const token = getToken();
-  //     if (!token) {
-  //       setIsLogin(false);
-  //     }
-  //   }
-  // }, [profile]);
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isNoti]);
+
+  useEffect(() => {
+    if (token) {
+      setIsLogin(true);
+      dispatch(getUserProfile());
+    }
+    return () => {};
+  }, [token, dispatch]);
+
+  useEffect(() => {
+    if (profile === null) {
+      const token = getToken();
+      if (!token) {
+        setIsLogin(false);
+      }
+    }
+  }, [profile]);
 
   const onNavItemClick = (e) => {
     setCurrent(e.key);
@@ -56,7 +73,8 @@ const AdminLayout = () => {
   };
   const handleLogout = async () => {
     dispatch(logOut());
-    localStorage.removeItem("doctor");
+    localStorage.removeItem("profile");
+    localStorage.removeItem("user");
     deleteToken();
     navigate("/");
   };
@@ -110,7 +128,7 @@ const AdminLayout = () => {
                   style={{ marginRight: 10, color: "#404040", marginTop: 5 }}
                   className="sidebar__logout__text"
                 >
-                  Bui Van Huy
+                  {profile?.name}
                 </span>
                 <Avatar
                   className="avt-avatar"
@@ -123,8 +141,30 @@ const AdminLayout = () => {
                   {profile?.name[0]}
                 </Avatar>
               </div>
-              <Badge count={5}>
-                <BellOutlined className="avt-notify" />
+              <Badge
+                count={countNoti}
+                style={{ cursor: "pointer" }}
+                size="large"
+                offset={[-5, 3]}
+              >
+                <div
+                  className="notification-icon"
+                  onClick={() => setIsNoti(!isNoti)}
+                  style={{
+                    position: "relative",
+                    cursor: "pointer",
+                    padding: 10,
+                    paddingBottom: 5,
+                    backgroundColor: isNoti ? "#E3F2FE" : "#E4E6EB",
+                    borderRadius: "50%",
+                  }}
+                >
+                  <IoNotifications
+                    size={26}
+                    color={`${isNoti ? "#4096ff" : "#404040"}`}
+                  />
+                  {isNoti && <Notify onClose={() => setIsNoti(!isNoti)} />}
+                </div>
               </Badge>
             </Space>
           ) : (

@@ -4,6 +4,7 @@ import SearchSlice from "./search-doctor/SearchSlice";
 import UserSlice from "./user/UserSlice";
 import DoctorSlice from "./doctor/DoctorSlice";
 import ChatSlice from "./Chat/ChatSlice";
+import AdminSlice from "./admin/AdminSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     profile: UserSlice,
     doctor: DoctorSlice,
     chat: ChatSlice,
+    admin: AdminSlice,
   },
 });
 

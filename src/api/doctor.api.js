@@ -71,8 +71,8 @@ export const getProfile = () => {
 };
 export const getCalendar = () => {
   return http.get(`/Doctor/Calendar/GetCalendar`);
-}
+};
 
 export const createTimeOff = (data) => {
   return http.post(`/Doctor/Calendar/CreateTimeOff`, data);
-}
+};

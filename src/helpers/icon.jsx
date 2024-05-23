@@ -57,13 +57,13 @@ export const iconCertificate = (status) => {
 };
 export const tabRole = (role) => {
   switch (role) {
-    case "USER":
+    case "User":
       return (
         <Tag color="#ffc53d" style={{ fontWeight: 500 }}>
           USER
         </Tag>
       );
-    case "DOCTOR":
+    case "Doctor":
       return (
         <Tag color="#2db7f5" style={{ fontWeight: 500 }}>
           DOCTOR
@@ -76,13 +76,13 @@ export const tabRole = (role) => {
 
 export const statusAccount = (status) => {
   switch (status) {
-    case "BAN":
+    case true:
       return (
         <Tag color="#f50" style={{ fontWeight: 500 }}>
           BANED
         </Tag>
       );
-    case "ACTIVE":
+    case false:
       return (
         <Tag color="#87d068" style={{ fontWeight: 500 }}>
           ACTIVE
@@ -93,18 +93,13 @@ export const statusAccount = (status) => {
   }
 };
 
-
 export const statusNotify = (status) => {
   switch (status) {
     case "New Appointment":
-      return (
-        <Image src={appointmentIcon} width={45} preview={false} />
-      );
+      return <Image src={appointmentIcon} width={45} preview={false} />;
     case "Cancel Appointment":
-      return (
-        <Image src={cancel} width={45} preview={false} />
-      );
+      return <Image src={cancel} width={45} preview={false} />;
     default:
       return <SyncOutlined spin />;
   }
-}
+};

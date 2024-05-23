@@ -11,12 +11,13 @@ import medicalHistory from "../../assets/images/medicalHistory.png";
 import personDefault from "../../assets/images/personDefault.png";
 import { auth, db, dbNotify } from "../../helpers/firebase";
 import { handleUpdateStatus } from "../../helpers/chat";
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import Notify from "../notify/Notify";
 import { FaFacebookMessenger } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 import CardNotify from "../notify/CardNotify";
 import { setNotify } from "../../stores/Chat/ChatSlice";
+import { orderBy } from "lodash";
 
 const Avt = (props) => {
   const dispatch = useDispatch();
@@ -58,14 +59,15 @@ const Avt = (props) => {
   }, [chatUser?.id]);
   useEffect(() => {
     const notifyCollection = collection(dbNotify, "notifications");
-    const unSub = onSnapshot(notifyCollection, (snapshot) => {
+    const q = query(notifyCollection, orderBy("createAt", "desc"));
+    const unSub = onSnapshot(q, (snapshot) => {
       const notifyData = snapshot.docs.map((doc) => ({
         id: doc.id, // get the id of the document
-        ...doc.data() // get the data of the document
+        ...doc.data(), // get the data of the document
       }));
       const listFilter = notifyData.filter((item) => {
         if (item?.idReceiver) {
-          return item.idReceiver === profile.idUser && !item.isRead;
+          return item.idReceiver === profile?.idUser && !item.isRead;
         }
       });
       setCountNoti(listFilter?.length);
@@ -115,7 +117,7 @@ const Avt = (props) => {
             paddingBottom: 5,
             backgroundColor: "#E4E6EB",
             borderRadius: "50%",
-            cursor: 'pointer'
+            cursor: "pointer",
           }}
           onClick={() => navigate("/chatting")}
         >
