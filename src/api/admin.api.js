@@ -29,8 +29,22 @@ export const getPartner = (search, idSpecialty, TypePartner, page = 1) => {
     url += `&TypePartner=${TypePartner}`;
   }
   return http.get(url);
-}
+};
 
 export const getPartnerDetail = (id) => {
   return http.get(`/Admin/Partner/GetPartnerDetail/${id}`);
-}
+};
+
+export const verifyProfile = (data) => {
+  return http.post("/Admin/Partner/VerifyInfoPartner", data);
+};
+
+export const verifyCertificate = (data) => {
+  return http.post("/Admin/Partner/VerifyCertificate", data);
+};
+export const verifyExperience = (data) => {
+  return http.post("/Admin/Partner/VerifyWorkingProcess", data);
+};
+export const verifyEducation = (data) => {
+  return http.post("/Admin/Partner/VerifyTrainingProcess", data);
+};

@@ -15,6 +15,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAdminPartnerDetail } from "../../../stores/admin/AdminThunk";
 import PartnerProfile from "./PartnerProfile";
+import CertificateAdmin from "../partners/CertificateAdmin";
+import ExperienceAdmin from "../partners/ExperienceAdmin";
+import EducationAdmin from "../partners/EducationAdmin";
 
 const DetailUser = ({ partner }) => {
   const { TabPane } = Tabs;
@@ -24,7 +27,7 @@ const DetailUser = ({ partner }) => {
   const { id } = useParams();
   const { partnerDetail } = useSelector((state) => state.admin);
   useEffect(() => {
-    dispatch(getAdminPartnerDetail(id))
+    dispatch(getAdminPartnerDetail(id));
   }, [id, dispatch]);
   return (
     <div className="setting">
@@ -46,27 +49,54 @@ const DetailUser = ({ partner }) => {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <UserInfor type={"profile"} partner={partner} />
             {/* <UserProfile role={location?.state.role} /> */}
-            <PartnerProfile />
+            <PartnerProfile partner={partner} />
           </div>
         </TabPane>
-        {location?.state.role === "DOCTOR" && partnerDetail?.certificates.length > 0 && (
-          <TabPane key={2} tab={<span>Certification <span>({partnerDetail?.certificates.length})</span></span>}>
-            <UserInfor partner={partner} />
-            <Certification type={"Admin"} />
-          </TabPane>
-        )}
-        {location?.state.role === "DOCTOR" && partnerDetail?.workingProcess.length > 0 && (
-          <TabPane key={3} tab={<span>Experience <span>({partnerDetail?.workingProcess.length})</span></span>}>
-            <UserInfor partner={partner} />
-            <Experience type={"Admin"} />
-          </TabPane>
-        )}
-        {location?.state.role === "DOCTOR" && partnerDetail?.trainingProcess.length > 0 && (
-          <TabPane key={4} tab={<span>Education <span>({partnerDetail?.trainingProcess.length})</span></span>}>
-            <UserInfor partner={partner} />
-            <Education type={"Admin"} />
-          </TabPane>
-        )}
+        {location?.state.role === "DOCTOR" &&
+          partnerDetail?.certificates.length > 0 && (
+            <TabPane
+              key={2}
+              tab={
+                <span>
+                  Certification{" "}
+                  <span>({partnerDetail?.certificates.length})</span>
+                </span>
+              }
+            >
+              <UserInfor partner={partner} type={"certificate"} />
+              <CertificateAdmin partner={partner} />
+            </TabPane>
+          )}
+        {location?.state.role === "DOCTOR" &&
+          partnerDetail?.workingProcess.length > 0 && (
+            <TabPane
+              key={3}
+              tab={
+                <span>
+                  Experience{" "}
+                  <span>({partnerDetail?.workingProcess.length})</span>
+                </span>
+              }
+            >
+              <UserInfor partner={partner} type={"experience"} />
+              <ExperienceAdmin partner={partner} />
+            </TabPane>
+          )}
+        {location?.state.role === "DOCTOR" &&
+          partnerDetail?.trainingProcess.length > 0 && (
+            <TabPane
+              key={4}
+              tab={
+                <span>
+                  Education{" "}
+                  <span>({partnerDetail?.trainingProcess.length})</span>
+                </span>
+              }
+            >
+              <UserInfor partner={partner} type={"education"} />
+              <EducationAdmin partner={partner} />
+            </TabPane>
+          )}
       </Tabs>
     </div>
   );

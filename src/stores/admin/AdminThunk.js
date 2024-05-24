@@ -1,5 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { disableAccount, getPartner, getPartnerDetail, getUsers } from "../../api/admin.api";
+import {
+  disableAccount,
+  getPartner,
+  getPartnerDetail,
+  getUsers,
+  verifyCertificate,
+  verifyEducation,
+  verifyExperience,
+  verifyProfile,
+} from "../../api/admin.api";
 
 export const getAdminUser = createAsyncThunk(
   "admin/getAdminUser",
@@ -43,8 +52,55 @@ export const getAdminPartnerDetail = createAsyncThunk(
   "admin/getAdminPartnerDetail",
   async (params, thunkApi) => {
     try {
-
       const response = await getPartnerDetail(params);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const verifyAdminProfile = createAsyncThunk(
+  "admin/verifyAdminProfile",
+  async (data, thunkApi) => {
+    try {
+      const response = await verifyProfile(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const verifyAdminCertificate = createAsyncThunk(
+  "admin/verifyAdminCertificate",
+  async (data, thunkApi) => {
+    try {
+      const response = await verifyCertificate(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const verifyAdminEducation = createAsyncThunk(
+  "admin/verifyAdminEducation",
+  async (data, thunkApi) => {
+    try {
+      const response = await verifyEducation(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const verifyAdminExperience = createAsyncThunk(
+  "admin/verifyAdminExperience",
+  async (data, thunkApi) => {
+    try {
+      const response = await verifyExperience(data);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

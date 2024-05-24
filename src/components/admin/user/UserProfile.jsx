@@ -13,7 +13,7 @@ const UserProfile = ({ role }) => {
   const handleCancel = () => {
     setIsEdit(!isEdit);
   };
-  const handleSave = () => { };
+  const handleSave = () => {};
   return (
     <div className="profileDr" style={{ padding: "0 30px" }}>
       <div className="profileDr-content" style={{ marginTop: 0 }}>
@@ -23,7 +23,7 @@ const UserProfile = ({ role }) => {
           initialValues={{
             remember: true,
           }}
-        //   onFinish={onFinish}
+          //   onFinish={onFinish}
         >
           <Form.Item
             style={{
@@ -35,8 +35,9 @@ const UserProfile = ({ role }) => {
               <Typography className="label">Name</Typography>
               <Input
                 value={partnerDetail?.name}
-                className={`input__username input ${!isEdit && "profileDr-input"
-                  }`}
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
                 disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
@@ -63,8 +64,9 @@ const UserProfile = ({ role }) => {
                 <Typography className="label">Year Of Experience</Typography>
                 <Input
                   value={partnerDetail?.yearExperience}
-                  className={`input__username input ${!isEdit && "profileDr-input"
-                    }`}
+                  className={`input__username input ${
+                    !isEdit && "profileDr-input"
+                  }`}
                   disabled={!isEdit}
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
@@ -152,8 +154,9 @@ const UserProfile = ({ role }) => {
               <Typography className="label">Phone Number</Typography>
               <Input
                 value={partnerDetail?.phoneNumber}
-                className={`input__username input ${!isEdit && "profileDr-input"
-                  }`}
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
                 disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
@@ -172,8 +175,9 @@ const UserProfile = ({ role }) => {
               >
                 <Typography className="label">Fees</Typography>
                 <Input
-                  className={`input__username input ${!isEdit && "profileDr-input"
-                    }`}
+                  className={`input__username input ${
+                    !isEdit && "profileDr-input"
+                  }`}
                   disabled={!isEdit}
                   defaultValue={partnerDetail?.price?.toLocaleString("vi-VN")}
                   style={{ margin: "8px 0", height: 46 }}
@@ -195,8 +199,9 @@ const UserProfile = ({ role }) => {
                 <Typography className="label">Address</Typography>
                 <Input
                   value={partnerDetail?.address}
-                  className={`input__username input ${!isEdit && "profileDr-input"
-                    }`}
+                  className={`input__username input ${
+                    !isEdit && "profileDr-input"
+                  }`}
                   disabled={!isEdit}
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
@@ -216,8 +221,9 @@ const UserProfile = ({ role }) => {
                 <Typography className="label">Enclinic Name</Typography>
                 <Input
                   value={partnerDetail?.nameClinic}
-                  className={`input__username input ${!isEdit && "profileDr-input"
-                    }`}
+                  className={`input__username input ${
+                    !isEdit && "profileDr-input"
+                  }`}
                   disabled={!isEdit}
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
@@ -237,8 +243,9 @@ const UserProfile = ({ role }) => {
                 <Typography className="label">Address</Typography>
                 <Input
                   value={partnerDetail?.address}
-                  className={`input__username input ${!isEdit && "profileDr-input"
-                    }`}
+                  className={`input__username input ${
+                    !isEdit && "profileDr-input"
+                  }`}
                   disabled={!isEdit}
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
