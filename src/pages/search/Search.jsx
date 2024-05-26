@@ -16,17 +16,19 @@ import CardResult from "../../components/Doctor/cardResult/CardResult";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSkeleton from "../../components/customSkeleton/CustomSkeleton";
-import { debounce } from "lodash";
+import { debounce, set } from "lodash";
 import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
 import { useNavigate, useParams } from "react-router-dom";
 import { setIdSpecialty } from "../../stores/search-doctor/SearchSlice";
 const Search = () => {
-  const { searchResult, loading, keyword, id_Specialty } = useSelector(
+  const { searchResult, loading, keyword, id_Specialty, paging } = useSelector(
     (state) => state.search
   );
+  const [page, setPage] = useState(paging?.currentPage);
   const [inputValue, setInputValue] = useState(keyword);
   const [specialty, setSpecialty] = useState(id_Specialty);
   const [filterAvailable, setFilterAvailable] = useState("");
+  const [rate, setRate] = useState(0);
   const [years, setYears] = useState(0);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000000);
@@ -36,16 +38,20 @@ const Search = () => {
   const contentRef = useRef(null);
 
   const handleClear = () => {
-    console.log(params);
+    setPage(1);
+    setRate(0);
     setYears(0);
     setMinPrice(0);
     setMaxPrice(1000000);
     setInputValue("");
+    setRate(0);
     setFilterAvailable("");
+    setSpecialty("All specialties");
     dispatch(setIdSpecialty("All specialties"));
     dispatch(
       getSearchResult({
         sortBy: "exp_desc",
+        page: 1,
       })
     );
   };
@@ -65,11 +71,12 @@ const Search = () => {
       years,
       minPrice,
       maxPrice,
-      filterAvailable
+      filterAvailable,
+      rate
     );
   };
   const debounceInputKey = useRef(
-    debounce((nextValue, specialty, year, min, max, available) => {
+    debounce((nextValue, specialty, year, min, max, available, rate) => {
       dispatch(
         getSearchResult({
           keyword: nextValue,
@@ -82,6 +89,7 @@ const Search = () => {
           minPrice: min !== 0 ? min : undefined,
           maxPrice: max,
           filterAvailable: available,
+          rate: rate !== 0 ? rate : undefined,
         })
       );
     }, 500)
@@ -97,6 +105,7 @@ const Search = () => {
           minPrice: minPrice !== 0 ? minPrice : undefined,
           maxPrice: maxPrice,
           filterAvailable: filterAvailable,
+          rate: rate !== 0 ? rate : undefined,
         })
       );
       navigate(`/search/doctor?name=${inputValue}&specialty=all`);
@@ -110,6 +119,7 @@ const Search = () => {
           maxPrice: maxPrice,
           sortBy: "exp_desc",
           filterAvailable: filterAvailable,
+          rate: rate !== 0 ? rate : undefined,
         })
       );
       navigate(`/search/doctor?name=${inputValue}&specialty=${specialty}`);
@@ -130,6 +140,7 @@ const Search = () => {
         minPrice: minPrice !== 0 ? minPrice : undefined,
         maxPrice: maxPrice,
         filterAvailable: e.target.value,
+        rate: rate !== 0 ? rate : undefined,
       })
     );
   };
@@ -315,6 +326,7 @@ const Search = () => {
                         minPrice: minPrice !== 0 ? minPrice : undefined,
                         maxPrice: maxPrice,
                         filterAvailable: filterAvailable,
+                        rate: rate !== 0 ? rate : undefined,
                       })
                     );
                   }}
@@ -344,6 +356,7 @@ const Search = () => {
                             minPrice: minPrice !== 0 ? minPrice : undefined,
                             maxPrice: maxPrice,
                             filterAvailable: filterAvailable,
+                            rate: rate !== 0 ? rate : undefined,
                           })
                         );
                       }
@@ -388,6 +401,7 @@ const Search = () => {
                         minPrice: parseInt(value[0] + "0000"),
                         maxPrice: parseInt(value[1] + "0000"),
                         filterAvailable: filterAvailable,
+                        rate: rate !== 0 ? rate : undefined,
                       })
                     );
                   }}
@@ -426,6 +440,7 @@ const Search = () => {
                                 minPrice: e.target.value,
                                 maxPrice: maxPrice,
                                 filterAvailable: filterAvailable,
+                                rate: rate !== 0 ? rate : undefined,
                               })
                             );
                           }
@@ -461,7 +476,7 @@ const Search = () => {
                                 keyword: inputValue,
                                 IdSpecialty:
                                   specialty === "All specialties" ||
-                                  specialty === 0
+                                    specialty === 0
                                     ? undefined
                                     : specialty,
                                 sortBy: "exp_desc",
@@ -469,6 +484,7 @@ const Search = () => {
                                 minPrice: minPrice,
                                 maxPrice: e.target.value,
                                 filterAvailable: filterAvailable,
+                                rate: rate !== 0 ? rate : undefined,
                               })
                             );
                           }
@@ -509,7 +525,25 @@ const Search = () => {
                         Rate
                       </Typography>
                     </Space>
-                    <Rate onChange={(value) => console.log(value)} />
+                    <Rate value={rate} onChange={(value) => {
+                      setRate(value);
+                      dispatch(
+                        getSearchResult({
+                          keyword: inputValue,
+                          IdSpecialty:
+                            specialty === "All specialties" ||
+                              specialty === 0
+                              ? undefined
+                              : specialty,
+                          sortBy: "exp_desc",
+                          exp: years,
+                          minPrice: minPrice,
+                          maxPrice: maxPrice,
+                          filterAvailable: filterAvailable,
+                          rate: value,
+                        })
+                      );
+                    }} />
                   </Space>
                 </Space>
                 <Divider
@@ -536,10 +570,32 @@ const Search = () => {
       {searchResult.length > 0 && (
         <div className="search-pagination">
           <Pagination
-            defaultCurrent={3}
-            total={500}
+
             showTotal={false}
             showSizeChanger={false}
+            pageSize={paging?.itemsPerPage}
+            total={paging?.totalItems}
+            current={page}
+            onChange={(page) => {
+              setPage(page);
+              dispatch(
+                getSearchResult({
+                  keyword: inputValue,
+                  IdSpecialty:
+                    specialty === "All specialties" ||
+                      specialty === 0
+                      ? undefined
+                      : specialty,
+                  sortBy: "exp_desc",
+                  exp: years,
+                  minPrice: minPrice,
+                  maxPrice: maxPrice,
+                  filterAvailable: filterAvailable,
+                  rate: rate !== 0 ? rate : undefined,
+                  page: page,
+                })
+              );
+            }}
           />
         </div>
       )}

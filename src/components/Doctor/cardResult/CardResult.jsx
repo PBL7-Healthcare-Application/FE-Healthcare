@@ -124,7 +124,7 @@ const CardResult = ({ doctor }) => {
           <Typography className="result-second__name">
             {doctor?.name}
           </Typography>
-          <CheckCircleFilled style={{ color: "green" }} />
+          {/* <CheckCircleFilled style={{ color: "green" }} /> */}
         </Space>
         <Typography className="result-second__specialty">
           {doctor?.medicalSpecialty}
@@ -139,20 +139,21 @@ const CardResult = ({ doctor }) => {
           <Space className="result-second__address">
             <DollarOutlined className="result-second__address-icon" />
             <Typography className="result-second__specialty">
-              {doctor.price.toLocaleString("vi-VN")} ₫
+              {doctor?.price && doctor?.price.toLocaleString("vi-VN")} ₫
             </Typography>
           </Space>
         </div>
       </div>
       <div className="result-third">
         <div className="result-third__rate">
-          <Space className="result-third__rate-item">
-            <StarFilled className="result-third__rate-icon" />
-            <Typography className="result-third__rate-text">5.0/5</Typography>
-          </Space>
-          <Link to="/doctor" className="result-third__rate-link">
-            31 rating
-          </Link>
+          {
+            doctor?.rateAverage && (
+              <Space className="result-third__rate-item">
+                <StarFilled className="result-third__rate-icon" />
+                <Typography className="result-third__rate-text">{doctor?.rateAverage}/5</Typography>
+              </Space>
+            )
+          }
         </div>
         <div
           className="result-third__button"

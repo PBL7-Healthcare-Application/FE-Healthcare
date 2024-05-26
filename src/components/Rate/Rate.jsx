@@ -1,22 +1,24 @@
+/* eslint-disable react/prop-types */
 import { Image, Rate } from "antd"
 import "./Rate.scss"
 
 import persondefault from "../../assets/images/personDefault.png"
+import { format } from "timeago.js"
 
-const Rating = () => {
+const Rating = ({ item }) => {
     return (
         <div className="review">
             <div className="review__box">
                 <div className="review__infor">
-                    <Image fallback={persondefault} width={60} style={{ borderRadius: "50%" }} />
+                    <Image fallback={persondefault} width={60} style={{ borderRadius: "50%" }} src={item?.urlAvatarUserRating} />
                     <div className="review__infor" style={{ flexDirection: 'column', gap: 5, }}>
-                        <span className="review__text" style={{ fontSize: 16, fontWeight: 600 }}>Nguyễn Văn A</span>
-                        <span className="review__text">1 month ago</span>
+                        <span className="review__text" style={{ fontSize: 16, fontWeight: 600 }}>{item?.nameUserRating}</span>
+                        <span className="review__text">{format(item?.createdAt)}</span>
                     </div>
                 </div>
                 <Rate value={4} />
             </div>
-            <span className="review__text" style={{ letterSpacing: 0.6, fontSize: 15 }}>Bác sĩ giải thích rõ ràng, tận tâm, chuyên nghiệp, nghiệp vụ xuất sắc và kinh nghiệm trong ngành. Tôi cảm thấy an tâm và cực kỳ hài lòng với dịch vụ</span>
+            <span className="review__text" style={{ letterSpacing: 0.6, fontSize: 15 }}>{item?.comment}</span>
         </div>
     )
 }

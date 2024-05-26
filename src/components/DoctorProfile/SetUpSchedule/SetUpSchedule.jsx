@@ -1,33 +1,65 @@
-import { Button, Form, Select, Typography, notification } from "antd";
+import { Button, Form, Image, Modal, Select, Typography, notification } from "antd";
 import { Per, Time } from "../../../constant/options";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
   getDoctorProfile,
   setDoctorSchedule,
+  updateDoctorWorkingTime,
+  updateDoctorWorkingTimeForConflict,
 } from "../../../stores/doctor/DoctorThunk";
 import { openNotificationWithIcon } from "../../notification/CustomNotify";
 import { delay } from "lodash";
-import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
+import { setError, setMessage, setStatusCode } from "../../../stores/doctor/DoctorSlice";
 import { useNavigate } from "react-router-dom";
-
+import { EditFilled } from "@ant-design/icons";
+import "./SetUpSchedule.scss";
+import warning from "../../../assets/images/warning.png";
+import TextArea from "antd/es/input/TextArea";
+import { set } from "date-fns";
 const SetUpSchedule = () => {
-  const { profile, error, statusCode } = useSelector((state) => state.doctor);
+  const { profile, error, statusCode, message, loading } = useSelector((state) => state.doctor);
   const [isDisabled, setIsDisabled] = useState(
     profile?.workingTimeStart !== null
   );
+  const [form] = Form.useForm();
+  const [isEdit, setIsEdit] = useState(false);
   const dispatch = useDispatch();
   const [api, contextHolder] = notification.useNotification();
+  const [isConflict, setIsConflict] = useState(false);
+  const [conflict, setConflict] = useState(null);
+  const [reason, setReason] = useState("");
   const navigate = useNavigate();
   const handleFinish = (values) => {
-    dispatch(getDoctorProfile());
-    dispatch(
-      setDoctorSchedule({
-        startTime: values.start,
-        endTime: values.end,
-        durationPerAppointment: values.per,
-      })
-    );
+    setConflict({
+      startTime: values.start,
+      endTime: values.end,
+      durationPerAppointment: values.per,
+    })
+    if (profile?.workingTimeStart === null) {
+      dispatch(
+        setDoctorSchedule({
+          startTime: values.start,
+          endTime: values.end,
+          durationPerAppointment: values.per,
+        })
+      );
+    }
+    else {
+      dispatch(
+        updateDoctorWorkingTime({
+          startTime: values.start,
+          endTime: values.end,
+          durationPerAppointment: values.per,
+
+        })
+      );
+      setIsEdit(!isEdit);
+      setIsDisabled(!isDisabled);
+
+    }
+
+
   };
   useEffect(() => {
     if (statusCode === 200) {
@@ -35,12 +67,20 @@ const SetUpSchedule = () => {
         "success",
         api,
         "",
-        "Set up your schedule successfully!"
+        message
       );
       delay(() => {
+        dispatch(setMessage(null))
         dispatch(setStatusCode(null));
-        navigate("/dr.Enclinic/calendar");
+        dispatch(getDoctorProfile());
+        setConflict(null);
+        setIsConflict(false);
+        // navigate("/dr.Enclinic/calendar");
       }, 1500);
+    }
+    if (statusCode === 409) {
+      dispatch(getDoctorProfile());
+      setIsConflict(true);
     }
     if (error !== null) {
       openNotificationWithIcon(
@@ -50,21 +90,63 @@ const SetUpSchedule = () => {
         "Set up your schedule unsuccessfully!"
       );
       delay(() => {
+        dispatch(getDoctorProfile());
         dispatch(setError(null));
+        setConflict(null);
+        setIsConflict(false);
       }, 1500);
     }
   }, [statusCode, api, error, dispatch, navigate]);
 
+  useEffect(() => {
+    form.setFieldsValue({
+      per: profile?.durationPerAppointment,
+      start: profile?.workingTimeStart,
+      end: profile?.workingTimeEnd
+    })
+  }, [form, profile])
+  const handleConflict = () => {
+
+    dispatch(updateDoctorWorkingTimeForConflict(
+      {
+        ...conflict,
+        reason: reason
+      }
+    ))
+
+    setReason("");
+    setConflict(null);
+  }
   return (
     <div className="setting-tab2">
       <div>
+        <Modal open={isConflict}
+          onCancel={() => {
+            setIsConflict(false);
+            setReason("");
+            setConflict(null);
+          }}
+          onOk={handleConflict}
+          okButtonProps={{
+            disabled: reason.length === 0
+          }}
+          width={600}>
+          <div className="modalConflict">
+            <Image src={warning} width={120} preview={false} />
+            <span className="setting-font modalConflict-text">There is a conflict with some appointments</span>
+            <span className="setting-font" style={{ fontWeight: 400, fontSize: 14, textAlign: 'center', color: "#404040", marginTop: 10 }}>Appointments outside of working hours that you want to update. If you click confirm update, the system will cancel all those appointments and update the working time again.</span>
+
+            <div className="modalConflict-reason">
+              <span className="setting-font" style={{ marginBottom: 10, fontSize: 14, textAlign: 'center', color: "#404040", marginTop: 10 }}>Please enter your reason if you choose confirm:</span>
+              <TextArea maxLength={100} onChange={(e) => setReason(e.target.value)} />
+            </div>
+          </div>
+        </Modal>
         <Form
           name="normal_login"
           className="login-form"
           style={{ minWidth: 620 }}
-          initialValues={{
-            remember: true,
-          }}
+          form={form}
           onFinish={handleFinish}
         >
           {contextHolder}
@@ -74,6 +156,7 @@ const SetUpSchedule = () => {
               display: "flex",
               justifyContent: "center",
               marginBottom: 20,
+              position: "relative",
             }}
           >
             {" "}
@@ -83,6 +166,22 @@ const SetUpSchedule = () => {
             >
               Schedule Setting
             </span>
+            {
+              !isEdit && profile?.workingTimeStart !== null && (
+                <div className="profile-edit" style={{ position: 'absolute', top: 9, right: 0 }} onClick={() => {
+                  setIsEdit(!isEdit);
+                  setIsDisabled(!isDisabled);
+                }}>
+                  <span
+                    className="profile-header__font"
+                    style={{ fontSize: 18, color: "rgb(45, 135, 243)" }}
+                  >
+                    Edit
+                  </span>
+                  <EditFilled className="profile-edit__icon" />
+                </div>
+              )
+            }
           </div>
 
           <Typography className="label">
@@ -104,7 +203,6 @@ const SetUpSchedule = () => {
                 label: item.value,
                 value: item.value,
               }))}
-              defaultValue={profile?.durationPerAppointment}
               disabled={isDisabled}
             />
           </Form.Item>
@@ -128,7 +226,6 @@ const SetUpSchedule = () => {
                 label: item.value,
                 value: item.value,
               }))}
-              defaultValue={profile?.workingTimeStart}
               disabled={isDisabled}
             />
           </Form.Item>
@@ -162,11 +259,10 @@ const SetUpSchedule = () => {
                 label: item.value,
                 value: item.value,
               }))}
-              defaultValue={profile?.workingTimeEnd}
               disabled={isDisabled}
             />
           </Form.Item>
-          {!isDisabled && (
+          {profile?.workingTimeStart === null && (
             <Form.Item>
               <div style={{ display: "flex", flexDirection: "row", gap: 40 }}>
                 <Button
@@ -174,12 +270,45 @@ const SetUpSchedule = () => {
                   htmlType="submit"
                   className="login-form-button"
                   style={{ marginTop: 10 }}
+                  loading={loading}
                 >
-                  Update
+                  Create
                 </Button>
               </div>
             </Form.Item>
           )}
+          {
+            isEdit && (
+              <div style={{ display: "flex", flexDirection: "row", gap: 20, justifyContent: 'flex-end' }} >
+                <Button
+                  loading={loading}
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  style={{ marginTop: 10, width: 150, height: 40, fontWeight: 500 }}
+                >
+                  Update
+                </Button>
+                <Button
+                  className="login-form-button btn-cancel"
+                  style={{ marginTop: 10, width: 150, height: 40, fontWeight: 500 }}
+                  onClick={() => {
+                    setIsEdit(!isEdit);
+                    setIsDisabled(!isDisabled);
+                    form.setFieldsValue({
+                      per: profile?.durationPerAppointment,
+                      start: profile?.workingTimeStart,
+                      end: profile?.workingTimeEnd
+                    })
+                  }}
+                >
+                  Cancel
+                </Button>
+
+              </div>
+            )
+          }
+
         </Form>
       </div>
     </div>

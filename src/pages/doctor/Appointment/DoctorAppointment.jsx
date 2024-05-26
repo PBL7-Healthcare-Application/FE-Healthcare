@@ -16,15 +16,12 @@ import { getDetailAppointment } from "../../../api/doctor.api";
 import { icon } from "../../../helpers/icon";
 
 const DoctorAppointment = () => {
-  const [tableParams, setTableParams] = useState({
-    pagination: {
-      current: 1,
-    },
-  });
+
   const [inputSearch, setInputSearch] = useState("");
   const [status, setStatus] = useState(null);
   const [filterAvailable, setFilterAvailable] = useState(null);
-  const { ListAppointments, TotalItems, CurrentPage, ItemsPerPage } = useSelector((state) => state.doctor)
+  const { ListAppointments, paging } = useSelector((state) => state.doctor)
+  const [page, setPage] = useState(paging?.currentPage);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const contentRef = useRef(null);
@@ -33,6 +30,7 @@ const DoctorAppointment = () => {
       title: "Id",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "Name",
@@ -66,7 +64,7 @@ const DoctorAppointment = () => {
   const handleStatusChange = (value) => {
     setStatus(value);
     dispatch(getDoctorAppointment({
-      search: inputSearch,
+      search: inputSearch !== "" ? inputSearch : undefined,
       status: value,
       page: 1,
       filterAvailable: filterAvailable !== null ? filterAvailable : undefined
@@ -74,12 +72,12 @@ const DoctorAppointment = () => {
     ));
   }
   const handleAvailableChange = (value) => {
-    setFilterAvailable(value);
+    setFilterAvailable(value === "all" ? null : value);
     dispatch(getDoctorAppointment({
-      search: inputSearch,
+      search: inputSearch !== "" ? inputSearch : undefined,
       status: status !== null ? status : undefined,
       page: 1,
-      filterAvailable: value
+      filterAvailable: value === "all" ? undefined : value
     }
     ));
 
@@ -110,7 +108,7 @@ const DoctorAppointment = () => {
   const handleClick = () => {
     dispatch(
       getDoctorAppointment({
-        search: inputSearch,
+        search: inputSearch !== "" ? inputSearch : undefined,
         status: status !== null ? status : undefined,
         page: 1,
         filterAvailable: filterAvailable !== null ? filterAvailable : undefined
@@ -120,8 +118,7 @@ const DoctorAppointment = () => {
 
 
   useEffect(() => {
-    console.log("DoctorAppointment");
-    dispatch(getDoctorAppointment({ status: 0, page: 1 }));
+    dispatch(getDoctorAppointment({ page: 1 }));
   }, [dispatch])
   return (
     <div className="DoctorAppointment">
@@ -146,17 +143,17 @@ const DoctorAppointment = () => {
               type="text"
               className="search__input-text"
               placeholder="Search for a patient..."
-              style={{ border: "1px solid #a1a1aa" }}
+              style={{ border: "1px solid #a1a1aa", fontSize: 13 }}
               onChange={handleChangeInput}
             />
-            <Button className="Schedule-content__left-button" onClick={handleClick}>Search</Button>
+            <Button className="Schedule-content__left-button" style={{ height: 42 }} onClick={handleClick}>Search</Button>
           </div>
         </div>
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Status</span>
           <Select
-            placeholder="-- select --"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
+            defaultValue={"Booked"}
+            style={{ width: 150, height: 42, color: "#6c81a0" }}
             onChange={handleStatusChange}
             options={[
               { value: 0, label: "All" },
@@ -169,10 +166,11 @@ const DoctorAppointment = () => {
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Available</span>
           <Select
-            placeholder="-- select --"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
+            defaultValue={"All"}
+            style={{ width: 150, height: 42, color: "#6c81a0" }}
             onChange={handleAvailableChange}
             options={[
+              { value: "all", label: "All" },
               { value: "TODAY", label: "Today" },
               { value: "TOMORROW", label: "Tomorrow" },
             ]}
@@ -189,21 +187,31 @@ const DoctorAppointment = () => {
             phone: item.phoneNumber,
             date: item.date.split("T")[0],
             time: `${item.startTime} - ${item.endTime}`,
-            status: icon(item.status),
+            status: <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>{icon(item.status)}</div>,
           }))}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
                 dispatch(getDetailDoctorAppointment(record.id));
                 navigate(`/dr.Enclinic/appointment/${record.id}`);
-                console.log("record");
               },
             };
           }}
           pagination={{
-            pageSize: ItemsPerPage,
-            total: TotalItems,
-            current: CurrentPage,
+            pageSize: paging?.itemsPerPage,
+            total: paging?.totalItems,
+            current: paging?.currentPage,
+          }}
+          onChange={(pagination) => {
+            setPage(pagination.current);
+            dispatch(
+              getDoctorAppointment({
+                search: inputSearch !== "" ? inputSearch : undefined,
+                status: status !== null ? status : 0,
+                page: pagination.current,
+                filterAvailable: filterAvailable !== null ? filterAvailable : undefined
+              })
+            );
           }}
         />
       </div>

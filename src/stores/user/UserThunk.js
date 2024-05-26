@@ -3,8 +3,10 @@ import {
   booking,
   cancelAppointment,
   changePassword,
+  createRating,
   disableAccount,
   getAppointment,
+  getMedicalHistory,
   getProfile,
   registerDoctor,
   updateProfile,
@@ -99,6 +101,30 @@ export const regisDoctor = createAsyncThunk(
     try {
       const body = await bodyPartner(data);
       const response = await registerDoctor(body);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const userCreateRating = createAsyncThunk(
+  "user/userCreateRating",
+  async (data, thunkApi) => {
+    try {
+      const response = await createRating(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const userGetMedical = createAsyncThunk(
+  "user/userGetMedical",
+  async (data, thunkApi) => {
+    try {
+      const response = await getMedicalHistory();
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

@@ -8,22 +8,30 @@ import {
   Modal,
   Space,
   Table,
+  Typography,
+  notification,
 } from "antd";
 import "../Certification/Certification.scss";
 import { CloseOutlined, DeleteTwoTone, EditOutlined } from "@ant-design/icons";
 import { iconCertificate } from "../../../helpers/icon";
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
+import { openNotificationWithIcon } from "../../notification/CustomNotify";
+import { doctorAddExperience, getDoctorProfile } from "../../../stores/doctor/DoctorThunk";
 
 const Experience = ({ type }) => {
-  const { profile } = useSelector((state) => state.doctor);
+  const { profile, statusCode, error, loading } = useSelector((state) => state.doctor);
   const [experience, setExperience] = useState([{}]);
   const [isAdd, setIsAdd] = useState(false);
+  const dispatch = useDispatch();
+  const [api, contextHolder] = notification.useNotification();
   const columns = [
     {
       title: "Id",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "Workplace",
@@ -40,16 +48,19 @@ const Experience = ({ type }) => {
       title: "Start Year",
       dataIndex: "startYear",
       align: "center",
+      width: "10%",
     },
     {
       title: "End Year",
       dataIndex: "endYear",
       align: "center",
+      width: "10%",
     },
     {
       title: "Status",
       dataIndex: "status",
       align: "center",
+      width: "15%",
     },
     {
       title: "Action",
@@ -70,7 +81,7 @@ const Experience = ({ type }) => {
           <EditOutlined
             className="certificate-iconEdit"
             style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-            //   onClick={handleShowDeleteModal}
+          //   onClick={handleShowDeleteModal}
           />
           <DeleteTwoTone
             twoToneColor="#EB1B36"
@@ -80,7 +91,33 @@ const Experience = ({ type }) => {
       ),
     },
   ];
+  useEffect(() => {
+    if (statusCode === 200) {
+      dispatch(setStatusCode(null));
+      openNotificationWithIcon("success", api, "", "Update Profile Successfully!");
+      dispatch(getDoctorProfile());
+      setIsAdd(false);
+      setExperience([{}]);
+    }
+    if (error !== null) {
+      openNotificationWithIcon("error", api, "", error);
+      dispatch(setError(null));
+      setIsAdd(false);
+      setExperience([{}]);
+    }
+  }, [statusCode, error, api, dispatch]);
 
+  const onFinish = (values) => {
+    const body = values.experience.map((item) => {
+      return {
+        workplace: item.workplace,
+        position: item.position,
+        startYear: item.startYear.$y,
+        endYear: item.endYear.$y,
+      }
+    })
+    dispatch(doctorAddExperience(body));
+  }
   return (
     <div className="certificate-main">
       {type === "DOCTOR" && (
@@ -91,7 +128,14 @@ const Experience = ({ type }) => {
           Experiences
         </span>
       )}
-      <Modal open={isAdd} onCancel={() => setIsAdd(false)} width={600}>
+      <Modal open={isAdd}
+        onCancel={() => {
+          setIsAdd(false)
+          setExperience([{}])
+        }}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
+        width={600}>
         <div
           style={{ width: "100%", justifyContent: "center", display: "flex" }}
         >
@@ -111,6 +155,7 @@ const Experience = ({ type }) => {
           initialValues={{
             experience,
           }}
+          onFinish={onFinish}
         >
           <Form.Item style={{ width: "100%" }}>
             <Form.List name="experience">
@@ -134,84 +179,92 @@ const Experience = ({ type }) => {
                         />
                       }
                     >
-                      <Form.Item
+                      <div
                         style={{
-                          marginBottom: 0,
+                          display: "flex",
+                          rowGap: 16,
+                          flexDirection: "row",
+                          gap: 30
                         }}
                       >
-                        <Form.Item
-                          label="Workplace"
-                          name={[field.name, "workplace"]}
-                          style={{
-                            display: "inline-block",
-                            width: "calc(50% - 8px)",
-                          }}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Workplace is required",
-                            },
-                          ]}
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          label="Position"
-                          name={[field.name, "position"]}
-                          style={{
-                            display: "inline-block",
-                            width: "calc(50% - 8px)",
-                            margin: "0 8px",
-                          }}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Position is required",
-                            },
-                          ]}
-                        >
-                          <Input />
-                        </Form.Item>
-                      </Form.Item>
-                      <Form.Item
+                        <div style={{ flex: 1 }}>
+                          <Typography>Workplace</Typography>
+                          <Form.Item
+
+                            name={[field.name, "workplace"]}
+                            style={{
+                              margin: '8px 0'
+                            }}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Workplace is required",
+                              },
+                            ]}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <Typography>Position</Typography>
+                          <Form.Item
+
+                            name={[field.name, "position"]}
+                            style={{
+
+                              margin: "8px 0",
+                            }}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Position is required",
+                              },
+                            ]}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </div>
+                      </div>
+                      <div
                         style={{
-                          marginBottom: 0,
+                          display: "flex",
+                          rowGap: 16,
+                          flexDirection: "row",
+                          gap: 30
                         }}
                       >
-                        <Form.Item
-                          name={[field.name, "startYear"]}
-                          label="Start Year"
-                          style={{
-                            display: "inline-block",
-                            width: "calc(50% - 8px)",
-                          }}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Start year is required",
-                            },
-                          ]}
-                        >
-                          <DatePicker picker="year" style={{ width: "100%" }} />
-                        </Form.Item>
-                        <Form.Item
-                          name={[field.name, "endYear"]}
-                          label="End Year"
-                          style={{
-                            display: "inline-block",
-                            width: "calc(50% - 8px)",
-                            margin: "0 8px",
-                          }}
-                          rules={[
-                            {
-                              required: true,
-                              message: "End year is required",
-                            },
-                          ]}
-                        >
-                          <DatePicker picker="year" style={{ width: "100%" }} />
-                        </Form.Item>
-                      </Form.Item>
+                        <div style={{ flex: 1 }}>
+                          <Typography>Start Year</Typography>
+                          <Form.Item
+
+                            name={[field.name, "startYear"]}
+                            style={{ margin: "8px 0" }}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Start year is required",
+                              },
+                            ]}
+                          >
+                            <DatePicker picker="year" style={{ width: "100%" }} />
+                          </Form.Item>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <Typography>End Year</Typography>
+                          <Form.Item
+                            name={[field.name, "endYear"]}
+                            style={{ margin: "8px 0" }}
+                            rules={[
+                              {
+                                required: true,
+                                message: "End year is required",
+                              },
+                            ]}
+                          >
+                            <DatePicker picker="year" style={{ width: "100%" }} />
+                          </Form.Item>
+                        </div>
+                      </div>
                     </Card>
                   ))}
 
@@ -222,6 +275,9 @@ const Experience = ({ type }) => {
               )}
             </Form.List>
           </Form.Item>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Button htmlType="submit" className="appointmentDetail-right__buttonEx" loading={loading}>Create</Button>
+          </div>
         </Form>
       </Modal>
       <div className="certificate">
@@ -242,7 +298,9 @@ const Experience = ({ type }) => {
             </Button>
           </div>
         )}
+        {contextHolder}
         <Table
+
           pagination={false}
           columns={columns}
           dataSource={profile?.workingProcess.map((item, index) => ({
@@ -252,7 +310,7 @@ const Experience = ({ type }) => {
             position: item?.position,
             startYear: item?.startYear,
             endYear: item?.endYear,
-            status: iconCertificate(item?.statusVerified),
+            status: <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}> {iconCertificate(item?.statusVerified)}</div>,
           }))}
           bordered
         />

@@ -99,7 +99,7 @@ const MyAppointment = () => {
                   );
                 })
               ) : (
-                <NotFound />
+                <NotFound content={"You don't have any appointments "} />
               )}
             </div>
             <Modal

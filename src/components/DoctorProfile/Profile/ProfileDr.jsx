@@ -8,26 +8,104 @@ import {
   Input,
   Select,
   Typography,
+  notification,
 } from "antd";
 import dayjs from "dayjs";
 import TextArea from "antd/es/input/TextArea";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { EditFilled } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllSpecialty } from "../../../api/doctor.api";
+import { getDoctorProfile, updateDoctorProfile } from "../../../stores/doctor/DoctorThunk";
+import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
+import { openNotificationWithIcon } from "../../notification/CustomNotify";
 const ProfileDr = () => {
-  const { profile } = useSelector((state) => state.doctor);
+  const { profile, statusCode, error, loading } = useSelector((state) => state.doctor);
+  const [form] = Form.useForm();
   const [isEdit, setIsEdit] = useState(false);
-
+  const [specialties, setSpecialties] = useState([]);
+  const [api, contextHolder] = notification.useNotification();
   const handleCancel = () => {
-    setIsEdit(!isEdit);
+    form.setFieldsValue({
+      name: profile?.name,
+      year: profile?.yearExperience,
+      idSpecialty: specialties.find(item => item.name === profile?.medicalSpecialty)?.idSpecialty,
+      dob: dayjs(new Date(profile?.dob)),
+      gender: profile?.gender,
+      phone: profile?.phoneNumber,
+      fee: profile?.price && profile?.price?.toLocaleString("vi-VN"),
+      clinicName: profile?.nameClinic,
+      address: profile?.address,
+      description: profile?.description,
+
+    })
+    setIsEdit(false);
   };
-  const handleSave = () => {};
+  const dispatch = useDispatch();
+  const getSpecialties = async () => {
+    try {
+      const response = await getAllSpecialty();
+
+      setSpecialties(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getSpecialties();
+
+  }, [])
+  useEffect(() => {
+    form.setFieldsValue({
+      name: profile?.name,
+      year: profile?.yearExperience,
+      idSpecialty: specialties?.find(item => item.name === profile?.medicalSpecialty)?.idSpecialty,
+      dob: dayjs(new Date(profile?.dob)),
+      gender: profile?.gender,
+      phone: profile?.phoneNumber,
+      fee: profile?.price?.toLocaleString("vi-VN"),
+      clinicName: profile?.nameClinic,
+      address: profile?.address,
+      description: profile?.description,
+
+    })
+  }, [form, profile, specialties])
+
+  useEffect(() => {
+    if (statusCode === 200) {
+      dispatch(setStatusCode(null));
+      openNotificationWithIcon("success", api, "", "Update Profile Successfully!");
+      dispatch(getDoctorProfile());
+      setIsEdit(false);
+    }
+    if (error !== null) {
+      openNotificationWithIcon("error", api, "", error);
+      dispatch(setError(null));
+    }
+  }, [statusCode, error, api, dispatch]);
+  const onFinish = (values) => {
+    const body = {
+      name: values.name,
+      dob: values.dob,
+      phoneNumber: values.phone,
+      address: values.address,
+      avatar: null,
+      gender: values.gender,
+      yearExperience: values.year,
+      price: values.fee,
+      description: values.description,
+      idSpecialty: values.idSpecialty
+
+    }
+    dispatch(updateDoctorProfile(body));
+  }
   return (
     <div className="profileDr">
       <div
         className="profile-header"
         style={{ width: "100%", justifyContent: "flex-start" }}
       >
+        {contextHolder}
         <Image
           src={profile?.avatar}
           width={120}
@@ -69,10 +147,9 @@ const ProfileDr = () => {
         <Form
           name="normal_login"
           className="profileDr-content__form"
-          initialValues={{
-            remember: true,
-          }}
-          //   onFinish={onFinish}
+
+          form={form}
+          onFinish={onFinish}
         >
           <Form.Item
             style={{
@@ -80,13 +157,20 @@ const ProfileDr = () => {
               marginRight: 30,
             }}
           >
-            <Form.Item name="Name" normalize={(value) => value.trim()}>
-              <Typography className="label">Name</Typography>
+            <Typography className="label">Name</Typography>
+            <Form.Item name="name"
+              normalize={(value) => value.trim()}
+              rules={[
+                {
+                  required: isEdit,
+                  message: "Name is required",
+                },
+              ]}
+            >
+
               <Input
-                value={profile?.name}
-                className={`input__username input ${
-                  !isEdit && "profileDr-input"
-                }`}
+                className={`input__username input ${!isEdit && "profileDr-input"
+                  }`}
                 disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
@@ -96,188 +180,249 @@ const ProfileDr = () => {
           </Form.Item>
           {/* ============================== */}
 
-          <Form.Item
+          <div
             style={{
               marginBottom: 0,
+              width: "97%",
+              flexDirection: "row",
+              display: "flex",
+              gap: 40
             }}
           >
-            <Form.Item
-              name="Name"
-              normalize={(value) => value.trim()}
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 30px)",
-              }}
-            >
+            <div style={{ flex: 1 }}>
               <Typography className="label">Year Of Experience</Typography>
-              <Input
-                value={profile?.yearExperience}
-                className={`input__username input ${
-                  !isEdit && "profileDr-input"
-                }`}
-                disabled={!isEdit}
-                onChange={(e) => {
-                  e.target.value = e.target.value.trim();
-                }}
-              />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              normalize={(value) => value.trim()}
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 30px)",
-                margin: "0 30px",
-              }}
+              <Form.Item
+                name="year"
+                normalize={(value) => value.trim()}
+                rules={[
+                  {
+                    required: isEdit,
+                    message: "Year Of Experience is required",
+                  },
+                ]}
+              >
+                <Input
+                  className={`input__username input ${!isEdit && "profileDr-input"
+                    }`}
+                  disabled={!isEdit}
+                  onChange={(e) => {
+                    e.target.value = e.target.value.trim();
+                  }}
+                />
+              </Form.Item>
+            </div>
+
+
+            <div
+              style={{ flex: 1 }}
             >
               <Typography className="label">Specialty</Typography>
-              <Select
-                defaultValue={profile?.medicalSpecialty}
-                style={{ margin: "8px 0", height: 46 }}
-                onChange={(e) => {
-                  e.target.value = e.target.value.trim();
-                }}
-                disabled={!isEdit}
-              />
-            </Form.Item>
-          </Form.Item>
+              <Form.Item
+                name="idSpecialty"
+                rules={[
+                  {
+                    required: isEdit,
+                    message: "Specialty is required",
+                  },
+                ]}
+              >
+                <Select
+                  style={{ margin: "8px 0", height: 46 }}
+                  options={specialties.map((item) => ({
+                    label: item.name,
+                    value: item.idSpecialty,
+                  }))}
+                  disabled={!isEdit}
+                />
+              </Form.Item>
+            </div>
+          </div>
 
           {/* ============================== */}
 
-          <Form.Item
+          <div
             style={{
               marginBottom: 0,
+              width: "97%",
+              flexDirection: "row",
+              display: "flex",
+              gap: 40
             }}
           >
-            <Form.Item
-              name="Name"
-              normalize={(value) => value.trim()}
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 30px)",
-              }}
-            >
+            <div style={{ flex: 1 }}>
               <Typography className="label">Date Of Birth</Typography>
-              <DatePicker
-                className="profile-datePicker"
-                style={{ marginTop: 10 }}
-                value={dayjs(new Date(profile?.dob))}
-                disabled={!isEdit}
-              />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              normalize={(value) => value.trim()}
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 30px)",
-                margin: "0 30px",
-              }}
-            >
-              <Typography className="label">Gender</Typography>
-              <Select
-                defaultValue={profile?.gender}
-                style={{ margin: "8px 0", height: 46 }}
-                onChange={(e) => {
-                  e.target.value = e.target.value.trim();
-                }}
-                disabled={!isEdit}
-              />
-            </Form.Item>
-          </Form.Item>
-          <Form.Item
-            style={{
-              marginBottom: 0,
-            }}
-          >
-            <Form.Item
-              name="Name"
-              normalize={(value) => value.trim()}
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 30px)",
-              }}
-            >
-              <Typography className="label">Phone Number</Typography>
-              <Input
-                value={profile?.phoneNumber}
-                className={`input__username input ${
-                  !isEdit && "profileDr-input"
-                }`}
-                disabled={!isEdit}
-                onChange={(e) => {
-                  e.target.value = e.target.value.trim();
-                }}
-              />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              normalize={(value) => value.trim()}
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 30px)",
-                margin: "0 30px",
-              }}
-            >
-              <Typography className="label">Fees</Typography>
-              <Input
-                className={`input__username input ${
-                  !isEdit && "profileDr-input"
-                }`}
-                disabled={!isEdit}
-                defaultValue={profile?.price?.toLocaleString("vi-VN")}
-                style={{ margin: "8px 0", height: 46 }}
-                onChange={(e) => {
-                  e.target.value = e.target.value.trim();
-                }}
-              />
-            </Form.Item>
-          </Form.Item>
-          <Form.Item
-            style={{
-              marginBottom: 0,
-              marginRight: 30,
-            }}
-          >
-            <Form.Item name="Name" normalize={(value) => value.trim()}>
-              <Typography className="label">Enclinic Name</Typography>
-              <Input
-                value={profile?.nameClinic}
-                className={`input__username input ${
-                  !isEdit && "profileDr-input"
-                }`}
-                disabled={!isEdit}
-                onChange={(e) => {
-                  e.target.value = e.target.value.trim();
-                }}
-              />
-            </Form.Item>
-          </Form.Item>
-          <Form.Item
-            style={{
-              marginBottom: 0,
-              marginRight: 30,
-            }}
-          >
-            <Form.Item name="Name" normalize={(value) => value.trim()}>
-              <Typography className="label">Address</Typography>
-              <Input
-                value={profile?.address}
-                className={`input__username input ${
-                  !isEdit && "profileDr-input"
-                }`}
-                disabled={!isEdit}
-                onChange={(e) => {
-                  e.target.value = e.target.value.trim();
-                }}
-              />
-            </Form.Item>
-          </Form.Item>
+              <Form.Item
+                name="dob"
+                normalize={(value) => value.trim()}
+                rules={[
+                  {
+                    required: isEdit,
+                    message: "Date Of Birth is required",
+                  },
+                ]}
+              >
 
-          <Form.Item style={{ marginRight: 30 }}>
-            <Typography className="label">Desciption</Typography>
+                <DatePicker
+                  className="profile-datePicker"
+                  style={{ marginTop: 10 }}
+                  disabled={!isEdit}
+                />
+              </Form.Item>
+            </div>
+            <div style={{ flex: 1 }}>
+              <Typography className="label">Gender</Typography>
+              <Form.Item
+                name="gender"
+                rules={[
+                  {
+                    required: isEdit,
+                    message: "Gender is required",
+                  },
+                ]}
+              >
+
+                <Select
+                  options={[
+                    {
+                      label: "Male",
+                      value: true,
+                    },
+                    {
+                      label: "Female",
+                      value: false,
+                    }
+                  ]}
+                  style={{ margin: "8px 0", height: 46 }}
+                  onChange={(e) => {
+                    e.target.value = e.target.value.trim();
+                  }}
+                  disabled={!isEdit}
+                />
+              </Form.Item>
+            </div>
+          </div>
+
+
+          <div
+            style={{
+              marginBottom: 0,
+              width: "97%",
+              flexDirection: "row",
+              display: "flex",
+              gap: 40
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <Typography className="label">Phone Number</Typography>
+              <Form.Item
+                name="phone"
+                normalize={(value) => value.trim()}
+                rules={[
+                  {
+                    required: isEdit,
+                    message: "Phone Number is required",
+                  },
+                ]}
+              >
+
+                <Input
+
+                  className={`input__username input ${!isEdit && "profileDr-input"
+                    }`}
+                  disabled={!isEdit}
+                  onChange={(e) => {
+                    e.target.value = e.target.value.trim();
+                  }}
+                />
+              </Form.Item>
+            </div>
+            <div style={{ flex: 1 }}>
+              <Typography className="label">Fees</Typography>
+              <Form.Item
+                name="fee"
+                normalize={(value) => value.trim()}
+                rules={[
+                  {
+                    required: isEdit,
+                    message: "Fees is required",
+                  },
+                ]}
+              >
+
+                <Input
+                  className={`input__username input ${!isEdit && "profileDr-input"
+                    }`}
+                  disabled={!isEdit}
+                  style={{ margin: "8px 0", height: 46 }}
+                  onChange={(e) => {
+                    e.target.value = e.target.value.trim();
+                  }}
+                />
+              </Form.Item>
+            </div>
+          </div>
+          <Form.Item
+            style={{
+              marginBottom: 0,
+              marginRight: 30,
+            }}
+            rules={[
+              {
+                required: isEdit,
+                message: "Enclinic Name is required",
+              },
+            ]}
+          >
+            <Typography className="label">Enclinic Name</Typography>
+            <Form.Item name="clinicName" normalize={(value) => value.trim()}>
+
+              <Input
+                className={`input__username input ${!isEdit && "profileDr-input"
+                  }`}
+                disabled={!isEdit}
+                onChange={(e) => {
+                  e.target.value = e.target.value.trim();
+                }}
+              />
+            </Form.Item>
+          </Form.Item>
+          <Form.Item
+            style={{
+              marginBottom: 0,
+              marginRight: 30,
+            }}
+          >
+            <Typography className="label">Address</Typography>
+            <Form.Item
+              name="address" normalize={(value) => value.trim()}
+              rules={[
+                {
+                  required: isEdit,
+                  message: "Address is required",
+                },
+              ]}
+            >
+
+              <Input
+                className={`input__username input ${!isEdit && "profileDr-input"
+                  }`}
+                disabled={!isEdit}
+                onChange={(e) => {
+                  e.target.value = e.target.value.trim();
+                }}
+
+              />
+            </Form.Item>
+          </Form.Item>
+          <Typography className="label">Desciption</Typography>
+          <Form.Item name="description" style={{ marginRight: 30 }} rules={[
+            {
+              required: isEdit,
+              message: "Desciption is required",
+            },
+          ]}>
+
             <TextArea
-              value={profile?.description}
               className={`profileDr-font ${!isEdit && "profileDr-input"}`}
               placeholder="Controlled autosize"
               autoSize={{ minRows: 3, maxRows: 5 }}
@@ -287,38 +432,30 @@ const ProfileDr = () => {
               disabled={!isEdit}
             />
           </Form.Item>
-          {/* <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            className="login-form-button"
-                            style={{ marginTop: 10, }}
-                        >
-                            Sign in
-                        </Button>
-                    </Form.Item> */}
+          {isEdit && (
+            <div
+              className="profile-buttonArea"
+              style={{ marginTop: 30, justifyContent: "center" }}
+            >
+              <Button
+                className="result-third__button-text profile-buttonArea__button-save"
+                onClick={() => handleCancel()}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="result-third__button-text profile-buttonArea__button"
+                // disabled={isDisabled}
+                htmlType="submit"
+                loading={loading}
+              >
+                Save
+              </Button>
+            </div>
+          )}
         </Form>
       </div>
-      {isEdit && (
-        <div
-          className="profile-buttonArea"
-          style={{ marginTop: 30, justifyContent: "center" }}
-        >
-          <Button
-            className="result-third__button-text profile-buttonArea__button-save"
-            onClick={() => handleCancel()}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="result-third__button-text profile-buttonArea__button"
-            // disabled={isDisabled}
-            onClick={() => handleSave()}
-          >
-            Save
-          </Button>
-        </div>
-      )}
+
     </div>
   );
 };

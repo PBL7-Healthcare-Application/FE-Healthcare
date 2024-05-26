@@ -7,9 +7,11 @@ export const searchDoctor = (
   maxPrice,
   sortBy,
   IdSpecialty,
-  filterAvailable
+  filterAvailable,
+  rate,
+  page = 1
 ) => {
-  let url = `User/Doctor/GetDoctor?`;
+  let url = `User/Doctor/GetDoctor?page=${page}`;
   if (keyword) {
     url += `&search=${keyword}`;
   }
@@ -30,6 +32,9 @@ export const searchDoctor = (
   }
   if (filterAvailable) {
     url += `&filterAvailable=${filterAvailable}`;
+  }
+  if (rate) {
+    url += `&rate=${rate}`;
   }
   return http.get(url);
 };
@@ -59,7 +64,7 @@ export const getDetailAppointment = (id) => {
 };
 
 export const setSchedule = (data) => {
-  return http.post(`/Doctor/Appointment/SetupSchedule`, data);
+  return http.post(`/Doctor/Profile/SetupWorkingTime`, data);
 };
 
 export const cancelAppointment = (data) => {
@@ -76,3 +81,35 @@ export const getCalendar = () => {
 export const createTimeOff = (data) => {
   return http.post(`/Doctor/Calendar/CreateTimeOff`, data);
 };
+
+
+export const updateProfile = (data) => {
+  return http.put(`/Doctor/Profile/UpdateProfile`, data);
+}
+export const editWorkingTime = (data) => {
+  return http.put(`/Doctor/Profile/EditWorkingTime`, data);
+}
+export const editWorkingTimeForConflict = (data) => {
+  return http.post(`/Doctor/Profile/CancelAppointmentAndUpdateWorkingTime`, data);
+}
+
+
+export const addCertificate = (data) => {
+  return http.post(`/Doctor/Certificate/AddListCertificate`, data);
+}
+export const addExperience = (data) => {
+  return http.post(`/Doctor/WorkingProcess/AddListWorkingProcess`, data);
+}
+export const addEducation = (data) => {
+  return http.post(`/Doctor/TrainingProcess/AddListTrainingProcess`, data);
+}
+
+
+
+export const getMedical = (search) => {
+  let url = `/Doctor/MedicalRecord/GetListExaminationByIdDoctor`;
+  if (search) {
+    url += `?search=${search}`;
+  }
+  return http.get(url);
+}

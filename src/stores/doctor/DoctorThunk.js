@@ -1,13 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  addCertificate,
+  addEducation,
+  addExperience,
   cancelAppointment,
   createTimeOff,
+  editWorkingTime,
+  editWorkingTimeForConflict,
   getAppointment,
   getCalendar,
   getDetailAppointment,
+  getMedical,
   getProfile,
   setSchedule,
+  updateProfile,
 } from "../../api/doctor.api";
+import { customResCertificate } from "../../helpers/resHelper";
 
 export const getDoctorAppointment = createAsyncThunk(
   "doctor/getDoctorAppointment",
@@ -90,6 +98,87 @@ export const createDoctorTimeOff = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await createTimeOff(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const updateDoctorProfile = createAsyncThunk(
+  "doctor/updateDoctorProfile",
+  async (data, thunkApi) => {
+    try {
+      const response = await updateProfile(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const updateDoctorWorkingTime = createAsyncThunk(
+  "doctor/updateDoctorWorkingTime",
+  async (data, thunkApi) => {
+    try {
+      const response = await editWorkingTime(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const updateDoctorWorkingTimeForConflict = createAsyncThunk(
+  "doctor/updateDoctorWorkingTimeForConflict",
+  async (data, thunkApi) => {
+    try {
+      const response = await editWorkingTimeForConflict(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const doctorAddCertificate = createAsyncThunk(
+  "doctor/doctorAddCertificate",
+  async (data, thunkApi) => {
+    try {
+      const body = await customResCertificate(data);
+      const response = await addCertificate(body);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const doctorAddEducation = createAsyncThunk(
+  "doctor/doctorAddEducation",
+  async (data, thunkApi) => {
+    try {
+      const response = await addEducation(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const doctorAddExperience = createAsyncThunk(
+  "doctor/doctorAddExperience",
+  async (data, thunkApi) => {
+    try {
+      const response = await addExperience(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const doctorGetlistMedical = createAsyncThunk(
+  "doctor/doctorGetlistMedical",
+  async (search, thunkApi) => {
+    try {
+      const response = await getMedical(search);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

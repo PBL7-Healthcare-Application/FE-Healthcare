@@ -79,7 +79,7 @@ const Partner = () => {
       if (!isImage) {
         console.log("Not an image file!");
       }
-      return isImage || Upload.LIST_IGNORE;
+      return false;
     },
   };
   useEffect(() => {

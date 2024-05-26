@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import calender from "../../../assets/images/calandar.png";
 import height from "../../../assets/images/height.png";
 import scale from "../../../assets/images/scale.png";
@@ -6,26 +7,27 @@ import jam_medical from "../../../assets/images/jam_medical.png";
 import doctorDefault from "../../../assets/images/doctor.jpeg";
 import { Image, Typography } from "antd";
 import "./MedicalHistory.scss";
+import { formatDate } from "../../../helpers/timeBooking";
 
-const CardMedical = () => {
+const CardMedical = ({ item }) => {
   return (
     <div className="cardAppointment">
       <div className="cardAppointment--header">
         <div className="cardAppointment--header__first">
           <Image
             className="cardAppointment--header__first__img"
-            src={""}
+            src={item?.avatar}
             width={70}
             preview={false}
             fallback={doctorDefault}
           />
           <div className="cardAppointment--header__first__infor">
-            <span className="cardAppointment--font">Bui Van Huy</span>
+            <span className="cardAppointment--font">{item?.name}</span>
             <span
               className="cardAppointment--font"
               style={{ fontSize: 13, color: "#6c81a0" }}
             >
-              Cardiology
+              {item?.medicalSpecialty}
             </span>
           </div>
         </div>
@@ -58,7 +60,7 @@ const CardMedical = () => {
                 letterSpacing: 0.4,
               }}
             >
-              Saturday, May 18, 2024
+              {formatDate(item?.date)}
             </Typography>
           </div>
         </div>
@@ -79,7 +81,7 @@ const CardMedical = () => {
                   letterSpacing: 0.4,
                 }}
               >
-                172 cm
+                {item?.height} cm
               </Typography>
             </div>
           </div>
@@ -99,7 +101,7 @@ const CardMedical = () => {
                   letterSpacing: 0.4,
                 }}
               >
-                75 kg
+                {item?.weight} kg
               </Typography>
             </div>
           </div>
@@ -119,21 +121,18 @@ const CardMedical = () => {
                   letterSpacing: 0.4,
                 }}
               >
-                37.2 °C
+                {item?.temperature} °C
               </Typography>
             </div>
           </div>
         </div>
         <div className="cardAppointment--item" style={{ marginTop: 20 }}>
           <p className="medical-content appointment-font">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab
-            assumenda est, blanditiis, corporis repellendus quasi consectetur
-            amet aliquam quidem inventore ad harum minima voluptates
-            consequatur, corrupti odio itaque ut maiores.
+            {item?.content}
           </p>
         </div>
       </div>
-      <div className="cardAppointment--buttonArea">
+      {/* <div className="cardAppointment--buttonArea">
         <div className="cardAppointment--buttonArea__button">
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <svg
@@ -157,7 +156,7 @@ const CardMedical = () => {
             </span>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

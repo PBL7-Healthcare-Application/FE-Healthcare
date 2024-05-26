@@ -83,7 +83,9 @@ export const doctorSchedule = (
     });
   });
   schedule.forEach((time) => {
+    let count = 0;
     slotAppointments.forEach((slot) => {
+
       if (compareDate(time.date, slot.date)) {
         for (var i = time.times.length - 1; i >= 0; i--) {
           var startTime = convertTime(time.times[i].startTime);
@@ -93,12 +95,17 @@ export const doctorSchedule = (
             startTime === convertTime(slot.startTime) &&
             endTime === convertTime(slot.endTime)
           ) {
-            time.times.splice(i, 1);
+            time.times[i].isBooking = true;
+            count++;
           }
         }
+        time.count = count;
       }
     });
+
   });
+
+
   var current = new Date();
   var currentDate = new Date(current);
   schedule.forEach((time) => {
@@ -179,7 +186,10 @@ export const formatDate = (gmtDateString) => {
   return convertDate;
 };
 
+
 export const timeSchedule = (start, end, durationPerAppointment) => {
+
+
   const timeArr = [];
   var currentTime = start;
   while (currentTime < end) {
@@ -191,11 +201,16 @@ export const timeSchedule = (start, end, durationPerAppointment) => {
     currentTime = addMinutes(currentTime, durationPerAppointment);
   }
 
+
   return timeArr;
 };
 
 export const viewSchedule = (timeOff, appointment, day, time) => {
-  const schedule = [...timeOff, ...appointment];
+  const schedule = [
+    ...timeOff,
+    ...appointment
+  ]
+
 
   let newDate = null;
   if (day) {
@@ -203,30 +218,34 @@ export const viewSchedule = (timeOff, appointment, day, time) => {
   }
   const timeArr = time.split(" - ");
   const item = schedule.find((item) => {
-    if (
-      item.date.split("T")[0] === newDate &&
-      item.startTime === timeArr[0] &&
-      item.endTime === timeArr[1]
-    ) {
+    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
       return item;
     }
-  });
+  })
   if (item) {
     if (item.idTimeOff) {
       if (item.status === 1) {
-        return "busy";
-      } else {
-        return "break";
+        return "busy"
       }
-    } else {
-      return "examination";
+      else {
+        return "break"
+      }
     }
-  } else {
+    else {
+      return "examination"
+
+    }
+  }
+  else {
     return null;
   }
-};
+
+}
 
 export const viewInforSchedule = (appointment, day, time) => {
+
+
+
   let newDate = null;
   if (day) {
     newDate = day.split("T")[0];
@@ -234,42 +253,51 @@ export const viewInforSchedule = (appointment, day, time) => {
 
   const timeArr = time.split(" - ");
   const item = appointment.find((item) => {
-    if (
-      item.date.split("T")[0] === newDate &&
-      item.startTime === timeArr[0] &&
-      item.endTime === timeArr[1]
-    ) {
+    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
       return item;
     }
-  });
+  })
   if (item) {
-    //
-    return item.namePatient;
-  } else {
+    return {
+      ...item
+    }
+  }
+  else {
     return null;
   }
-};
+
+}
 
 export const viewBreakTime = (timeOff, time) => {
+
+
+
+
   const timeArr = time.split(" - ");
   const item = timeOff.find((item) => {
     if (item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
       return item;
     }
-  });
+  })
   if (item) {
     //
     if (item.status === 2) {
-      return "break";
-    } else {
-      return null;
+      return "break"
     }
-  } else {
+    else {
+      return null
+    }
+  }
+  else {
     return null;
   }
-};
+
+}
 
 export const viewInforTimeOff = (timeOff, day, time) => {
+
+
+
   let newDate = null;
   if (day) {
     newDate = day.split("T")[0];
@@ -277,35 +305,47 @@ export const viewInforTimeOff = (timeOff, day, time) => {
 
   const timeArr = time.split(" - ");
   const item = timeOff.find((item) => {
-    if (
-      item.date.split("T")[0] === newDate &&
-      item.startTime === timeArr[0] &&
-      item.endTime === timeArr[1]
-    ) {
+    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
       return item;
     }
-  });
+  })
   if (item) {
+
     if (item.status === 1) {
-      return item.reason;
-    } else {
-      return null;
+      return item.reason
     }
-  } else {
+    else {
+      return null
+    }
+
+
+  }
+  else {
     return null;
   }
-};
+
+}
 
 const compareDate = (date1, date2) => {
   const newDate1 = new Date(date1);
   const newDate2 = new Date(date2);
-  if (
-    newDate1.getDate() === newDate2.getDate() &&
-    newDate1.getMonth() === newDate2.getMonth() &&
-    newDate1.getFullYear() === newDate2.getFullYear()
-  ) {
+  if (newDate1.getDate() === newDate2.getDate() && newDate1.getMonth() === newDate2.getMonth() && newDate1.getFullYear() === newDate2.getFullYear()) {
     return true;
-  } else {
+  }
+  else {
     return false;
   }
-};
+}
+
+export const compareTime = (time) => {
+  const timeArr = time.split(" - ");
+  var current = new Date();
+  var startTime = convertTime(timeArr[0]);
+  if (startTime - current.getHours() < 0) {
+    return true
+  }
+  else {
+    return false
+  }
+
+}

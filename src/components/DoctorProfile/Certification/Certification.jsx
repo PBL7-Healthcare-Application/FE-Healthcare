@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
   Button,
@@ -9,7 +10,9 @@ import {
   Modal,
   Space,
   Table,
+  Typography,
   Upload,
+  notification,
 } from "antd";
 import "./Certification.scss";
 import {
@@ -18,47 +21,38 @@ import {
   EditOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { iconCertificate } from "../../../helpers/icon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import certificateImg from "../../../assets/images/certificate.png";
 import calandar from "../../../assets/images/calandar.png";
+import { doctorAddCertificate, getDoctorProfile } from "../../../stores/doctor/DoctorThunk";
+import { openNotificationWithIcon } from "../../notification/CustomNotify";
+import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
 
 const Certification = ({ type }) => {
-  const { profile } = useSelector((state) => state.doctor);
+  const [api, contextHolder] = notification.useNotification();
+  const { profile, loading, statusCode, error } = useSelector((state) => state.doctor);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [key, setKey] = useState(0);
   const [isAdd, setIsAdd] = useState(false);
   const [certificate, setCertificate] = useState([{}]);
+  const dispatch = useDispatch();
   const handleOk = () => {
     setIsModalOpen(false);
   };
   const propsUpload = {
-    // action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
     maxCount: 1,
     accept: "image/* ",
-    onChange({ file, fileList }) {
-      if (file.status === "error") {
-        return { ...file, status: "error" };
-      }
-
-      if (file.status === "removed") {
-        return undefined;
-      }
-      if (file.status === "done") {
-        return { ...file, status: "done" };
-      }
-      return file;
-    },
     beforeUpload: (file) => {
       const isImage = file.type.startsWith("image/");
       if (!isImage) {
         console.log("Not an image file!");
+        return false; // Prevent upload if file is not an image
       }
-      return isImage || Upload.LIST_IGNORE;
+      return false;
     },
   };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -67,6 +61,7 @@ const Certification = ({ type }) => {
       title: "Id",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "Name",
@@ -78,11 +73,13 @@ const Certification = ({ type }) => {
       title: "Year",
       dataIndex: "year",
       align: "center",
+      width: "15%",
     },
     {
       title: "Status",
       dataIndex: "status",
       align: "center",
+      width: "20%",
     },
     {
       title: "Action",
@@ -104,7 +101,7 @@ const Certification = ({ type }) => {
             <EditOutlined
               className="certificate-iconEdit"
               style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-              //   onClick={handleShowDeleteModal}
+            //   onClick={handleShowDeleteModal}
             />
             <DeleteTwoTone
               twoToneColor="#EB1B36"
@@ -115,6 +112,24 @@ const Certification = ({ type }) => {
       ),
     },
   ];
+  const onFinish = (values) => {
+    dispatch(doctorAddCertificate(values.certificate));
+  }
+  useEffect(() => {
+    if (statusCode === 200) {
+      dispatch(setStatusCode(null));
+      openNotificationWithIcon("success", api, "", "Update Profile Successfully!");
+      dispatch(getDoctorProfile());
+      setIsAdd(false);
+      setCertificate([{}]);
+    }
+    if (error !== null) {
+      openNotificationWithIcon("error", api, "", error);
+      dispatch(setError(null));
+      setIsAdd(false);
+      setCertificate([{}]);
+    }
+  }, [statusCode, error, api, dispatch]);
   return (
     <div className="certificate-main">
       {type === "DOCTOR" && (
@@ -201,17 +216,6 @@ const Certification = ({ type }) => {
                   >
                     {key > 0 && profile?.certificates[key - 1].year}
                   </span>
-                  {/* <Input
-                    value={profile?.address}
-                    className={`input__username input ${
-                      true && "profileDr-input"
-                    }`}
-                    disabled={true}
-                    onChange={(e) => {
-                      e.target.value = e.target.value.trim();
-                    }}
-                    style={{ height: 30 }}
-                  /> */}
                 </Form.Item>
                 <span>
                   {iconCertificate(
@@ -223,10 +227,15 @@ const Certification = ({ type }) => {
           </div>
         </div>
       </Modal>
-      <Modal onCancel={() => setIsAdd(false)} open={isAdd}>
+      <Modal onCancel={() => {
+        setIsAdd(false)
+        setCertificate([{}])
+      }} open={isAdd} okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}>
         <div
           style={{ width: "100%", justifyContent: "center", display: "flex" }}
         >
+          {contextHolder}
           <span
             className="setting-font"
             style={{
@@ -243,6 +252,7 @@ const Certification = ({ type }) => {
           initialValues={{
             certificate,
           }}
+          onFinish={onFinish}
         >
           <Form.Item style={{ width: "100%" }}>
             <Form.List name="certificate" label="Certificates">
@@ -266,45 +276,49 @@ const Certification = ({ type }) => {
                         />
                       }
                     >
-                      <Form.Item
+                      <div
                         style={{
-                          marginBottom: 0,
+                          display: 'flex',
+                          flexDirection: "row",
+                          gap: 20
                         }}
                       >
-                        <Form.Item
-                          label="Certificate"
-                          name={[field.name, "name"]}
-                          style={{
-                            display: "inline-block",
-                            width: "calc(50% - 8px)",
-                          }}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Certificate is required",
-                            },
-                          ]}
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          name={[field.name, "year"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Year is required",
-                            },
-                          ]}
-                          label="Year"
-                          style={{
-                            display: "inline-block",
-                            width: "calc(50% - 8px)",
-                            margin: "0 8px",
-                          }}
-                        >
-                          <DatePicker picker="year" style={{ width: "100%" }} />
-                        </Form.Item>
-                      </Form.Item>
+                        <div style={{ flex: 1 }}>
+                          <Typography>Certificate</Typography>
+                          <Form.Item
+                            name={[field.name, "name"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Certificate is required",
+                              },
+                            ]}
+                            style={{
+                              margin: "8px 0",
+                            }}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <Typography>Year</Typography>
+                          <Form.Item
+                            name={[field.name, "year"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Year is required",
+                              },
+                            ]}
+
+                            style={{
+                              margin: "8px 0",
+                            }}
+                          >
+                            <DatePicker picker="year" style={{ width: "100%" }} />
+                          </Form.Item>
+                        </div>
+                      </div>
                       <Form.Item
                         name={[field.name, "image"]}
                         rules={[
@@ -314,7 +328,7 @@ const Certification = ({ type }) => {
                           },
                         ]}
                       >
-                        <Upload {...propsUpload} listType="picture">
+                        <Upload {...propsUpload} listType="picture" >
                           <Button icon={<UploadOutlined />}>
                             Click to upload
                           </Button>
@@ -330,6 +344,9 @@ const Certification = ({ type }) => {
               )}
             </Form.List>
           </Form.Item>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Button htmlType="submit" className="appointmentDetail-right__buttonEx" loading={loading}>Create</Button>
+          </div>
         </Form>
       </Modal>
       <div className="certificate">
@@ -358,7 +375,7 @@ const Certification = ({ type }) => {
             key: index + 1,
             name: item?.name,
             year: item?.year,
-            status: iconCertificate(item?.statusVerified),
+            status: <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}> {iconCertificate(item?.statusVerified)}</div>,
           }))}
           bordered
           onRow={(record, rowIndex) => {

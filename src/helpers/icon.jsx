@@ -10,19 +10,19 @@ export const icon = (status) => {
   switch (status) {
     case 1:
       return (
-        <Tag icon={<SyncOutlined spin />} color="processing">
+        <Tag icon={<SyncOutlined spin />} color="processing" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Booked
         </Tag>
       );
     case 2:
       return (
-        <Tag icon={<CloseCircleOutlined />} color="error">
+        <Tag icon={<CloseCircleOutlined />} color="error" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Canceled
         </Tag>
       );
     case 3:
       return (
-        <Tag icon={<CheckCircleOutlined />} color="success">
+        <Tag icon={<CheckCircleOutlined />} color="success" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Completed
         </Tag>
       );
@@ -35,19 +35,19 @@ export const iconCertificate = (status) => {
   switch (status) {
     case 0:
       return (
-        <Tag icon={<SyncOutlined spin />} color="processing">
+        <Tag icon={<SyncOutlined spin />} color="processing" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Pending
         </Tag>
       );
     case 1:
       return (
-        <Tag icon={<CheckCircleOutlined />} color="success">
+        <Tag icon={<CheckCircleOutlined />} color="success" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Approved
         </Tag>
       );
     case 2:
       return (
-        <Tag icon={<CloseCircleOutlined />} color="error">
+        <Tag icon={<CloseCircleOutlined />} color="error" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           rejected
         </Tag>
       );
@@ -108,19 +108,19 @@ export const iconPartner = (status) => {
   switch (status) {
     case 1:
       return (
-        <Tag icon={<CheckCircleOutlined />} color="success" >
+        <Tag icon={<CheckCircleOutlined />} color="success" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Approved
         </Tag>
       );
     case 2:
       return (
-        <Tag icon={<CloseCircleOutlined />} color="error">
+        <Tag icon={<CloseCircleOutlined />} color="error" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Rejected
         </Tag>
       );
     case 0:
       return (
-        <Tag icon={<SyncOutlined spin />} color="processing">
+        <Tag icon={<SyncOutlined spin />} color="processing" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Pending
         </Tag>
       );

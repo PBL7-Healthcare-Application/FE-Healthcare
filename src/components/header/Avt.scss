@@ -4,9 +4,10 @@
 .avt {
   display: flex;
   flex-direction: row;
-  gap: 30px;
+  gap: 15px;
   align-items: center;
   justify-content: center;
+
   &-notify {
     font-size: 35px;
     color: $text-secondary-color;

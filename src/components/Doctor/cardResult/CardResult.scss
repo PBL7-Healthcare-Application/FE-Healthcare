@@ -80,7 +80,7 @@
     &__rate {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
 
       @media (max-width: 1172px) {
         flex-direction: column;
@@ -92,7 +92,7 @@
 
       &-item {
         background-color: rgb(248, 249, 252);
-        padding: 2px 10px;
+        padding: 2px 20px;
         border-radius: 10px;
       }
 
@@ -103,7 +103,7 @@
         font-size: 14px;
         color: $background-primary;
         text-align: center;
-        letter-spacing: 1.5px;
+        letter-spacing: 2.5px;
       }
 
       &-link {

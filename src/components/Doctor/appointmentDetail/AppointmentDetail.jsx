@@ -181,9 +181,18 @@ export const AppointmentDetail = () => {
                         </div>
                         {
                             appointmentDetail?.status === 1 && (
-                                <div className="appointmentDetail-right__buttonView">
+
+                                <div className="appointmentDetail-right__buttonView" style={{ marginTop: 50 }}>
+                                    <Button className="appointmentDetail-right__buttonEx" onClick={() => navigate("/dr.Enclinic/examination", {
+                                        state: {
+                                            idPatient: appointmentDetail?.idPatient,
+                                        }
+                                    })} >Examination</Button>
                                     <Button className="appointmentDetail-right__button" onClick={() => handleCancel(appointmentDetail?.idAppointment)}>Cancel</Button>
+
                                 </div>
+
+
                             )
                         }
 

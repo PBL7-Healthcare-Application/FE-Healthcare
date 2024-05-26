@@ -26,3 +26,14 @@ export const cancelAppointment = (data) => {
 export const registerDoctor = (data) => {
   return http.post("/User/Partner/StartDoctoring", data);
 };
+
+export const createRating = (data) => {
+  return http.post("User/Rating/CreateRating", data);
+}
+export const getRating = (id, page = 1) => {
+  return http.get(`/User/Rating/GetRating?IdDoctor=${id}&page=${page}`);
+}
+
+export const getMedicalHistory = () => {
+  return http.get("/User/MedicalRecord/GetMedicalRecord");
+}

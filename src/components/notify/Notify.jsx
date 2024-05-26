@@ -2,10 +2,10 @@
 import { useSelector } from "react-redux";
 import CardNotify from "./CardNotify";
 import "./Notify.scss";
-import { Space } from "antd";
+import { Image, Space } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { dbNotify } from "../../helpers/firebase";
-
+import noNotification from "../../assets/images/remove.png";
 function Notify({ onClose }) {
   const { notify } = useSelector((state) => state.chat);
   const handleMark = async () => {
@@ -33,7 +33,7 @@ function Notify({ onClose }) {
       }}
     >
       {
-        notify?.length > 0 && (
+        notify?.length > 0 ? (
           <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', padding: "10px 20px" }}>
             <span className="cardNotify-font" style={{ color: "#404040" }}>
               Notifications
@@ -47,6 +47,11 @@ function Notify({ onClose }) {
                 Mark all as read
               </span>
             </span>
+          </div>
+        ) : (
+          <div style={{ width: '100%', display: 'flex', alignItems: 'center', padding: '20px 0', flexDirection: 'column', gap: 20 }}>
+            <Image src={noNotification} width={100} />
+            <span className="cardNotify-font" style={{ color: "#404040", letterSpacing: 0.5, fontSize: 16, fontWeight: 500 }}>You dont have any notifications </span>
           </div>
         )
       }

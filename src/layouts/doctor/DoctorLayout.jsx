@@ -56,7 +56,7 @@ const DoctorLayout = () => {
       dispatch(getDoctorProfile());
       dispatch(getDoctorCalendar());
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -188,10 +188,16 @@ const DoctorLayout = () => {
               style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "flex-end",
               }}
             >
               <Space>
+                <Typography
+                  className="sidebar__logout__text"
+                  style={{ color: "#404040" }}
+                >
+                  {profile && profile?.name}
+                </Typography>
                 <Avatar
                   className="avt-avatar profile-icon"
                   size="large"
@@ -202,61 +208,55 @@ const DoctorLayout = () => {
                 >
                   {profile && profile?.name[0]}
                 </Avatar>
-                <Typography
-                  className="sidebar__logout__text"
-                  style={{ color: "#404040" }}
-                >
-                  {profile && profile?.name}
-                </Typography>
-              </Space>
-              <Space style={{ display: "flex", gap: 30 }}>
-                <Badge
-                  count={countSeen}
-                  style={{ cursor: "pointer" }}
-                  size="large"
-                  offset={[-5, 3]}
-                >
-                  <div
-                    style={{
-                      padding: 10,
-                      paddingBottom: 5,
-                      backgroundColor: "#E4E6EB",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => navigate("/chatting")}
-                  >
-                    {/* <MessageOutlined className="avt-notify" style={{ width: 25 }} /> */}
-                    <FaFacebookMessenger size={25} color="#404040" />
-                  </div>
-                </Badge>
 
-                <Badge
-                  count={countNoti}
-                  style={{ cursor: "pointer" }}
-                  size="large"
-                  offset={[-5, 3]}
-                >
-                  <div
-                    className="notification-icon"
-                    onClick={() => setIsNoti(!isNoti)}
-                    style={{
-                      position: "relative",
-                      cursor: "pointer",
-                      padding: 10,
-                      paddingBottom: 5,
-                      backgroundColor: isNoti ? "#E3F2FE" : "#E4E6EB",
-                      borderRadius: "50%",
-                    }}
-                  >
-                    <IoNotifications
-                      size={26}
-                      color={`${isNoti ? "#4096ff" : "#404040"}`}
-                    />
-                    {isNoti && <Notify onClose={() => setIsNoti(!isNoti)} />}
-                  </div>
-                </Badge>
               </Space>
+              <Badge
+                count={countSeen}
+                style={{ cursor: "pointer" }}
+                size="large"
+                offset={[-5, 3]}
+              >
+                <div
+                  style={{
+                    padding: 10,
+                    paddingBottom: 5,
+                    backgroundColor: "#E4E6EB",
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => navigate("/dr.Enclinic/chatting")}
+                >
+                  {/* <MessageOutlined className="avt-notify" style={{ width: 25 }} /> */}
+                  <FaFacebookMessenger size={25} color="#404040" />
+                </div>
+              </Badge>
+
+              <Badge
+                count={countNoti}
+                style={{ cursor: "pointer" }}
+                size="large"
+                offset={[-5, 3]}
+              >
+                <div
+                  className="notification-icon"
+                  onClick={() => setIsNoti(!isNoti)}
+                  style={{
+                    position: "relative",
+                    cursor: "pointer",
+                    padding: 10,
+                    paddingBottom: 5,
+                    backgroundColor: isNoti ? "#E3F2FE" : "#E4E6EB",
+                    borderRadius: "50%",
+                  }}
+                >
+                  <IoNotifications
+                    size={26}
+                    color={`${isNoti ? "#4096ff" : "#404040"}`}
+                  />
+                  {isNoti && <Notify onClose={() => setIsNoti(!isNoti)} />}
+                </div>
+              </Badge>
+
             </Space>
           ) : (
             <SignInBtn />

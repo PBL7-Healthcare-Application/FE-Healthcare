@@ -286,10 +286,10 @@
 .rate {
     border-radius: 10px;
     padding: 16px;
-    max-width: 400px;
+    max-width: 450px;
     display: flex;
     flex-direction: row;
-    gap: 30px;
+    gap: 15px;
     background-color: #F5FAFF;
     border: 1px solid #E3F0FF;
 
@@ -326,12 +326,16 @@
     }
 
     &__review {
+
         font-weight: 500;
         font-size: 15px;
-        line-height: 22px;
+        // line-height: 22px;
         margin: 4px 0px 16px;
         color: rgb(89, 89, 89);
         letter-spacing: 0.5px;
+        width: 70px;
+
+
     }
 
     &__item {
@@ -339,9 +343,13 @@
         display: flex;
         flex-direction: row;
         width: 100%;
+        // margin-bottom: 2px;
         align-items: center;
-        justify-content: center;
-        gap: 10px;
+        // justify-content: center;
+        // gap: 10px;
+        // &:nth-child(1) {
+        //     margin-bottom: 5px;
+        // }
 
     }
 

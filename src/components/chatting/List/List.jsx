@@ -4,7 +4,7 @@ import "./List.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
-import { Empty } from "antd";
+import { Divider, Empty } from "antd";
 import { changeChat } from "../../../stores/Chat/ChatSlice";
 
 const ListUser = () => {
@@ -64,6 +64,7 @@ const ListUser = () => {
   return (
     <div className="listUser">
       <span className="listUser-font">List Messages</span>
+      <div className="listUser-divider"></div>
       <div className="listUser-list">
         {chats.length > 0 ? (
           chats.map((chat) => (

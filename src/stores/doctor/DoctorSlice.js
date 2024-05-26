@@ -2,12 +2,21 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   cancelDoctorAppointment,
   createDoctorTimeOff,
+  doctorAddCertificate,
+  doctorAddEducation,
+  doctorAddExperience,
+  doctorGetlistMedical,
   getDetailDoctorAppointment,
   getDoctorAppointment,
   getDoctorCalendar,
   getDoctorProfile,
   setDoctorSchedule,
+  updateDoctorProfile,
+  updateDoctorWorkingTime,
+  updateDoctorWorkingTimeForConflict,
 } from "./DoctorThunk";
+
+
 
 const doctorSlice = createSlice({
   name: "doctor",
@@ -18,10 +27,10 @@ const doctorSlice = createSlice({
     statusCode: null,
     error: null,
     ListAppointments: [],
-    TotalItems: null,
-    CurrentPage: 1,
-    ItemsPerPage: null,
     loading: false,
+    paging: null,
+    message: null,
+    listMedical: [],
   },
   reducers: {
     setStatusCode: (state, action) => {
@@ -30,6 +39,9 @@ const doctorSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    setMessage: (state, action) => {
+      state.message = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -40,9 +52,7 @@ const doctorSlice = createSlice({
       .addCase(getDoctorAppointment.fulfilled, (state, action) => {
         state.loading = false;
         state.ListAppointments = action.payload.data;
-        state.TotalItems = action.payload.pagingInfo.totalItems;
-        state.CurrentPage = action.payload.pagingInfo.CurrentPage;
-        state.ItemsPerPage = action.payload.pagingInfo.ItemsPerPage;
+        state.paging = action.payload.pagingInfo;
       })
       .addCase(getDoctorAppointment.rejected, (state, action) => {
         state.loading = false;
@@ -71,7 +81,13 @@ const doctorSlice = createSlice({
       .addCase(getDoctorProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.profile = action.payload.data;
-        localStorage.setItem("doctor", JSON.stringify(action.payload.data));
+        if (localStorage.getItem("doctor")) {
+          localStorage.removeItem("doctor")
+          localStorage.setItem("doctor", JSON.stringify(action.payload.data))
+        }
+        else {
+          localStorage.setItem("doctor", JSON.stringify(action.payload.data))
+        }
       })
       .addCase(getDoctorProfile.rejected, (state, action) => {
         state.loading = false;
@@ -108,6 +124,7 @@ const doctorSlice = createSlice({
           return;
         }
         state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
       })
       .addCase(cancelDoctorAppointment.rejected, (state, action) => {
         state.loading = false;
@@ -138,13 +155,136 @@ const doctorSlice = createSlice({
           state.error = action.payload.message;
           return;
         }
+        state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
       })
       .addCase(createDoctorTimeOff.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
       })
+      //=====================================
+      .addCase(updateDoctorProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateDoctorProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(updateDoctorProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(updateDoctorWorkingTime.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateDoctorWorkingTime.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          if (action.payload.statusCode === 409) {
+            state.statusCode = action.payload.statusCode;
+            return;
+          }
+          state.error = action.payload.message;
+          return;
+        }
+        state.message = action.payload.message;
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(updateDoctorWorkingTime.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(updateDoctorWorkingTimeForConflict.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateDoctorWorkingTimeForConflict.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.message = action.payload.message;
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(updateDoctorWorkingTimeForConflict.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(doctorAddCertificate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorAddCertificate.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(doctorAddCertificate.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(doctorAddExperience.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorAddExperience.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(doctorAddExperience.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(doctorAddEducation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorAddEducation.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(doctorAddEducation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //============================
+      //=====================================
+      .addCase(doctorGetlistMedical.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorGetlistMedical.fulfilled, (state, action) => {
+        state.loading = false;
+        state.listMedical = action.payload.data;
+      })
+      .addCase(doctorGetlistMedical.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
   },
 });
 export default doctorSlice.reducer;
-export const { setStatusCode, setError } = doctorSlice.actions;
+export const { setStatusCode, setError, setMessage } = doctorSlice.actions;

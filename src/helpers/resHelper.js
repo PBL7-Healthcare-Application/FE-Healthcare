@@ -39,6 +39,18 @@ export const bodyPartner = async (values) => {
 
   return body;
 };
+export const customResCertificate = async (data) => {
+  console.log("data", data);
+  return await Promise.all(
+    data.map(async (item) => {
+      return {
+        name: item.name,
+        year: item.year.$y,
+        image: await getImageUpload(item.image.fileList[0].originFileObj),
+      };
+    })
+  )
+}
 
 export const customResCertificates = (arr) => {
   return arr.map((item) => {
