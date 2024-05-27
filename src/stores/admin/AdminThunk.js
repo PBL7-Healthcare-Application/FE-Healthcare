@@ -4,6 +4,7 @@ import {
   getPartner,
   getPartnerDetail,
   getUsers,
+  unlockAccount,
   verifyCertificate,
   verifyEducation,
   verifyExperience,
@@ -28,6 +29,17 @@ export const disableAccountUser = createAsyncThunk(
   async (params, thunkApi) => {
     try {
       const response = await disableAccount(params);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const unLockAccountUser = createAsyncThunk(
+  "admin/unLockAccountUser",
+  async (params, thunkApi) => {
+    try {
+      const response = await unlockAccount(params);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

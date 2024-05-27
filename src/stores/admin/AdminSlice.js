@@ -4,6 +4,7 @@ import {
   getAdminPartner,
   getAdminPartnerDetail,
   getAdminUser,
+  unLockAccountUser,
   verifyAdminCertificate,
   verifyAdminEducation,
   verifyAdminExperience,
@@ -103,12 +104,33 @@ const adminSlice = createSlice({
           state.error = action.payload.message;
           return;
         }
+        state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
       })
       .addCase(disableAccountUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
       })
+
+      //======================================
+      .addCase(unLockAccountUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(unLockAccountUser.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.message = action.payload.message;
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(unLockAccountUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
       //======================================
       .addCase(getAdminPartner.pending, (state) => {
         state.loading = true;

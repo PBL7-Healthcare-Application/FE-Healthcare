@@ -20,6 +20,7 @@ import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
 import { openNotificationWithIcon } from "../../notification/CustomNotify";
 import {
   doctorAddExperience,
+  doctorDeleteExperience,
   doctorUpdateExperience,
   getDoctorProfile,
 } from "../../../stores/doctor/DoctorThunk";
@@ -36,6 +37,7 @@ const Experience = ({ type }) => {
   const [isAdd, setIsAdd] = useState(false);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const [isDelete, setIsDelete] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const columns = [
     {
@@ -115,6 +117,10 @@ const Experience = ({ type }) => {
           <DeleteTwoTone
             twoToneColor="#EB1B36"
             className="function-box__delete"
+            onClick={() => {
+              setIsDelete(true);
+              setID(record?.id);
+            }}
           />
         </Space>
       ),
@@ -128,6 +134,7 @@ const Experience = ({ type }) => {
       dispatch(getDoctorProfile());
       setIsAdd(false);
       setIsEdit(false);
+      setIsDelete(false);
       setExperience([{}]);
       form.resetFields();
     }
@@ -136,6 +143,7 @@ const Experience = ({ type }) => {
       dispatch(setError(null));
       setIsAdd(false);
       setIsEdit(false);
+      setIsDelete(false);
       setExperience([{}]);
       form.resetFields();
     }
@@ -171,6 +179,18 @@ const Experience = ({ type }) => {
           Experiences
         </span>
       )}
+      <Modal open={isDelete}
+        onCancel={() => setIsDelete(false)}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}>
+        <div className="modalDelete">
+          <span className="setting-font" style={{ color: "#404040", fontSize: 18, fontWeight: 500 }}>Are you sure you want to delete this experience?</span>
+          <div className="modalDelete-btn">
+            <Button className="modalDelete-btn__Delete" onClick={() => dispatch(doctorDeleteExperience(iD))}>Delete</Button>
+            <Button className="modalDelete-btn__Cancel" onClick={() => setIsDelete(false)}>Cancel</Button>
+          </div>
+        </div>
+      </Modal>
       <Modal
         open={isAdd}
         onCancel={() => {

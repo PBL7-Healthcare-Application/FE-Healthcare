@@ -126,3 +126,16 @@ export const updateEducation = (data) => {
 export const updateExprience = (data) => {
   return http.put(`/Doctor/WorkingProcess/UpdateWorkingProcess`, data);
 };
+export const updateCertificate = (data) => {
+  return http.put(`/Doctor/Certificate/UpdateCertificate`, data);
+}
+
+export const deleteCertificate = (id) => {
+  return http.delete(`/Doctor/Certificate/DeleteCertificate/${id}`);
+}
+export const deleteEducation = (id) => {
+  return http.delete(`/Doctor/TrainingProcess/DeleteTrainingProcess/${id}`);
+}
+export const deleteExperience = (id) => {
+  return http.delete(`/Doctor/WorkingProcess/DeleteWorkingProcess/${id}`);
+}

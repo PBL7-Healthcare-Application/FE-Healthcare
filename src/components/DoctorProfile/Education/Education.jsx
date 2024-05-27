@@ -24,6 +24,7 @@ import {
 import { openNotificationWithIcon } from "../../notification/CustomNotify";
 import {
   doctorAddEducation,
+  doctorDeleteEducation,
   doctorUpdateEducation,
   getDoctorProfile,
 } from "../../../stores/doctor/DoctorThunk";
@@ -39,6 +40,7 @@ const Education = ({ type }) => {
   const [isEdit, setIsEdit] = useState(false);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [isDelete, setIsDelete] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const columns = [
     {
@@ -116,11 +118,15 @@ const Education = ({ type }) => {
               });
             }}
 
-            //   onClick={handleShowDeleteModal}
+          //   onClick={handleShowDeleteModal}
           />
           <DeleteTwoTone
             twoToneColor="#EB1B36"
             className="function-box__delete"
+            onClick={() => {
+              setIsDelete(true);
+              setIdAppointment(record?.id);
+            }}
           />
         </Space>
       ),
@@ -134,6 +140,7 @@ const Education = ({ type }) => {
       dispatch(getDoctorProfile());
       setIsAdd(false);
       setIsEdit(false);
+      setIsDelete(false);
       setEducation([{}]);
       form.resetFields();
     }
@@ -142,6 +149,7 @@ const Education = ({ type }) => {
       dispatch(setError(null));
       setIsAdd(false);
       setIsEdit(false);
+      setIsDelete(false);
       setEducation([{}]);
       form.resetFields();
     }
@@ -176,6 +184,19 @@ const Education = ({ type }) => {
           Educations
         </span>
       )}
+      <Modal open={isDelete}
+
+        onCancel={() => setIsDelete(false)}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}>
+        <div className="modalDelete">
+          <span className="setting-font" style={{ color: "#404040", fontSize: 18, fontWeight: 500 }}>Are you sure you want to delete this education?</span>
+          <div className="modalDelete-btn">
+            <Button className="modalDelete-btn__Delete" onClick={() => dispatch(doctorDeleteEducation(idAppointment))}>Delete</Button>
+            <Button className="modalDelete-btn__Cancel" onClick={() => setIsDelete(false)}>Cancel</Button>
+          </div>
+        </div>
+      </Modal>
       <Modal
         open={isAdd}
         onCancel={() => {

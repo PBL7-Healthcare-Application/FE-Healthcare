@@ -16,6 +16,9 @@ export const getUsers = (search, role, status, page = 1) => {
 export const disableAccount = (email) => {
   return http.post(`/Admin/User/DisableAccount`, email);
 };
+export const unlockAccount = (email) => {
+  return http.post(`/Admin/User/UnlockAccount`, email);
+};
 
 export const getPartner = (search, idSpecialty, TypePartner, page = 1) => {
   let url = `/Admin/Partner/GetPartner?page=${page}`;

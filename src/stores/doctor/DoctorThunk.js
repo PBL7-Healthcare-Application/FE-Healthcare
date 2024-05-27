@@ -6,6 +6,9 @@ import {
   addMedical,
   cancelAppointment,
   createTimeOff,
+  deleteCertificate,
+  deleteEducation,
+  deleteExperience,
   editWorkingTime,
   editWorkingTimeForConflict,
   getAppointment,
@@ -15,6 +18,7 @@ import {
   getProfile,
   getUserMedical,
   setSchedule,
+  updateCertificate,
   updateEducation,
   updateExprience,
   updateProfile,
@@ -237,3 +241,51 @@ export const doctorUpdateExperience = createAsyncThunk(
     }
   }
 );
+
+export const doctorUpdateCertificate = createAsyncThunk(
+  "doctor/doctorUpdateCertificate",
+  async (data, thunkApi) => {
+    try {
+      const response = await updateCertificate(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const doctorDeleteCertificate = createAsyncThunk(
+  "doctor/doctorDeleteCertificate",
+  async (id, thunkApi) => {
+    try {
+      const response = await deleteCertificate(id);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const doctorDeleteEducation = createAsyncThunk(
+  "doctor/doctorDeleteEducation",
+  async (id, thunkApi) => {
+    try {
+      const response = await deleteEducation(id);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const doctorDeleteExperience = createAsyncThunk(
+  "doctor/doctorDeleteExperience",
+  async (id, thunkApi) => {
+    try {
+      const response = await deleteExperience(id);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+

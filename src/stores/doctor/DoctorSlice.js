@@ -6,8 +6,12 @@ import {
   doctorAddEducation,
   doctorAddExperience,
   doctorCreateMedical,
+  doctorDeleteCertificate,
+  doctorDeleteEducation,
+  doctorDeleteExperience,
   doctorGetUserMedical,
   doctorGetlistMedical,
+  doctorUpdateCertificate,
   doctorUpdateEducation,
   doctorUpdateExperience,
   getDetailDoctorAppointment,
@@ -235,6 +239,7 @@ const doctorSlice = createSlice({
           state.error = action.payload.message;
           return;
         }
+        state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
       })
       .addCase(doctorAddCertificate.rejected, (state, action) => {
@@ -252,6 +257,7 @@ const doctorSlice = createSlice({
           state.error = action.payload.message;
           return;
         }
+        state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
       })
       .addCase(doctorAddExperience.rejected, (state, action) => {
@@ -357,7 +363,80 @@ const doctorSlice = createSlice({
       .addCase(doctorUpdateExperience.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
-      });
+      })
+      //=====================================
+      .addCase(doctorUpdateCertificate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorUpdateCertificate.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(doctorUpdateCertificate.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
+      //=====================================
+      .addCase(doctorDeleteCertificate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorDeleteCertificate.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(doctorDeleteCertificate.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(doctorDeleteEducation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorDeleteEducation.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(doctorDeleteEducation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(doctorDeleteExperience.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorDeleteExperience.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(doctorDeleteExperience.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
   },
 });
 export default doctorSlice.reducer;

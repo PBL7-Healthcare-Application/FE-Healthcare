@@ -199,12 +199,13 @@ const ManagementPartner = () => {
               type="text"
               className="search__input-text"
               placeholder="Search for a patient..."
-              style={{ border: "1px solid #a1a1aa" }}
+              style={{ border: "1px solid #a1a1aa", fontSize: 13 }}
               onChange={handleChangeInput}
             />
             <Button
               className="Schedule-content__left-button"
               onClick={handleClick}
+              style={{ height: 43 }}
             >
               Search
             </Button>
@@ -219,8 +220,8 @@ const ManagementPartner = () => {
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Type</span>
           <Select
-            placeholder="-- select --"
-            style={{ width: 150, height: 32, color: "#6c81a0" }}
+            defaultValue={"New Partner"}
+            style={{ width: 150, height: 42, color: "#6c81a0" }}
             onChange={handleTypePartnerChange}
             options={[
               { value: "All", label: "All" },
@@ -268,7 +269,7 @@ const ManagementPartner = () => {
           }}
         />
       </div>
-    </div>
+    </div >
   );
 };
 

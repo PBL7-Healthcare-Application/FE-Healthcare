@@ -86,7 +86,7 @@ const Examination = () => {
   useEffect(() => {
     if (location.state) {
       setIsList(true);
-      dispatch(doctorGetUserMedical(location.state));
+      dispatch(doctorGetUserMedical(location?.state?.idUser));
     } else {
       setIsList(false);
       dispatch(doctorGetlistMedical());

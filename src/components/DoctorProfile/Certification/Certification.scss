@@ -20,21 +20,25 @@
       cursor: pointer;
     }
   }
+
   &-modal {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-around;
     flex-direction: column;
+
     &__item {
       display: flex;
       flex-direction: row;
       gap: 20px;
     }
+
     &__infor {
       flex: 1;
     }
   }
+
   &-button {
     font-family: $font-main;
     color: $text-color;
@@ -47,4 +51,52 @@ td {
   font-family: $font-main;
   font-size: 15px;
   font-weight: 400;
+}
+
+.customizeUpload {
+  padding: 10px 20px;
+  border: 1px dashed #404040;
+  border-radius: 20px;
+}
+
+.modalDelete {
+  padding: 10px;
+  margin-top: 10px;
+
+  &-btn {
+    width: 94%;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    margin-top: 15px;
+
+    &__Delete {
+      background-color: red;
+      color: white;
+      border: none;
+
+      border-radius: 5px;
+      font-family: $font-main;
+      font-size: 15px;
+      font-weight: 500;
+
+      &:hover {
+        cursor: pointer;
+        color: red !important;
+        background-color: #fff !important;
+        border: 1px solid red !important;
+      }
+    }
+
+    &__Cancel {
+      border: 1px solid $text-color;
+      border-radius: 5px;
+      font-family: $font-main;
+      font-size: 15px;
+      font-weight: 500;
+      color: $text-color;
+
+
+    }
+  }
 }

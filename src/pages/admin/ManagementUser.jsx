@@ -21,12 +21,14 @@ import { BiSolidLock } from "react-icons/bi";
 import {
   disableAccountUser,
   getAdminUser,
+  unLockAccountUser,
 } from "../../stores/admin/AdminThunk";
 import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
-import { setError, setStatusCode } from "../../stores/admin/AdminSlice";
+import { setError, setMessage, setStatusCode } from "../../stores/admin/AdminSlice";
+import { FaUnlockAlt } from "react-icons/fa";
 
 const ManagementUser = () => {
-  const { listUser, paging, statusCode, error } = useSelector(
+  const { listUser, paging, statusCode, error, message } = useSelector(
     (state) => state.admin
   );
   const [inputSearch, setInputSearch] = useState("");
@@ -35,6 +37,7 @@ const ManagementUser = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [page, setPage] = useState(paging?.currentPage);
   const [email, setEmail] = useState(null);
+  const [isLock, setIsLock] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -83,16 +86,33 @@ const ManagementUser = () => {
       render: (text, record) => (
         <>
           <Space size={"middle"} align="center" direction="horizontal">
-            <BiSolidLock
-              className="function-box__delete"
-              size={30}
-              style={{ cursor: "pointer" }}
-              color="#ff4d4f"
-              onClick={() => {
-                setIsDisabled(!isDisabled);
-                setEmail(record.email);
-              }}
-            />
+            {
+              !record.isLocked ? (
+                <FaUnlockAlt
+                  className="function-box__delete"
+                  size={25}
+                  style={{ cursor: "pointer", color: '#87d068' }}
+                  color="#ff4d4f"
+                  onClick={() => {
+                    setIsDisabled(!isDisabled);
+                    setEmail(record.email);
+                    setIsLock(record.isLocked)
+                  }}
+                />
+              ) : (
+                <BiSolidLock
+                  className="function-box__delete"
+                  size={30}
+                  style={{ cursor: "pointer" }}
+                  color="#ff4d4f"
+                  onClick={() => {
+                    setIsDisabled(!isDisabled);
+                    setEmail(record.email);
+                    setIsLock(record.isLocked)
+                  }}
+                />
+              )
+            }
           </Space>
         </>
       ),
@@ -154,11 +174,21 @@ const ManagementUser = () => {
     });
   };
   const handleOk = () => {
-    dispatch(
-      disableAccountUser({
-        email: email,
-      })
-    );
+    if (!isLock) {
+      dispatch(
+        disableAccountUser({
+          email: email,
+        })
+      );
+    }
+    else {
+      dispatch(
+        unLockAccountUser({
+          email: email,
+        })
+      );
+
+    }
 
     setIsDisabled(false);
   };
@@ -171,7 +201,8 @@ const ManagementUser = () => {
   }, [dispatch]);
   useEffect(() => {
     if (statusCode === 200) {
-      openNotificationWithIcon("success", api, "", "Disable Account Success!");
+      openNotificationWithIcon("success", api, "", message);
+      dispatch(setMessage(null));
       dispatch(setStatusCode(null));
       dispatch(
         getAdminUser({
@@ -183,7 +214,7 @@ const ManagementUser = () => {
       );
     }
     if (error !== null) {
-      openNotificationWithIcon("error", api, "", "Disable Account Failed!");
+      openNotificationWithIcon("error", api, "", error);
       dispatch(setError(null));
     }
   }, [statusCode, dispatch, navigate, api, error]);
@@ -240,7 +271,7 @@ const ManagementUser = () => {
                 fontSize: 18,
               }}
             >
-              Are you sure you want to disable this account ?
+              {isLock ? "Do you want to unlock this account?" : "Do you want to lock this account?"}
             </span>
             <span
               className="ChangePass-text"
@@ -277,11 +308,12 @@ const ManagementUser = () => {
               type="text"
               className="search__input-text"
               placeholder="Search ..."
-              style={{ border: "1px solid #a1a1aa" }}
+              style={{ border: "1px solid #a1a1aa", fontSize: 13 }}
               onChange={handleChangeInput}
             />
             <Button
               className="Schedule-content__left-button"
+              style={{ height: 43 }}
               onClick={handleClick}
             >
               Search
@@ -291,8 +323,8 @@ const ManagementUser = () => {
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Role</span>
           <Select
-            placeholder="-- select --"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
+            defaultValue={"All"}
+            style={{ width: 150, height: 43, color: "#6c81a0" }}
             onChange={handleRoleChange}
             options={[
               { value: 0, label: "All" },
@@ -304,8 +336,8 @@ const ManagementUser = () => {
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Status</span>
           <Select
-            placeholder="-- select --"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
+            defaultValue={"All"}
+            style={{ width: 150, height: 43, color: "#6c81a0" }}
             onChange={handleStatusChange}
             options={[
               { value: "All", label: "All" },
@@ -326,6 +358,7 @@ const ManagementUser = () => {
             role: tabRole(item?.role),
             status: statusAccount(item?.isLocked),
             email: item?.email,
+            isLocked: item?.isLocked,
             r: item.role === "User" ? "USER" : "DOCTOR",
           }))}
           onRow={(record, rowIndex) => {

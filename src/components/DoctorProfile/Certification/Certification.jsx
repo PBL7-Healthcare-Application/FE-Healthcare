@@ -26,17 +26,24 @@ import { iconCertificate } from "../../../helpers/icon";
 import { useEffect, useState } from "react";
 import certificateImg from "../../../assets/images/certificate.png";
 import calandar from "../../../assets/images/calandar.png";
-import { doctorAddCertificate, getDoctorProfile } from "../../../stores/doctor/DoctorThunk";
+import { doctorAddCertificate, doctorDeleteCertificate, doctorUpdateCertificate, getDoctorProfile } from "../../../stores/doctor/DoctorThunk";
 import { openNotificationWithIcon } from "../../notification/CustomNotify";
-import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
+import { setError, setMessage, setStatusCode } from "../../../stores/doctor/DoctorSlice";
+import dayjs from "dayjs";
+import getImageUpload from "../../../helpers/uploadCloudinary";
 
 const Certification = ({ type }) => {
   const [api, contextHolder] = notification.useNotification();
-  const { profile, loading, statusCode, error } = useSelector((state) => state.doctor);
+  const { profile, loading, statusCode, error, message } = useSelector((state) => state.doctor);
+  const [form] = Form.useForm();
+  const [fileUrl, setFileUrl] = useState(null);
+  const [iD, setId] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [key, setKey] = useState(0);
   const [isAdd, setIsAdd] = useState(false);
   const [certificate, setCertificate] = useState([{}]);
+  const [isDelete, setIsDelete] = useState(false);
   const dispatch = useDispatch();
   const handleOk = () => {
     setIsModalOpen(false);
@@ -95,17 +102,34 @@ const Certification = ({ type }) => {
           },
         };
       },
-      render: () => (
+      render: (text, record) => (
         <>
           <Space size={"middle"}>
             <EditOutlined
               className="certificate-iconEdit"
               style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-            //   onClick={handleShowDeleteModal}
+              onClick={() => {
+                setIsEdit(true);
+                setIsAdd(true);
+                setId(record?.id);
+                form.setFieldsValue({
+                  certificate: [
+                    {
+                      name: record?.name,
+                      year: record?.year && dayjs(record?.year?.toString(), "YYYY"),
+                    },
+                  ],
+                });
+                setFileUrl(record?.image);
+              }}
             />
             <DeleteTwoTone
               twoToneColor="#EB1B36"
               className="function-box__delete"
+              onClick={() => {
+                setIsDelete(true);
+                setId(record?.id);
+              }}
             />
           </Space>
         </>
@@ -113,23 +137,46 @@ const Certification = ({ type }) => {
     },
   ];
   const onFinish = (values) => {
-    dispatch(doctorAddCertificate(values.certificate));
+    if (isEdit) {
+      dispatch(doctorUpdateCertificate({
+        name: values.certificate[0].name,
+        year: values.certificate[0].year.$y,
+        image: fileUrl,
+        idCertificate: iD
+      }))
+    }
+    else {
+      dispatch(doctorAddCertificate(values.certificate));
+    }
   }
   useEffect(() => {
     if (statusCode === 200) {
       dispatch(setStatusCode(null));
-      openNotificationWithIcon("success", api, "", "Update Profile Successfully!");
+
+      openNotificationWithIcon("success", api, "", message);
+      dispatch(setMessage(null));
       dispatch(getDoctorProfile());
       setIsAdd(false);
+      setIsEdit(false);
+      setIsDelete(false);
       setCertificate([{}]);
+      setFileUrl(null);
+      form.resetFields();
     }
     if (error !== null) {
       openNotificationWithIcon("error", api, "", error);
       dispatch(setError(null));
       setIsAdd(false);
+      setIsEdit(false);
+      setIsDelete(false);
       setCertificate([{}]);
+      setFileUrl(null);
+      form.resetFields();
     }
   }, [statusCode, error, api, dispatch]);
+
+
+
   return (
     <div className="certificate-main">
       {type === "DOCTOR" && (
@@ -140,6 +187,18 @@ const Certification = ({ type }) => {
           Certificates
         </span>
       )}
+      <Modal open={isDelete}
+        onCancel={() => setIsDelete(false)}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}>
+        <div className="modalDelete">
+          <span className="setting-font" style={{ color: "#404040", fontSize: 18, fontWeight: 500 }}>Are you sure you want to delete this certificate?</span>
+          <div className="modalDelete-btn">
+            <Button className="modalDelete-btn__Delete" onClick={() => dispatch(doctorDeleteCertificate(iD))}>Delete</Button>
+            <Button className="modalDelete-btn__Cancel" onClick={() => setIsDelete(false)}>Cancel</Button>
+          </div>
+        </div>
+      </Modal>
       <Modal
         open={isModalOpen}
         onOk={handleOk}
@@ -162,13 +221,13 @@ const Certification = ({ type }) => {
           <div className="certificate-modal__item">
             <div style={{ width: "50%" }}>
               <Image
-                src="https://cdn.venngage.com/template/thumbnail/small/5bdeb833-5514-4c2d-9d67-b269371bb924.webp"
+                src={key > 0 && profile?.certificates[key - 1].image}
                 width={"100%"}
                 style={{ borderRadius: 10 }}
               />
             </div>
             <div className="certificate-modal__infor">
-              <Form>
+              <div>
                 <Form.Item>
                   <div>
                     <Image src={certificateImg} preview={false} width={30} />
@@ -222,14 +281,16 @@ const Certification = ({ type }) => {
                     key > 0 && profile?.certificates[key - 1].statusVerified
                   )}
                 </span>
-              </Form>
+              </div>
             </div>
           </div>
         </div>
       </Modal>
       <Modal onCancel={() => {
+        setIsEdit(false)
         setIsAdd(false)
         setCertificate([{}])
+        form.resetFields()
       }} open={isAdd} okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}>
         <div
@@ -253,6 +314,7 @@ const Certification = ({ type }) => {
             certificate,
           }}
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item style={{ width: "100%" }}>
             <Form.List name="certificate" label="Certificates">
@@ -319,7 +381,7 @@ const Certification = ({ type }) => {
                           </Form.Item>
                         </div>
                       </div>
-                      <Form.Item
+                      {!isEdit ? <Form.Item
                         name={[field.name, "image"]}
                         rules={[
                           {
@@ -328,24 +390,63 @@ const Certification = ({ type }) => {
                           },
                         ]}
                       >
-                        <Upload {...propsUpload} listType="picture" >
+                        <Upload {...propsUpload} listType="picture">
                           <Button icon={<UploadOutlined />}>
                             Click to upload
                           </Button>
                         </Upload>
-                      </Form.Item>
+                      </Form.Item> : (
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+                          <div style={{ flex: 1 }}><Image src={fileUrl} width={300} /></div>
+                          <div style={{ flex: 1 }}>
+                            <input
+                              type="file"
+                              id="img"
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const res = await getImageUpload(e.target.files[0]);
+                                setFileUrl(res);
+                              }}
+                              style={{ display: 'none' }} // Ẩn input mặc định
+                            />
+                            <label htmlFor="img" style={{ cursor: 'pointer' }} className="customizeUpload">
+                              <UploadOutlined style={{ fontSize: 20, marginRight: 5 }} />
+                              Upload
+                              {/* <Button icon={<UploadOutlined />} className="customizeUpload">Upload</Button> */}
+                            </label>
+                          </div>
+                        </div>
+                      )}
                     </Card>
                   ))}
 
-                  <Button type="dashed" onClick={() => add()} block>
-                    + Add Item
-                  </Button>
+                  {!isEdit && (
+                    <Button type="dashed" onClick={() => add()} block>
+                      + Add Item
+                    </Button>
+                  )}
                 </div>
               )}
             </Form.List>
           </Form.Item>
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Button htmlType="submit" className="appointmentDetail-right__buttonEx" loading={loading}>Create</Button>
+            {!isEdit ? (
+              <Button
+                htmlType="submit"
+                className="appointmentDetail-right__buttonEx"
+                loading={loading}
+              >
+                Create
+              </Button>
+            ) : (
+              <Button
+                htmlType="submit"
+                className="appointmentDetail-right__buttonEx"
+                loading={loading}
+              >
+                Update
+              </Button>
+            )}
           </div>
         </Form>
       </Modal>
@@ -376,6 +477,7 @@ const Certification = ({ type }) => {
             name: item?.name,
             year: item?.year,
             status: <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}> {iconCertificate(item?.statusVerified)}</div>,
+            image: item?.image,
           }))}
           bordered
           onRow={(record, rowIndex) => {
