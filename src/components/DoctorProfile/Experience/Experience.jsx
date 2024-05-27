@@ -18,12 +18,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
 import { openNotificationWithIcon } from "../../notification/CustomNotify";
-import { doctorAddExperience, getDoctorProfile } from "../../../stores/doctor/DoctorThunk";
+import {
+  doctorAddExperience,
+  doctorUpdateExperience,
+  getDoctorProfile,
+} from "../../../stores/doctor/DoctorThunk";
+import dayjs from "dayjs";
+import { setMessage } from "../../../stores/admin/AdminSlice";
 
 const Experience = ({ type }) => {
-  const { profile, statusCode, error, loading } = useSelector((state) => state.doctor);
+  const { profile, statusCode, error, loading, message } = useSelector(
+    (state) => state.doctor
+  );
   const [experience, setExperience] = useState([{}]);
+  const [iD, setID] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const [api, contextHolder] = notification.useNotification();
   const columns = [
@@ -76,12 +87,30 @@ const Experience = ({ type }) => {
           },
         };
       },
-      render: () => (
+      render: (text, record) => (
         <Space size={"middle"}>
           <EditOutlined
             className="certificate-iconEdit"
             style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-          //   onClick={handleShowDeleteModal}
+            onClick={() => {
+              setIsAdd(true);
+              setIsEdit(true);
+              setID(record?.id);
+              form.setFieldsValue({
+                experience: [
+                  {
+                    position: record?.position,
+                    workplace: record?.name,
+                    startYear:
+                      record?.startYear &&
+                      dayjs(record?.startYear?.toString(), "YYYY"),
+                    endYear:
+                      record?.endYear &&
+                      dayjs(record?.endYear?.toString(), "YYYY"),
+                  },
+                ],
+              });
+            }}
           />
           <DeleteTwoTone
             twoToneColor="#EB1B36"
@@ -94,16 +123,21 @@ const Experience = ({ type }) => {
   useEffect(() => {
     if (statusCode === 200) {
       dispatch(setStatusCode(null));
-      openNotificationWithIcon("success", api, "", "Update Profile Successfully!");
+      dispatch(setMessage(null));
+      openNotificationWithIcon("success", api, "", message);
       dispatch(getDoctorProfile());
       setIsAdd(false);
+      setIsEdit(false);
       setExperience([{}]);
+      form.resetFields();
     }
     if (error !== null) {
       openNotificationWithIcon("error", api, "", error);
       dispatch(setError(null));
       setIsAdd(false);
+      setIsEdit(false);
       setExperience([{}]);
+      form.resetFields();
     }
   }, [statusCode, error, api, dispatch]);
 
@@ -114,10 +148,19 @@ const Experience = ({ type }) => {
         position: item.position,
         startYear: item.startYear.$y,
         endYear: item.endYear.$y,
-      }
-    })
-    dispatch(doctorAddExperience(body));
-  }
+      };
+    });
+    if (isEdit) {
+      dispatch(
+        doctorUpdateExperience({
+          ...body[0],
+          idWorkingProcess: iD,
+        })
+      );
+    } else {
+      dispatch(doctorAddExperience(body));
+    }
+  };
   return (
     <div className="certificate-main">
       {type === "DOCTOR" && (
@@ -128,14 +171,18 @@ const Experience = ({ type }) => {
           Experiences
         </span>
       )}
-      <Modal open={isAdd}
+      <Modal
+        open={isAdd}
         onCancel={() => {
-          setIsAdd(false)
-          setExperience([{}])
+          setIsAdd(false);
+          setExperience([{}]);
+          form.resetFields();
+          setIsEdit(false);
         }}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
-        width={600}>
+        width={600}
+      >
         <div
           style={{ width: "100%", justifyContent: "center", display: "flex" }}
         >
@@ -156,6 +203,7 @@ const Experience = ({ type }) => {
             experience,
           }}
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item style={{ width: "100%" }}>
             <Form.List name="experience">
@@ -184,16 +232,15 @@ const Experience = ({ type }) => {
                           display: "flex",
                           rowGap: 16,
                           flexDirection: "row",
-                          gap: 30
+                          gap: 30,
                         }}
                       >
                         <div style={{ flex: 1 }}>
                           <Typography>Workplace</Typography>
                           <Form.Item
-
                             name={[field.name, "workplace"]}
                             style={{
-                              margin: '8px 0'
+                              margin: "8px 0",
                             }}
                             rules={[
                               {
@@ -208,10 +255,8 @@ const Experience = ({ type }) => {
                         <div style={{ flex: 1 }}>
                           <Typography>Position</Typography>
                           <Form.Item
-
                             name={[field.name, "position"]}
                             style={{
-
                               margin: "8px 0",
                             }}
                             rules={[
@@ -230,13 +275,12 @@ const Experience = ({ type }) => {
                           display: "flex",
                           rowGap: 16,
                           flexDirection: "row",
-                          gap: 30
+                          gap: 30,
                         }}
                       >
                         <div style={{ flex: 1 }}>
                           <Typography>Start Year</Typography>
                           <Form.Item
-
                             name={[field.name, "startYear"]}
                             style={{ margin: "8px 0" }}
                             rules={[
@@ -246,7 +290,10 @@ const Experience = ({ type }) => {
                               },
                             ]}
                           >
-                            <DatePicker picker="year" style={{ width: "100%" }} />
+                            <DatePicker
+                              picker="year"
+                              style={{ width: "100%" }}
+                            />
                           </Form.Item>
                         </div>
                         <div style={{ flex: 1 }}>
@@ -261,22 +308,49 @@ const Experience = ({ type }) => {
                               },
                             ]}
                           >
-                            <DatePicker picker="year" style={{ width: "100%" }} />
+                            <DatePicker
+                              picker="year"
+                              style={{ width: "100%" }}
+                            />
                           </Form.Item>
                         </div>
                       </div>
                     </Card>
                   ))}
 
-                  <Button type="dashed" onClick={() => add()} block>
-                    + Add Item
-                  </Button>
+                  {!isEdit && (
+                    <Button type="dashed" onClick={() => add()} block>
+                      + Add Item
+                    </Button>
+                  )}
                 </div>
               )}
             </Form.List>
           </Form.Item>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Button htmlType="submit" className="appointmentDetail-right__buttonEx" loading={loading}>Create</Button>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            {!isEdit ? (
+              <Button
+                htmlType="submit"
+                className="appointmentDetail-right__buttonEx"
+                loading={loading}
+              >
+                Create
+              </Button>
+            ) : (
+              <Button
+                htmlType="submit"
+                className="appointmentDetail-right__buttonEx"
+                loading={loading}
+              >
+                Update
+              </Button>
+            )}
           </div>
         </Form>
       </Modal>
@@ -300,7 +374,6 @@ const Experience = ({ type }) => {
         )}
         {contextHolder}
         <Table
-
           pagination={false}
           columns={columns}
           dataSource={profile?.workingProcess.map((item, index) => ({
@@ -310,7 +383,18 @@ const Experience = ({ type }) => {
             position: item?.position,
             startYear: item?.startYear,
             endYear: item?.endYear,
-            status: <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}> {iconCertificate(item?.statusVerified)}</div>,
+            status: (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {" "}
+                {iconCertificate(item?.statusVerified)}
+              </div>
+            ),
           }))}
           bordered
         />

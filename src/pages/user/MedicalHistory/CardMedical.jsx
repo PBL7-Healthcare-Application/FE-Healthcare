@@ -126,8 +126,14 @@ const CardMedical = ({ item }) => {
             </div>
           </div>
         </div>
-        <div className="cardAppointment--item" style={{ marginTop: 20 }}>
-          <p className="medical-content appointment-font">
+        <div
+          className="cardAppointment--item"
+          style={{ marginTop: 20, width: "100%" }}
+        >
+          <p
+            className="medical-content appointment-font"
+            style={{ width: "100%" }}
+          >
             {item?.content}
           </p>
         </div>

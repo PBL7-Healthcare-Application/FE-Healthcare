@@ -44,7 +44,9 @@ import { MdPhone } from "react-icons/md";
 import Rating from "../../components/Rate/Rate";
 import { getDoctorRating } from "../../stores/search-doctor/SearchThunk";
 const DetailDoctor = () => {
-  const { doctorDetail, schedule, listRate, tableOfrate } = useSelector((state) => state.search);
+  const { doctorDetail, schedule, listRate, tableOfrate } = useSelector(
+    (state) => state.search
+  );
   const [times, setTimes] = useState(schedule[0]?.times);
   const [api, contextHolder] = notification.useNotification();
   const [chooseTime, setChooseTime] = useState(null);
@@ -53,10 +55,10 @@ const DetailDoctor = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   const handleCardClick = (cardId, item) => {
     setChooseDate(item.date);
     setTimes(item.times);
+    dispatch(setIsTimeSelected(null));
     dispatch(setIsSelected(cardId));
   };
   const handleTimeClick = (time) => {
@@ -151,11 +153,14 @@ const DetailDoctor = () => {
   });
   const handleTab = (key) => {
     if (key === "2") {
-      dispatch(getDoctorRating({
-        id: doctorDetail?.idDoctor, page: 1
-      }));
+      dispatch(
+        getDoctorRating({
+          id: doctorDetail?.idDoctor,
+          page: 1,
+        })
+      );
     }
-  }
+  };
   const { TabPane } = Tabs;
   return (
     <div className="detailDr-main">
@@ -179,22 +184,22 @@ const DetailDoctor = () => {
                   {doctorDetail?.medicalSpecialty}
                 </Typography>
               </div>
-              {
-                doctorDetail?.rateAverage && (
-                  <div>
-                    <Space
-                      className="result-third__rate-item"
-                      style={{ backgroundColor: "rgb(226 232 240)", marginTop: 3 }}
-                    >
-                      <StarFilled className="result-third__rate-icon" />
-                      <Typography className="result-third__rate-text">
-                        {doctorDetail?.rateAverage}/5
-                      </Typography>
-                    </Space>
-
-                  </div>
-                )
-              }
+              {doctorDetail?.rateAverage && (
+                <div>
+                  <Space
+                    className="result-third__rate-item"
+                    style={{
+                      backgroundColor: "rgb(226 232 240)",
+                      marginTop: 3,
+                    }}
+                  >
+                    <StarFilled className="result-third__rate-icon" />
+                    <Typography className="result-third__rate-text">
+                      {doctorDetail?.rateAverage}/5
+                    </Typography>
+                  </Space>
+                </div>
+              )}
             </div>
           </div>
           <div style={{ marginTop: 20 }}>
@@ -209,176 +214,172 @@ const DetailDoctor = () => {
                     {doctorDetail?.description}
                   </span>
                 </div>
-                {
-                  doctorDetail?.trainingProcess.length > 0 && (
-                    <div className="detailDr-content__left-information__profile">
-                      <div style={{ display: "flex", flexDirection: "row" }}>
-                        <svg
-                          width="26"
-                          height="26"
-                          viewBox="0 0 32 32"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            width="32"
-                            height="32"
-                            rx="16"
-                            fill="#BCDEFF"
-                          ></rect>
-                          <g clipPath="url(#education-icon_svg__clip0_16395_412957)">
+                {doctorDetail?.trainingProcess.length > 0 && (
+                  <div className="detailDr-content__left-information__profile">
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 32 32"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          width="32"
+                          height="32"
+                          rx="16"
+                          fill="#BCDEFF"
+                        ></rect>
+                        <g clipPath="url(#education-icon_svg__clip0_16395_412957)">
+                          <path
+                            d="M25.598 10.79H6.402a.402.402 0 00-.402.402v12.616c0 .223.18.403.402.403h8.828a.964.964 0 011.54 0h8.828c.222 0 .402-.18.402-.403V11.192a.402.402 0 00-.402-.402z"
+                            fill="#2D87F3"
+                          ></path>
+                          <path
+                            d="M25.598 10.79h-1.61c.223 0 .403.18.403.402v12.616c0 .223-.18.403-.403.403h1.61c.222 0 .402-.18.402-.403V11.192a.402.402 0 00-.402-.402z"
+                            fill="#2743AD"
+                          ></path>
+                          <path
+                            d="M7.313 12.682h17.372V22.96H7.313V12.682z"
+                            fill="#C5D7E6"
+                          ></path>
+                          <path
+                            d="M15.999 10.416v12.413s-3.274-2.709-8.687-.805V10.416s4.365-2.052 8.687 0zM16 10.416v12.413s3.274-2.709 8.686-.805V10.416s-4.365-2.052-8.686 0z"
+                            fill="#E4ECF2"
+                          ></path>
+                          <path
+                            d="M16 10.614s2.629-2.817 7.479-2.817v12.215c-4.85 0-7.479 2.817-7.479 2.817V10.614z"
+                            fill="#F0F5FA"
+                          ></path>
+                        </g>
+                        <defs>
+                          <clipPath id="education-icon_svg__clip0_16395_412957">
                             <path
-                              d="M25.598 10.79H6.402a.402.402 0 00-.402.402v12.616c0 .223.18.403.402.403h8.828a.964.964 0 011.54 0h8.828c.222 0 .402-.18.402-.403V11.192a.402.402 0 00-.402-.402z"
-                              fill="#2D87F3"
+                              fill="#fff"
+                              transform="translate(6 6)"
+                              d="M0 0h20v20H0z"
                             ></path>
-                            <path
-                              d="M25.598 10.79h-1.61c.223 0 .403.18.403.402v12.616c0 .223-.18.403-.403.403h1.61c.222 0 .402-.18.402-.403V11.192a.402.402 0 00-.402-.402z"
-                              fill="#2743AD"
-                            ></path>
-                            <path
-                              d="M7.313 12.682h17.372V22.96H7.313V12.682z"
-                              fill="#C5D7E6"
-                            ></path>
-                            <path
-                              d="M15.999 10.416v12.413s-3.274-2.709-8.687-.805V10.416s4.365-2.052 8.687 0zM16 10.416v12.413s3.274-2.709 8.686-.805V10.416s-4.365-2.052-8.686 0z"
-                              fill="#E4ECF2"
-                            ></path>
-                            <path
-                              d="M16 10.614s2.629-2.817 7.479-2.817v12.215c-4.85 0-7.479 2.817-7.479 2.817V10.614z"
-                              fill="#F0F5FA"
-                            ></path>
-                          </g>
-                          <defs>
-                            <clipPath id="education-icon_svg__clip0_16395_412957">
-                              <path
-                                fill="#fff"
-                                transform="translate(6 6)"
-                                d="M0 0h20v20H0z"
-                              ></path>
-                            </clipPath>
-                          </defs>
-                        </svg>
-                        <Typography className="detailDr-content__left-information__profile-title">
-                          Education
-                        </Typography>
-                      </div>
-
-                      <div>
-                        {doctorDetail?.trainingProcess.map((item, index) => (
-                          <div
-                            className="detailDr-content__left-information__box"
-                            key={index}
-                          >
-                            <div>
-                              <Typography
-                                className="detailDr-content__left-information__profile-content"
-                                style={{ fontSize: 16, fontWeight: 500 }}
-                              >
-                                {item?.schoolName}
-                              </Typography>
-                              <Typography className="detailDr-content__left-information__profile-content">
-                                {item?.major}
-                              </Typography>
-                              <Typography className="detailDr-content__left-information__profile-content">
-                                2013-2015
-                              </Typography>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <Typography className="detailDr-content__left-information__profile-title">
+                        Education
+                      </Typography>
                     </div>
-                  )
-                }
+
+                    <div>
+                      {doctorDetail?.trainingProcess.map((item, index) => (
+                        <div
+                          className="detailDr-content__left-information__box"
+                          key={index}
+                        >
+                          <div>
+                            <Typography
+                              className="detailDr-content__left-information__profile-content"
+                              style={{ fontSize: 16, fontWeight: 500 }}
+                            >
+                              {item?.schoolName}
+                            </Typography>
+                            <Typography className="detailDr-content__left-information__profile-content">
+                              {item?.major}
+                            </Typography>
+                            <Typography className="detailDr-content__left-information__profile-content">
+                              2013-2015
+                            </Typography>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/*  */}
-                {
-                  doctorDetail?.workingProcess.length > 0 && (
-                    <div className="detailDr-content__left-information__profile">
-                      <div style={{ display: "flex", flexDirection: "row" }}>
-                        <svg
-                          width="26"
-                          height="26"
-                          viewBox="0 0 32 32"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            width="32"
-                            height="32"
-                            rx="16"
-                            fill="#BCDEFF"
-                          ></rect>
-                          <g clipPath="url(#expertise-icon_svg__clip0_17095_459877)">
+                {doctorDetail?.workingProcess.length > 0 && (
+                  <div className="detailDr-content__left-information__profile">
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 32 32"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          width="32"
+                          height="32"
+                          rx="16"
+                          fill="#BCDEFF"
+                        ></rect>
+                        <g clipPath="url(#expertise-icon_svg__clip0_17095_459877)">
+                          <path
+                            d="M25.688 11.781a2.964 2.964 0 01-2.188 2.863V12.95a1.406 1.406 0 10-1.563 0v1.694a2.968 2.968 0 113.75-2.863z"
+                            fill="#fff"
+                          ></path>
+                          <path
+                            d="M23.5 12.95a1.406 1.406 0 11-1.562-2.338A1.406 1.406 0 0123.5 12.95z"
+                            fill="#E4E8EC"
+                          ></path>
+                          <path
+                            d="M23.5 14.644v2.293h-1.563V12.95a1.404 1.404 0 001.563 0v1.694z"
+                            fill="#2B62CD"
+                          ></path>
+                          <path
+                            d="M23.5 16.938v2.656a6.094 6.094 0 01-12.188 0v-.782a8.154 8.154 0 01-3.531-2.715 7.643 7.643 0 01-.728-1.197l1.59-.594a7.682 7.682 0 001.878 2.225 2.5 2.5 0 003.144 0 7.683 7.683 0 001.878-2.225l1.591.594a8.074 8.074 0 01-4.26 3.912v.782a4.531 4.531 0 009.063 0v-2.657H23.5z"
+                            fill="#2D87F3"
+                          ></path>
+                          <path
+                            d="M15.374 6.625v1.563l-.937.312-.797-.16a.953.953 0 010-1.868l.797-.16.937.313z"
+                            fill="#fff"
+                          ></path>
+                          <path
+                            d="M17.875 8.188v3.75a7.301 7.301 0 01-.74 2.962l-1.591-.594c.463-.82.726-1.74.768-2.681V8.187h-.937V6.625h.938a1.563 1.563 0 011.562 1.563zM8.813 6.625v1.563h-.938v3.437a6.01 6.01 0 00.769 2.681l-1.59.594a7.3 7.3 0 01-.741-2.963v-3.75a1.558 1.558 0 011.562-1.562h.938z"
+                            fill="#2D87F3"
+                          ></path>
+                          <path
+                            d="M10.547 6.472a.953.953 0 010 1.869L9.75 8.5l-.938-.313V6.625l.938-.313.797.16z"
+                            fill="#fff"
+                          ></path>
+                        </g>
+                        <defs>
+                          <clipPath id="expertise-icon_svg__clip0_17095_459877">
                             <path
-                              d="M25.688 11.781a2.964 2.964 0 01-2.188 2.863V12.95a1.406 1.406 0 10-1.563 0v1.694a2.968 2.968 0 113.75-2.863z"
                               fill="#fff"
+                              transform="translate(6 6)"
+                              d="M0 0h20v20H0z"
                             ></path>
-                            <path
-                              d="M23.5 12.95a1.406 1.406 0 11-1.562-2.338A1.406 1.406 0 0123.5 12.95z"
-                              fill="#E4E8EC"
-                            ></path>
-                            <path
-                              d="M23.5 14.644v2.293h-1.563V12.95a1.404 1.404 0 001.563 0v1.694z"
-                              fill="#2B62CD"
-                            ></path>
-                            <path
-                              d="M23.5 16.938v2.656a6.094 6.094 0 01-12.188 0v-.782a8.154 8.154 0 01-3.531-2.715 7.643 7.643 0 01-.728-1.197l1.59-.594a7.682 7.682 0 001.878 2.225 2.5 2.5 0 003.144 0 7.683 7.683 0 001.878-2.225l1.591.594a8.074 8.074 0 01-4.26 3.912v.782a4.531 4.531 0 009.063 0v-2.657H23.5z"
-                              fill="#2D87F3"
-                            ></path>
-                            <path
-                              d="M15.374 6.625v1.563l-.937.312-.797-.16a.953.953 0 010-1.868l.797-.16.937.313z"
-                              fill="#fff"
-                            ></path>
-                            <path
-                              d="M17.875 8.188v3.75a7.301 7.301 0 01-.74 2.962l-1.591-.594c.463-.82.726-1.74.768-2.681V8.187h-.937V6.625h.938a1.563 1.563 0 011.562 1.563zM8.813 6.625v1.563h-.938v3.437a6.01 6.01 0 00.769 2.681l-1.59.594a7.3 7.3 0 01-.741-2.963v-3.75a1.558 1.558 0 011.562-1.562h.938z"
-                              fill="#2D87F3"
-                            ></path>
-                            <path
-                              d="M10.547 6.472a.953.953 0 010 1.869L9.75 8.5l-.938-.313V6.625l.938-.313.797.16z"
-                              fill="#fff"
-                            ></path>
-                          </g>
-                          <defs>
-                            <clipPath id="expertise-icon_svg__clip0_17095_459877">
-                              <path
-                                fill="#fff"
-                                transform="translate(6 6)"
-                                d="M0 0h20v20H0z"
-                              ></path>
-                            </clipPath>
-                          </defs>
-                        </svg>
-                        <Typography className="detailDr-content__left-information__profile-title">
-                          Experience
-                        </Typography>
-                      </div>
-
-                      <div>
-                        {doctorDetail?.workingProcess.map((item, index) => (
-                          <div
-                            className="detailDr-content__left-information__box"
-                            key={index}
-                          >
-                            <div>
-                              <Typography
-                                className="detailDr-content__left-information__profile-content"
-                                style={{ fontSize: 16, fontWeight: 500 }}
-                              >
-                                {item?.position}
-                              </Typography>
-                              <Typography className="detailDr-content__left-information__profile-content">
-                                {item?.workplace}
-                              </Typography>
-                              <Typography className="detailDr-content__left-information__profile-content">
-                                {item?.startYear}-{item?.endYear}
-                              </Typography>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <Typography className="detailDr-content__left-information__profile-title">
+                        Experience
+                      </Typography>
                     </div>
-                  )
-                }
+
+                    <div>
+                      {doctorDetail?.workingProcess.map((item, index) => (
+                        <div
+                          className="detailDr-content__left-information__box"
+                          key={index}
+                        >
+                          <div>
+                            <Typography
+                              className="detailDr-content__left-information__profile-content"
+                              style={{ fontSize: 16, fontWeight: 500 }}
+                            >
+                              {item?.position}
+                            </Typography>
+                            <Typography className="detailDr-content__left-information__profile-content">
+                              {item?.workplace}
+                            </Typography>
+                            <Typography className="detailDr-content__left-information__profile-content">
+                              {item?.startYear}-{item?.endYear}
+                            </Typography>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/*  */}
                 <div className="detailDr-content__left-information__profile">
@@ -537,103 +538,199 @@ const DetailDoctor = () => {
                   </div>
                 </div>
               </TabPane>
-              {
-                doctorDetail?.rateAverage && (
-                  <TabPane tab="Review" key="2">
-                    <div className="detailDr-content__left-information__profile rate">
-                      <div className="rate__box">
-                        <div className="rate__box__child">
-                          <span className="rate__text rate__totalPoint">
-                            {doctorDetail?.rateAverage}
-                            <span className="rate__text rate__scale-point">/5</span>
+              {doctorDetail?.rateAverage && (
+                <TabPane tab="Review" key="2">
+                  <div className="detailDr-content__left-information__profile rate">
+                    <div className="rate__box">
+                      <div className="rate__box__child">
+                        <span className="rate__text rate__totalPoint">
+                          {doctorDetail?.rateAverage}
+                          <span className="rate__text rate__scale-point">
+                            /5
                           </span>
-                          <span className="rate__text rate__review" style={{ width: '100%' }}>
-                            {doctorDetail?.numberOfComment} reviews
-                          </span>
-                        </div>
-                        <div>
-                          <Rate value={doctorDetail?.rateAverage} />
-                        </div>
+                        </span>
+                        <span
+                          className="rate__text rate__review"
+                          style={{ width: "100%" }}
+                        >
+                          {doctorDetail?.numberOfComment} reviews
+                        </span>
                       </div>
-                      <div
-                        style={{
-                          width: "100%",
-                          flex: 1,
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 10,
-                        }}
-                      >
-                        <div className="rate__item">
-                          <span
-                            className="rate__text rate__review"
-                            style={{ fontSize: 14, fontWeight: 400, marginTop: 17 }}
-                          >
-                            5 star
-                          </span>
-                          <div style={{ width: '100%' }}>
-                            <Progress percent={tableOfrate?.five > 0 ? (tableOfrate?.five / doctorDetail?.numberOfComment) * 100 : 100} size="small" showInfo={false} strokeColor={tableOfrate?.five > 0 ? "rgb(255, 181, 33)" : "#fef9c3"} />
-                          </div>
-                        </div>
-                        <div className="rate__item">
-                          <span
-                            className="rate__text rate__review"
-                            style={{ fontSize: 14, fontWeight: 400, marginTop: 17 }}
-                          >
-                            4 star
-                          </span>
-                          <div style={{ width: '100%' }}>
-                            <Progress percent={tableOfrate?.four > 0 ? (tableOfrate?.four / doctorDetail?.numberOfComment) * 100 : 100} size="small" showInfo={false} strokeColor={tableOfrate?.four > 0 ? "rgb(255, 181, 33)" : "#fef9c3"} />
-                          </div>
-                        </div>
-                        <div className="rate__item">
-                          <span
-                            className="rate__text rate__review"
-                            style={{ fontSize: 14, fontWeight: 400, marginTop: 17 }}
-                          >
-                            3 star
-                          </span>
-                          <div style={{ width: '100%' }}>
-                            <Progress percent={tableOfrate?.three > 0 ? (tableOfrate?.three / doctorDetail?.numberOfComment) * 100 : 100} size="small" showInfo={false} strokeColor={tableOfrate?.three > 0 ? "rgb(255, 181, 33)" : "#fef9c3"} />
-                          </div>
-                        </div>
-                        <div className="rate__item">
-                          <span
-                            className="rate__text rate__review"
-                            style={{ fontSize: 14, fontWeight: 400, marginTop: 17 }}
-                          >
-                            2 star
-                          </span>
-                          <div style={{ width: '100%' }}>
-                            <Progress percent={tableOfrate?.two > 0 ? (tableOfrate?.two / doctorDetail?.numberOfComment) * 100 : 100} size="small" showInfo={false} strokeColor={tableOfrate?.two > 0 ? "rgb(255, 181, 33)" : "#fef9c3"} />
-                          </div>
-                        </div>
-                        <div className="rate__item">
-                          <span
-                            className="rate__text rate__review"
-                            style={{ fontSize: 14, fontWeight: 400, marginTop: 17 }}
-                          >
-                            1 star
-                          </span>
-                          <div style={{ width: '100%' }}>
-                            <Progress percent={tableOfrate?.one > 0 ? (tableOfrate?.one / doctorDetail?.numberOfComment) * 100 : 100} size="small" showInfo={false} strokeColor={tableOfrate?.one > 0 ? "rgb(255, 181, 33)" : "#fef9c3"} />
-                          </div>
-                        </div>
+                      <div>
+                        <Rate value={doctorDetail?.rateAverage} />
                       </div>
                     </div>
                     <div
-                      className="detailDr-content__left-information__profile"
-                      style={{ marginTop: 50 }}
+                      style={{
+                        width: "100%",
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
                     >
-                      {
-                        listRate.map((item, index) => (
-                          <Rating key={index} item={item} />
-                        ))
-                      }
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          5 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.five > 0
+                                ? (tableOfrate?.five /
+                                    doctorDetail?.numberOfComment) *
+                                  100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.five > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          4 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.four > 0
+                                ? (tableOfrate?.four /
+                                    doctorDetail?.numberOfComment) *
+                                  100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.four > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          3 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.three > 0
+                                ? (tableOfrate?.three /
+                                    doctorDetail?.numberOfComment) *
+                                  100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.three > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          2 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.two > 0
+                                ? (tableOfrate?.two /
+                                    doctorDetail?.numberOfComment) *
+                                  100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.two > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          1 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.one > 0
+                                ? (tableOfrate?.one /
+                                    doctorDetail?.numberOfComment) *
+                                  100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.one > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </TabPane>
-                )
-              }
+                  </div>
+                  <div
+                    className="detailDr-content__left-information__profile"
+                    style={{ marginTop: 50 }}
+                  >
+                    {listRate.map((item, index) => (
+                      <Rating key={index} item={item} />
+                    ))}
+                  </div>
+                </TabPane>
+              )}
             </Tabs>
           </div>
         </div>
@@ -699,13 +796,18 @@ const DetailDoctor = () => {
                 <Slider {...settings}>
                   {schedule.map((item, index) => {
                     const dateArr = item?.date.toString().split(" ");
+
                     return (
                       <div className="item" key={index}>
                         <CardDay
                           dateOfWeek={dateArr[0]}
                           date={dateArr[2]}
                           month={monthNameToNumber(dateArr[1])}
-                          available={item?.count ? item.times.length - item?.count : item.times.length}
+                          available={
+                            item?.count
+                              ? item.times.length - item?.count
+                              : item.times.length
+                          }
                           item={item}
                           index={index}
                           handleClick={(value, item) =>
@@ -768,9 +870,7 @@ const DetailDoctor = () => {
                 <div className="detailDr-content__right-appointment__time">
                   {countTime(times, "e") > 0 ? (
                     times.map((item, index) => {
-                      console.log(item);
                       if (convertTime(item?.startTime) >= 18) {
-
                         return (
                           <CardTime
                             isBooking={item?.isBooking}

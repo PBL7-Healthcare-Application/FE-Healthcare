@@ -3,6 +3,7 @@ import {
   addCertificate,
   addEducation,
   addExperience,
+  addMedical,
   cancelAppointment,
   createTimeOff,
   editWorkingTime,
@@ -12,7 +13,10 @@ import {
   getDetailAppointment,
   getMedical,
   getProfile,
+  getUserMedical,
   setSchedule,
+  updateEducation,
+  updateExprience,
   updateProfile,
 } from "../../api/doctor.api";
 import { customResCertificate } from "../../helpers/resHelper";
@@ -179,6 +183,54 @@ export const doctorGetlistMedical = createAsyncThunk(
   async (search, thunkApi) => {
     try {
       const response = await getMedical(search);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const doctorGetUserMedical = createAsyncThunk(
+  "doctor/doctorGetUserMedical",
+  async (id, thunkApi) => {
+    try {
+      const response = await getUserMedical(id);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const doctorCreateMedical = createAsyncThunk(
+  "doctor/doctorCreateMedical",
+  async (data, thunkApi) => {
+    try {
+      const response = await addMedical(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const doctorUpdateEducation = createAsyncThunk(
+  "doctor/doctorUpdateEducation",
+  async (data, thunkApi) => {
+    try {
+      const response = await updateEducation(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const doctorUpdateExperience = createAsyncThunk(
+  "doctor/doctorUpdateExperience",
+  async (data, thunkApi) => {
+    try {
+      const response = await updateExprience(data);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

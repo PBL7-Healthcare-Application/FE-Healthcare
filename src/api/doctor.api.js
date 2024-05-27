@@ -82,29 +82,28 @@ export const createTimeOff = (data) => {
   return http.post(`/Doctor/Calendar/CreateTimeOff`, data);
 };
 
-
 export const updateProfile = (data) => {
   return http.put(`/Doctor/Profile/UpdateProfile`, data);
-}
+};
 export const editWorkingTime = (data) => {
   return http.put(`/Doctor/Profile/EditWorkingTime`, data);
-}
+};
 export const editWorkingTimeForConflict = (data) => {
-  return http.post(`/Doctor/Profile/CancelAppointmentAndUpdateWorkingTime`, data);
-}
-
+  return http.post(
+    `/Doctor/Profile/CancelAppointmentAndUpdateWorkingTime`,
+    data
+  );
+};
 
 export const addCertificate = (data) => {
   return http.post(`/Doctor/Certificate/AddListCertificate`, data);
-}
+};
 export const addExperience = (data) => {
   return http.post(`/Doctor/WorkingProcess/AddListWorkingProcess`, data);
-}
+};
 export const addEducation = (data) => {
   return http.post(`/Doctor/TrainingProcess/AddListTrainingProcess`, data);
-}
-
-
+};
 
 export const getMedical = (search) => {
   let url = `/Doctor/MedicalRecord/GetListExaminationByIdDoctor`;
@@ -112,4 +111,18 @@ export const getMedical = (search) => {
     url += `?search=${search}`;
   }
   return http.get(url);
-}
+};
+export const getUserMedical = (id) => {
+  return http.get(`/Doctor/MedicalRecord/GetMedicalHistoryOfUser/${id}`);
+};
+
+export const addMedical = (data) => {
+  return http.post(`/Doctor/MedicalRecord/CreateMedicalRecord`, data);
+};
+
+export const updateEducation = (data) => {
+  return http.put(`/Doctor/TrainingProcess/UpdateTrainingProcess`, data);
+};
+export const updateExprience = (data) => {
+  return http.put(`/Doctor/WorkingProcess/UpdateWorkingProcess`, data);
+};

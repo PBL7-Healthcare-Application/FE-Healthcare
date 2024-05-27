@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import calender from "../../../assets/images/calandar.png";
 import height from "../../../assets/images/height.png";
 import scale from "../../../assets/images/scale.png";
@@ -5,7 +6,8 @@ import temperatures from "../../../assets/images/temperatures.png";
 import { Image, Typography } from "antd";
 import "../../user/MedicalHistory/MedicalHistory.scss";
 
-const CardExamination = () => {
+const CardExamination = ({ item }) => {
+  console.log("item", item);
   return (
     <div className="cardAppointment" style={{ marginBottom: 10 }}>
       <div
@@ -14,7 +16,41 @@ const CardExamination = () => {
           paddingBottom: 20,
         }}
       >
-        <div className="cardAppointment--item" style={{ marginTop: 20 }}>
+        <div
+          className="cardAppointment--item"
+          style={{
+            marginTop: 20,
+            // flexDirection: "column",
+            gap: 20,
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <Typography
+              className="appointment-font"
+              style={{
+                fontSize: 18,
+                fontWeight: 600,
+                letterSpacing: 0.4,
+              }}
+            >
+              {item?.name}
+            </Typography>
+          </div>
+          <div>
+            <Typography
+              className="appointment-font"
+              style={{
+                fontSize: 14,
+                fontWeight: 400,
+                letterSpacing: 0.4,
+              }}
+            >
+              {item?.medicalSpecialty}
+            </Typography>
+          </div>
+        </div>
+        <div className="cardAppointment--item" style={{ marginTop: 10 }}>
           <Image
             src={calender}
             width={24}
@@ -51,7 +87,7 @@ const CardExamination = () => {
                   letterSpacing: 0.4,
                 }}
               >
-                172 cm
+                {item?.height} cm
               </Typography>
             </div>
           </div>
@@ -71,7 +107,7 @@ const CardExamination = () => {
                   letterSpacing: 0.4,
                 }}
               >
-                75 kg
+                {item?.weight} kg
               </Typography>
             </div>
           </div>
@@ -91,17 +127,17 @@ const CardExamination = () => {
                   letterSpacing: 0.4,
                 }}
               >
-                37.2 °C
+                {item?.temperature} °C
               </Typography>
             </div>
           </div>
         </div>
         <div className="cardAppointment--item" style={{ marginTop: 10 }}>
-          <p className="medical-content appointment-font">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab
-            assumenda est, blanditiis, corporis repellendus quasi consectetur
-            amet aliquam quidem inventore ad harum minima voluptates
-            consequatur, corrupti odio itaque ut maiores.
+          <p
+            className="medical-content appointment-font"
+            style={{ width: "100%" }}
+          >
+            {item?.content}
           </p>
         </div>
       </div>

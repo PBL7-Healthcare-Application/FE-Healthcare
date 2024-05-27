@@ -82,10 +82,23 @@ export const doctorSchedule = (
       }
     });
   });
+
+  var current = new Date();
+  var currentDate = new Date(current);
+  schedule.forEach((time) => {
+    if (compareDate(time.date, currentDate)) {
+      for (var i = time.times.length - 1; i >= 0; i--) {
+        var startTime = convertTime(time.times[i].startTime);
+        if (startTime - current.getHours() < 5) {
+          time.times.splice(i, 1);
+        }
+      }
+    }
+  });
+
   schedule.forEach((time) => {
     let count = 0;
     slotAppointments.forEach((slot) => {
-
       if (compareDate(time.date, slot.date)) {
         for (var i = time.times.length - 1; i >= 0; i--) {
           var startTime = convertTime(time.times[i].startTime);
@@ -102,23 +115,65 @@ export const doctorSchedule = (
         time.count = count;
       }
     });
-
   });
-
-
-  var current = new Date();
-  var currentDate = new Date(current);
-  schedule.forEach((time) => {
-    if (compareDate(time.date, currentDate)) {
-      for (var i = time.times.length - 1; i >= 0; i--) {
-        var startTime = convertTime(time.times[i].startTime);
-        if (startTime - current.getHours() < 5) {
-          time.times.splice(i, 1);
-        }
-      }
+  console.log(schedule);
+  return schedule;
+};
+export const renderTimeForDoctor = (
+  start,
+  end,
+  durationPerAppointment,
+  timeOff,
+  timeBreak,
+  slotAppointments,
+  date
+) => {
+  var conflictSchedule = [];
+  timeOff.forEach((off) => {
+    if (compareDate(date, off.date)) {
+      conflictSchedule.push({
+        startTime: off.startTime,
+        endTime: off.endTime,
+      });
     }
   });
-  return schedule;
+  timeBreak.forEach((off) => {
+    if (compareDate(date, off.date)) {
+      conflictSchedule.push({
+        startTime: off.startTime,
+        endTime: off.endTime,
+      });
+    }
+  });
+  slotAppointments.forEach((slot) => {
+    if (compareDate(date, slot.date)) {
+      conflictSchedule.push({
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+      });
+    }
+  });
+  console.log(conflictSchedule);
+  const timeArr = [];
+  var currentTime = start;
+  while (currentTime < end) {
+    const time = {
+      startTime: formatTime(currentTime),
+      endTime: formatTime(addMinutes(currentTime, durationPerAppointment)),
+    };
+    const checkStartTime = conflictSchedule.findIndex(
+      (c) =>
+        convertTime(c.startTime) === convertTime(time.startTime) &&
+        convertTime(c.endTime) === convertTime(time.endTime)
+    );
+    if (checkStartTime !== -1) {
+      currentTime = addMinutes(currentTime, durationPerAppointment);
+    } else {
+      timeArr.push(time);
+      currentTime = addMinutes(currentTime, durationPerAppointment);
+    }
+  }
+  return timeArr;
 };
 export const convertToInt = (time) => {
   if (time) {
@@ -130,18 +185,18 @@ export const convertToInt = (time) => {
 };
 export const monthNameToNumber = (monthName) => {
   const months = {
-    January: 1,
-    February: 2,
-    March: 3,
-    April: 4,
+    Jan: 1,
+    Feb: 2,
+    Mar: 3,
+    Apr: 4,
     May: 5,
-    June: 6,
-    July: 7,
-    August: 8,
-    September: 9,
-    October: 10,
-    November: 11,
-    December: 12,
+    Jun: 6,
+    Jul: 7,
+    Aug: 8,
+    Sep: 9,
+    Oct: 10,
+    Nov: 11,
+    Dec: 12,
   };
 
   // Convert the month name to its corresponding number
@@ -186,10 +241,7 @@ export const formatDate = (gmtDateString) => {
   return convertDate;
 };
 
-
 export const timeSchedule = (start, end, durationPerAppointment) => {
-
-
   const timeArr = [];
   var currentTime = start;
   while (currentTime < end) {
@@ -201,16 +253,11 @@ export const timeSchedule = (start, end, durationPerAppointment) => {
     currentTime = addMinutes(currentTime, durationPerAppointment);
   }
 
-
   return timeArr;
 };
 
 export const viewSchedule = (timeOff, appointment, day, time) => {
-  const schedule = [
-    ...timeOff,
-    ...appointment
-  ]
-
+  const schedule = [...timeOff, ...appointment];
 
   let newDate = null;
   if (day) {
@@ -218,34 +265,30 @@ export const viewSchedule = (timeOff, appointment, day, time) => {
   }
   const timeArr = time.split(" - ");
   const item = schedule.find((item) => {
-    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
+    if (
+      item.date.split("T")[0] === newDate &&
+      item.startTime === timeArr[0] &&
+      item.endTime === timeArr[1]
+    ) {
       return item;
     }
-  })
+  });
   if (item) {
     if (item.idTimeOff) {
       if (item.status === 1) {
-        return "busy"
+        return "busy";
+      } else {
+        return "break";
       }
-      else {
-        return "break"
-      }
+    } else {
+      return "examination";
     }
-    else {
-      return "examination"
-
-    }
-  }
-  else {
+  } else {
     return null;
   }
-
-}
+};
 
 export const viewInforSchedule = (appointment, day, time) => {
-
-
-
   let newDate = null;
   if (day) {
     newDate = day.split("T")[0];
@@ -253,51 +296,43 @@ export const viewInforSchedule = (appointment, day, time) => {
 
   const timeArr = time.split(" - ");
   const item = appointment.find((item) => {
-    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
+    if (
+      item.date.split("T")[0] === newDate &&
+      item.startTime === timeArr[0] &&
+      item.endTime === timeArr[1]
+    ) {
       return item;
     }
-  })
+  });
   if (item) {
     return {
-      ...item
-    }
-  }
-  else {
+      ...item,
+    };
+  } else {
     return null;
   }
-
-}
+};
 
 export const viewBreakTime = (timeOff, time) => {
-
-
-
-
   const timeArr = time.split(" - ");
   const item = timeOff.find((item) => {
     if (item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
       return item;
     }
-  })
+  });
   if (item) {
     //
     if (item.status === 2) {
-      return "break"
+      return "break";
+    } else {
+      return null;
     }
-    else {
-      return null
-    }
-  }
-  else {
+  } else {
     return null;
   }
-
-}
+};
 
 export const viewInforTimeOff = (timeOff, day, time) => {
-
-
-
   let newDate = null;
   if (day) {
     newDate = day.split("T")[0];
@@ -305,47 +340,46 @@ export const viewInforTimeOff = (timeOff, day, time) => {
 
   const timeArr = time.split(" - ");
   const item = timeOff.find((item) => {
-    if (item.date.split("T")[0] === newDate && item.startTime === timeArr[0] && item.endTime === timeArr[1]) {
+    if (
+      item.date.split("T")[0] === newDate &&
+      item.startTime === timeArr[0] &&
+      item.endTime === timeArr[1]
+    ) {
       return item;
     }
-  })
+  });
   if (item) {
-
     if (item.status === 1) {
-      return item.reason
+      return item.reason;
+    } else {
+      return null;
     }
-    else {
-      return null
-    }
-
-
-  }
-  else {
+  } else {
     return null;
   }
-
-}
+};
 
 const compareDate = (date1, date2) => {
   const newDate1 = new Date(date1);
   const newDate2 = new Date(date2);
-  if (newDate1.getDate() === newDate2.getDate() && newDate1.getMonth() === newDate2.getMonth() && newDate1.getFullYear() === newDate2.getFullYear()) {
+  if (
+    newDate1.getDate() === newDate2.getDate() &&
+    newDate1.getMonth() === newDate2.getMonth() &&
+    newDate1.getFullYear() === newDate2.getFullYear()
+  ) {
     return true;
-  }
-  else {
+  } else {
     return false;
   }
-}
+};
 
 export const compareTime = (time) => {
   const timeArr = time.split(" - ");
   var current = new Date();
   var startTime = convertTime(timeArr[0]);
   if (startTime - current.getHours() < 0) {
-    return true
+    return true;
+  } else {
+    return false;
   }
-  else {
-    return false
-  }
-
-}
+};

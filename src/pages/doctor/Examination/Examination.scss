@@ -68,7 +68,21 @@
         height: 400px;
         margin-top: 20px;
         overflow-y: scroll;
-        padding: 0 10px;
+        &::-webkit-scrollbar {
+          width: 5px; // Độ rộng của thanh cuộn
+        }
+
+        &::-webkit-scrollbar-track {
+          background: #f1f1f1; // Màu nền của thanh cuộn
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: #888; // Màu của thanh cuộn
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+          background: #555; // Màu của thanh cuộn khi rê chuột vào
+        }
       }
 
       &__button {

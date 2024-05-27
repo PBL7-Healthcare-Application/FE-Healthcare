@@ -16,15 +16,29 @@ import { CloseOutlined, DeleteTwoTone, EditOutlined } from "@ant-design/icons";
 import { iconCertificate } from "../../../helpers/icon";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
+import {
+  setError,
+  setMessage,
+  setStatusCode,
+} from "../../../stores/doctor/DoctorSlice";
 import { openNotificationWithIcon } from "../../notification/CustomNotify";
-import { doctorAddEducation, getDoctorProfile } from "../../../stores/doctor/DoctorThunk";
+import {
+  doctorAddEducation,
+  doctorUpdateEducation,
+  getDoctorProfile,
+} from "../../../stores/doctor/DoctorThunk";
+import dayjs from "dayjs";
 
 const Education = ({ type }) => {
-  const { profile, loading, statusCode, error } = useSelector((state) => state.doctor);
+  const { profile, loading, statusCode, error, message } = useSelector(
+    (state) => state.doctor
+  );
   const [education, setEducation] = useState([{}]);
+  const [idAppointment, setIdAppointment] = useState(null);
   const [isAdd, setIsAdd] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
   const columns = [
     {
@@ -76,12 +90,33 @@ const Education = ({ type }) => {
           },
         };
       },
-      render: () => (
+      render: (text, record) => (
         <Space size={"middle"}>
           <EditOutlined
             className="certificate-iconEdit"
             style={{ fontSize: 20, color: "rgb(51, 114, 254)" }}
-          //   onClick={handleShowDeleteModal}
+            onClick={() => {
+              console.log(record);
+              setIsAdd(true);
+              setIsEdit(true);
+              setIdAppointment(record?.id);
+              form.setFieldsValue({
+                education: [
+                  {
+                    schoolName: record?.name,
+                    major: record?.major,
+                    startYear:
+                      record?.startYear &&
+                      dayjs(record?.startYear?.toString(), "YYYY"),
+                    endYear:
+                      record?.endYear &&
+                      dayjs(record?.endYear?.toString(), "YYYY"),
+                  },
+                ],
+              });
+            }}
+
+            //   onClick={handleShowDeleteModal}
           />
           <DeleteTwoTone
             twoToneColor="#EB1B36"
@@ -94,16 +129,21 @@ const Education = ({ type }) => {
   useEffect(() => {
     if (statusCode === 200) {
       dispatch(setStatusCode(null));
-      openNotificationWithIcon("success", api, "", "Update Profile Successfully!");
+      dispatch(setMessage(null));
+      openNotificationWithIcon("success", api, "", message);
       dispatch(getDoctorProfile());
       setIsAdd(false);
+      setIsEdit(false);
       setEducation([{}]);
+      form.resetFields();
     }
     if (error !== null) {
       openNotificationWithIcon("error", api, "", error);
       dispatch(setError(null));
       setIsAdd(false);
+      setIsEdit(false);
       setEducation([{}]);
+      form.resetFields();
     }
   }, [statusCode, error, api, dispatch]);
   const onFinish = (values) => {
@@ -113,10 +153,19 @@ const Education = ({ type }) => {
         major: item.major,
         startYear: item.startYear.$y,
         endYear: item.endYear.$y,
-      }
-    })
-    dispatch(doctorAddEducation(body));
-  }
+      };
+    });
+    if (isEdit) {
+      dispatch(
+        doctorUpdateEducation({
+          ...body[0],
+          idTrainingProcess: idAppointment,
+        })
+      );
+    } else {
+      dispatch(doctorAddEducation(body));
+    }
+  };
   return (
     <div className="certificate-main">
       {type === "DOCTOR" && (
@@ -127,14 +176,18 @@ const Education = ({ type }) => {
           Educations
         </span>
       )}
-      <Modal open={isAdd}
+      <Modal
+        open={isAdd}
         onCancel={() => {
-          setIsAdd(false)
-          setEducation([{}])
+          setIsEdit(false);
+          setIsAdd(false);
+          setEducation([{}]);
+          form.resetFields();
         }}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
-        width={600}>
+        width={600}
+      >
         <div
           style={{ width: "100%", justifyContent: "center", display: "flex" }}
         >
@@ -155,6 +208,7 @@ const Education = ({ type }) => {
             education,
           }}
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item style={{ width: "100%" }}>
             <Form.List name="education" label="Certificates">
@@ -183,7 +237,7 @@ const Education = ({ type }) => {
                           display: "flex",
                           rowGap: 16,
                           flexDirection: "row",
-                          gap: 30
+                          gap: 30,
                         }}
                       >
                         <div style={{ flex: 1 }}>
@@ -191,7 +245,7 @@ const Education = ({ type }) => {
                           <Form.Item
                             name={[field.name, "schoolName"]}
                             style={{
-                              margin: '8px 0'
+                              margin: "8px 0",
                             }}
                             rules={[
                               {
@@ -209,7 +263,7 @@ const Education = ({ type }) => {
                           <Form.Item
                             name={[field.name, "major"]}
                             style={{
-                              margin: '8px 0'
+                              margin: "8px 0",
                             }}
                             rules={[
                               {
@@ -227,7 +281,7 @@ const Education = ({ type }) => {
                           display: "flex",
                           rowGap: 16,
                           flexDirection: "row",
-                          gap: 30
+                          gap: 30,
                         }}
                       >
                         <div style={{ flex: 1 }}>
@@ -235,7 +289,7 @@ const Education = ({ type }) => {
                           <Form.Item
                             name={[field.name, "startYear"]}
                             style={{
-                              margin: '8px 0'
+                              margin: "8px 0",
                             }}
                             rules={[
                               {
@@ -244,7 +298,10 @@ const Education = ({ type }) => {
                               },
                             ]}
                           >
-                            <DatePicker picker="year" style={{ width: "100%" }} />
+                            <DatePicker
+                              picker="year"
+                              style={{ width: "100%" }}
+                            />
                           </Form.Item>
                         </div>
                         <div style={{ flex: 1 }}>
@@ -252,7 +309,7 @@ const Education = ({ type }) => {
                           <Form.Item
                             name={[field.name, "endYear"]}
                             style={{
-                              margin: '8px 0'
+                              margin: "8px 0",
                             }}
                             rules={[
                               {
@@ -261,23 +318,49 @@ const Education = ({ type }) => {
                               },
                             ]}
                           >
-                            <DatePicker picker="year" style={{ width: "100%" }} />
+                            <DatePicker
+                              picker="year"
+                              style={{ width: "100%" }}
+                            />
                           </Form.Item>
                         </div>
-
                       </div>
                     </Card>
                   ))}
 
-                  <Button type="dashed" onClick={() => add()} block>
-                    + Add Item
-                  </Button>
+                  {!isEdit && (
+                    <Button type="dashed" onClick={() => add()} block>
+                      + Add Item
+                    </Button>
+                  )}
                 </div>
               )}
             </Form.List>
           </Form.Item>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Button htmlType="submit" className="appointmentDetail-right__buttonEx" loading={loading}>Create</Button>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            {!isEdit ? (
+              <Button
+                htmlType="submit"
+                className="appointmentDetail-right__buttonEx"
+                loading={loading}
+              >
+                Create
+              </Button>
+            ) : (
+              <Button
+                htmlType="submit"
+                className="appointmentDetail-right__buttonEx"
+                loading={loading}
+              >
+                Update
+              </Button>
+            )}
           </div>
         </Form>
       </Modal>
@@ -310,7 +393,18 @@ const Education = ({ type }) => {
             major: item?.major,
             startYear: item?.startYear,
             endYear: item?.endYear,
-            status: <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}> {iconCertificate(item?.statusVerified)}</div>,
+            status: (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {" "}
+                {iconCertificate(item?.statusVerified)}
+              </div>
+            ),
           }))}
           bordered
         />

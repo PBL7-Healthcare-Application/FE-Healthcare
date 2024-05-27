@@ -5,7 +5,11 @@ import {
   doctorAddCertificate,
   doctorAddEducation,
   doctorAddExperience,
+  doctorCreateMedical,
+  doctorGetUserMedical,
   doctorGetlistMedical,
+  doctorUpdateEducation,
+  doctorUpdateExperience,
   getDetailDoctorAppointment,
   getDoctorAppointment,
   getDoctorCalendar,
@@ -15,8 +19,6 @@ import {
   updateDoctorWorkingTime,
   updateDoctorWorkingTimeForConflict,
 } from "./DoctorThunk";
-
-
 
 const doctorSlice = createSlice({
   name: "doctor",
@@ -31,6 +33,7 @@ const doctorSlice = createSlice({
     paging: null,
     message: null,
     listMedical: [],
+    userMedical: [],
   },
   reducers: {
     setStatusCode: (state, action) => {
@@ -41,7 +44,7 @@ const doctorSlice = createSlice({
     },
     setMessage: (state, action) => {
       state.message = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -82,11 +85,10 @@ const doctorSlice = createSlice({
         state.loading = false;
         state.profile = action.payload.data;
         if (localStorage.getItem("doctor")) {
-          localStorage.removeItem("doctor")
-          localStorage.setItem("doctor", JSON.stringify(action.payload.data))
-        }
-        else {
-          localStorage.setItem("doctor", JSON.stringify(action.payload.data))
+          localStorage.removeItem("doctor");
+          localStorage.setItem("doctor", JSON.stringify(action.payload.data));
+        } else {
+          localStorage.setItem("doctor", JSON.stringify(action.payload.data));
         }
       })
       .addCase(getDoctorProfile.rejected, (state, action) => {
@@ -206,15 +208,18 @@ const doctorSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateDoctorWorkingTimeForConflict.fulfilled, (state, action) => {
-        state.loading = false;
-        if (action.payload.statusCode !== 200) {
-          state.error = action.payload.message;
-          return;
+      .addCase(
+        updateDoctorWorkingTimeForConflict.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          if (action.payload.statusCode !== 200) {
+            state.error = action.payload.message;
+            return;
+          }
+          state.message = action.payload.message;
+          state.statusCode = action.payload.statusCode;
         }
-        state.message = action.payload.message;
-        state.statusCode = action.payload.statusCode;
-      })
+      )
       .addCase(updateDoctorWorkingTimeForConflict.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
@@ -264,6 +269,7 @@ const doctorSlice = createSlice({
           state.error = action.payload.message;
           return;
         }
+        state.message = action.payload.message;
         state.statusCode = action.payload.statusCode;
       })
       .addCase(doctorAddEducation.rejected, (state, action) => {
@@ -284,6 +290,74 @@ const doctorSlice = createSlice({
         state.loading = false;
         state.error = action.payload.detail;
       })
+      //=====================================
+      .addCase(doctorCreateMedical.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorCreateMedical.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(doctorCreateMedical.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(doctorGetUserMedical.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorGetUserMedical.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userMedical = action.payload.data;
+      })
+      .addCase(doctorGetUserMedical.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
+      //=====================================
+      .addCase(doctorUpdateEducation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorUpdateEducation.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(doctorUpdateEducation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(doctorUpdateExperience.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorUpdateExperience.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(doctorUpdateExperience.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      });
   },
 });
 export default doctorSlice.reducer;
