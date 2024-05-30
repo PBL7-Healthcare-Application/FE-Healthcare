@@ -24,7 +24,11 @@ import {
   unLockAccountUser,
 } from "../../stores/admin/AdminThunk";
 import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
-import { setError, setMessage, setStatusCode } from "../../stores/admin/AdminSlice";
+import {
+  setError,
+  setMessage,
+  setStatusCode,
+} from "../../stores/admin/AdminSlice";
 import { FaUnlockAlt } from "react-icons/fa";
 
 const ManagementUser = () => {
@@ -47,6 +51,7 @@ const ManagementUser = () => {
       title: "Id",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "Name",
@@ -86,33 +91,31 @@ const ManagementUser = () => {
       render: (text, record) => (
         <>
           <Space size={"middle"} align="center" direction="horizontal">
-            {
-              !record.isLocked ? (
-                <FaUnlockAlt
-                  className="function-box__delete"
-                  size={25}
-                  style={{ cursor: "pointer", color: '#87d068' }}
-                  color="#ff4d4f"
-                  onClick={() => {
-                    setIsDisabled(!isDisabled);
-                    setEmail(record.email);
-                    setIsLock(record.isLocked)
-                  }}
-                />
-              ) : (
-                <BiSolidLock
-                  className="function-box__delete"
-                  size={30}
-                  style={{ cursor: "pointer" }}
-                  color="#ff4d4f"
-                  onClick={() => {
-                    setIsDisabled(!isDisabled);
-                    setEmail(record.email);
-                    setIsLock(record.isLocked)
-                  }}
-                />
-              )
-            }
+            {!record.isLocked ? (
+              <FaUnlockAlt
+                className="function-box__delete"
+                size={25}
+                style={{ cursor: "pointer", color: "#87d068" }}
+                color="#ff4d4f"
+                onClick={() => {
+                  setIsDisabled(!isDisabled);
+                  setEmail(record.email);
+                  setIsLock(record.isLocked);
+                }}
+              />
+            ) : (
+              <BiSolidLock
+                className="function-box__delete"
+                size={30}
+                style={{ cursor: "pointer" }}
+                color="#ff4d4f"
+                onClick={() => {
+                  setIsDisabled(!isDisabled);
+                  setEmail(record.email);
+                  setIsLock(record.isLocked);
+                }}
+              />
+            )}
           </Space>
         </>
       ),
@@ -180,14 +183,12 @@ const ManagementUser = () => {
           email: email,
         })
       );
-    }
-    else {
+    } else {
       dispatch(
         unLockAccountUser({
           email: email,
         })
       );
-
     }
 
     setIsDisabled(false);
@@ -271,7 +272,9 @@ const ManagementUser = () => {
                 fontSize: 18,
               }}
             >
-              {isLock ? "Do you want to unlock this account?" : "Do you want to lock this account?"}
+              {isLock
+                ? "Do you want to unlock this account?"
+                : "Do you want to lock this account?"}
             </span>
             <span
               className="ChangePass-text"
@@ -351,12 +354,22 @@ const ManagementUser = () => {
         <Table
           columns={columns}
           dataSource={listUser.map((item, index) => ({
-            id: item?.email,
+            id: item?.idUser,
             key: index,
             name: item?.email,
             created: item?.createdDate ? item?.createdDate.split("T")[0] : "--",
             role: tabRole(item?.role),
-            status: statusAccount(item?.isLocked),
+            status: (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {statusAccount(item?.isLocked)}
+              </div>
+            ),
             email: item?.email,
             isLocked: item?.isLocked,
             r: item.role === "User" ? "USER" : "DOCTOR",

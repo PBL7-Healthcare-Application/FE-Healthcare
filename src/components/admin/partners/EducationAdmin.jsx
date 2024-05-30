@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { Modal, Select, Space, Table } from "antd";
-import { DeleteTwoTone, EditOutlined } from "@ant-design/icons";
 import { iconCertificate } from "../../../helpers/icon";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
@@ -24,6 +23,7 @@ const EducationAdmin = () => {
       title: "Id",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "School Name",
@@ -40,16 +40,19 @@ const EducationAdmin = () => {
       title: "Start Year",
       dataIndex: "startYear",
       align: "center",
+      width: "10%",
     },
     {
       title: "End Year",
       dataIndex: "endYear",
       align: "center",
+      width: "10%",
     },
     {
       title: "Status",
       dataIndex: "status",
       align: "center",
+      width: "15%",
     },
     {
       title: "Action",
@@ -97,7 +100,18 @@ const EducationAdmin = () => {
             major: item?.major,
             startYear: item?.startYear,
             endYear: item?.endYear,
-            status: iconCertificate(item?.statusVerified),
+            status: (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {" "}
+                {iconCertificate(item?.statusVerified)}
+              </div>
+            ),
           }))}
           bordered
         />

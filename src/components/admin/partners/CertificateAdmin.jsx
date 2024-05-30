@@ -30,6 +30,7 @@ const CertificateAdmin = ({ partner }) => {
       title: "Id",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "Name",
@@ -41,11 +42,13 @@ const CertificateAdmin = ({ partner }) => {
       title: "Year",
       dataIndex: "year",
       align: "center",
+      width: "20%",
     },
     {
       title: "Status",
       dataIndex: "status",
       align: "center",
+      width: "15%",
     },
   ];
   if (partner === "partner") {
@@ -102,7 +105,17 @@ const CertificateAdmin = ({ partner }) => {
             key: index + 1,
             name: item?.name,
             year: item?.year,
-            status: iconCertificate(item?.statusVerified),
+            status: (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {iconCertificate(item?.statusVerified)}
+              </div>
+            ),
           }))}
           bordered
           onRow={(record, rowIndex) => {

@@ -34,8 +34,7 @@ import problem from "../../assets/images/problem.png";
 import Specialty from "../../components/specialty/Specialty";
 import { getAdminPartner } from "../../stores/admin/AdminThunk";
 const ManagementPartner = () => {
-  const { partner, paging } =
-    useSelector((state) => state.admin);
+  const { partner, paging } = useSelector((state) => state.admin);
   const [inputSearch, setInputSearch] = useState("");
   const [specialty, setSpecialty] = useState(null);
   const [typePartner, setTypePartner] = useState(null);
@@ -49,6 +48,7 @@ const ManagementPartner = () => {
       title: "Id",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "Doctor",
@@ -70,6 +70,7 @@ const ManagementPartner = () => {
       title: "Status",
       dataIndex: "status",
       align: "center",
+      width: "15%",
     },
     {
       title: "Action",
@@ -123,9 +124,8 @@ const ManagementPartner = () => {
         idSpecialty: value !== 0 ? value : undefined,
         TypePartner: typePartner !== null ? typePartner : undefined,
         search: inputSearch !== "" ? inputSearch : undefined,
-
       })
-    )
+    );
   };
   const handleTypePartnerChange = (value) => {
     setTypePartner(value !== "All" ? value : null);
@@ -135,9 +135,8 @@ const ManagementPartner = () => {
         idSpecialty: specialty !== null ? specialty : undefined,
         TypePartner: value !== "All" ? value : undefined,
         search: inputSearch !== "" ? inputSearch : undefined,
-
       })
-    )
+    );
   };
 
   const handleChangeInput = (e) => {
@@ -176,7 +175,6 @@ const ManagementPartner = () => {
     );
   }, [dispatch]);
   return (
-
     <div className="DoctorAppointment">
       <div
         className="DoctorAppointment-filter"
@@ -211,8 +209,8 @@ const ManagementPartner = () => {
             </Button>
           </div>
         </div>
-        <div className="DoctorAppointment-select" >
-          <span className="DoctorAppointment-text" >Specialty</span>
+        <div className="DoctorAppointment-select">
+          <span className="DoctorAppointment-text">Specialty</span>
           <div style={{ width: 200 }}>
             <Specialty onChange={(value) => handleSpecialty(value)} />
           </div>
@@ -240,7 +238,17 @@ const ManagementPartner = () => {
             doctor: item.name,
             specialty: item.medicalSpecialty,
             created: item.created ? item.created : "N/A",
-            status: iconPartner(item.statusVerified),
+            status: (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {iconPartner(item.statusVerified)}
+              </div>
+            ),
           }))}
           onRow={(record, rowIndex) => {
             return {
@@ -269,7 +277,7 @@ const ManagementPartner = () => {
           }}
         />
       </div>
-    </div >
+    </div>
   );
 };
 

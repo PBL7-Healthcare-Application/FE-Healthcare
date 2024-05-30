@@ -23,6 +23,7 @@ const ExperienceAdmin = () => {
       title: "Id",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "Workplace",
@@ -39,16 +40,19 @@ const ExperienceAdmin = () => {
       title: "Start Year",
       dataIndex: "startYear",
       align: "center",
+      width: "10%",
     },
     {
       title: "End Year",
       dataIndex: "endYear",
       align: "center",
+      width: "10%",
     },
     {
       title: "Status",
       dataIndex: "status",
       align: "center",
+      width: "15%",
     },
     {
       title: "Action",
@@ -96,7 +100,17 @@ const ExperienceAdmin = () => {
             position: item?.position,
             startYear: item?.startYear,
             endYear: item?.endYear,
-            status: iconCertificate(item?.statusVerified),
+            status: (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {iconCertificate(item?.statusVerified)}
+              </div>
+            ),
           }))}
           bordered
         />

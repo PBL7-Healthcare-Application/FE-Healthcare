@@ -47,9 +47,15 @@ const DetailUser = ({ partner }) => {
       >
         <TabPane key={1} tab="Profile">
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <UserInfor type={"profile"} partner={partner} />
-            {/* <UserProfile role={location?.state.role} /> */}
-            <PartnerProfile partner={partner} />
+            {/* <UserInfor type={"profile"} partner={partner} /> */}
+            {partner ? (
+              <>
+                <UserInfor type={"profile"} partner={partner} />
+                <PartnerProfile partner={partner} />
+              </>
+            ) : (
+              <UserProfile role={location?.state.role} />
+            )}
           </div>
         </TabPane>
         {location?.state.role === "DOCTOR" &&

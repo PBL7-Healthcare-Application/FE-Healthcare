@@ -362,7 +362,17 @@ const ManagementAppointment = () => {
             doctor: item.doctor,
             patient: item.patient,
             created: item.created,
-            status: icon(item.status),
+            status: (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {icon(item.status)}
+              </div>
+            ),
           }))}
           onRow={(record, rowIndex) => {
             return {
