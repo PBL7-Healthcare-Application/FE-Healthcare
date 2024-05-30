@@ -16,7 +16,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
-  const { user, error } = useSelector((state) => state.auth);
+  const { user, error, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (user) {
@@ -164,6 +164,7 @@ const SignUp = () => {
               htmlType="submit"
               className="login-form-button"
               style={{ marginTop: 10 }}
+              loading={loading}
             >
               Sign up
             </Button>

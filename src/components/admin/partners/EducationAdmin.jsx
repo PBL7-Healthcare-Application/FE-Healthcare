@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { addVerifyEducation } from "../../../stores/admin/AdminSlice";
 
-const EducationAdmin = () => {
+const EducationAdmin = ({ partner }) => {
   const { partnerDetail } = useSelector((state) => state.admin);
   const [isAdd, setIsAdd] = useState(false);
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(partnerDetail?.isVerifiedInfoTrainingProcess);
   const dispatch = useDispatch();
   const handleVerify = (value, record) => {
     dispatch(
@@ -54,7 +54,10 @@ const EducationAdmin = () => {
       align: "center",
       width: "15%",
     },
-    {
+  ];
+
+  if (partner === "partner") {
+    columns.push({
       title: "Action",
       key: "function",
       dataIndex: "function",
@@ -83,9 +86,8 @@ const EducationAdmin = () => {
           />
         </Space>
       ),
-    },
-  ];
-
+    });
+  }
   return (
     <div className="certificate-main">
       <Modal open={isAdd} onCancel={() => setIsAdd(false)} width={600}></Modal>

@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  adminGetAppointment,
+  adminGetAppointmentDetail,
+  adminGetUserDetail,
   disableAccountUser,
   getAdminPartner,
   getAdminPartnerDetail,
@@ -19,6 +22,8 @@ const adminSlice = createSlice({
     verifyCertificate: [],
     verifyExperience: [],
     verifyEducation: [],
+    listAppointment: [],
+    appointmentDetail: null,
     partnerDetail: null,
     paging: null,
     statusCode: null,
@@ -158,6 +163,19 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload.detail;
       })
+      //======================================
+      .addCase(adminGetUserDetail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(adminGetUserDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.partnerDetail = action.payload.data;
+      })
+      .addCase(adminGetUserDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
       //=============================
       .addCase(verifyAdminCertificate.pending, (state) => {
         state.loading = true;
@@ -227,6 +245,33 @@ const adminSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(verifyAdminEducation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=============================
+      .addCase(adminGetAppointment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(adminGetAppointment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.paging = action.payload.pagingInfo;
+        state.listAppointment = action.payload.data;
+      })
+      .addCase(adminGetAppointment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=============================
+      .addCase(adminGetAppointmentDetail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(adminGetAppointmentDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.appointmentDetail = action.payload.data;
+      })
+      .addCase(adminGetAppointmentDetail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
       });

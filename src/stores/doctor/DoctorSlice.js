@@ -11,6 +11,7 @@ import {
   doctorDeleteExperience,
   doctorGetUserMedical,
   doctorGetlistMedical,
+  doctorReschedule,
   doctorUpdateCertificate,
   doctorUpdateEducation,
   doctorUpdateExperience,
@@ -434,6 +435,25 @@ const doctorSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(doctorDeleteExperience.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
+      //=====================================
+      .addCase(doctorReschedule.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doctorReschedule.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(doctorReschedule.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
       })

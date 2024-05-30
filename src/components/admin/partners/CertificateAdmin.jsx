@@ -8,7 +8,7 @@ import { addVerifyCertificate } from "../../../stores/admin/AdminSlice";
 const CertificateAdmin = ({ partner }) => {
   const { partnerDetail } = useSelector((state) => state.admin);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(partnerDetail?.isVerifiedInfoCertificate);
   const dispatch = useDispatch();
   const handleVerify = (value, record) => {
     dispatch(
@@ -73,7 +73,7 @@ const CertificateAdmin = ({ partner }) => {
             <Select
               disabled={isDisable}
               onChange={(value) => handleVerify(value, record)}
-              placeholder="-- select --"
+              placeholder="--Select--"
               style={{ height: 32, color: "#6c81a0" }}
               //   onChange={handleTypePartnerChange}
               options={[

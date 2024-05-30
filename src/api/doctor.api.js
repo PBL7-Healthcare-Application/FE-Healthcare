@@ -81,7 +81,9 @@ export const getCalendar = () => {
 export const createTimeOff = (data) => {
   return http.post(`/Doctor/Calendar/CreateTimeOff`, data);
 };
-
+export const reschedule = (data) => {
+  return http.post(`/Doctor/Appointment/RescheduleAppointment`, data);
+};
 export const updateProfile = (data) => {
   return http.put(`/Doctor/Profile/UpdateProfile`, data);
 };

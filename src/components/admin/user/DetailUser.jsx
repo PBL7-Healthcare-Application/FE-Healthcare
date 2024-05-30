@@ -13,7 +13,7 @@ import { EditFilled } from "@ant-design/icons";
 import UserInfor from "./UserInfor";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAdminPartnerDetail } from "../../../stores/admin/AdminThunk";
+import { adminGetUserDetail, getAdminPartnerDetail } from "../../../stores/admin/AdminThunk";
 import PartnerProfile from "./PartnerProfile";
 import CertificateAdmin from "../partners/CertificateAdmin";
 import ExperienceAdmin from "../partners/ExperienceAdmin";
@@ -26,8 +26,13 @@ const DetailUser = ({ partner }) => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { partnerDetail } = useSelector((state) => state.admin);
+  // console.log(pa);
   useEffect(() => {
-    dispatch(getAdminPartnerDetail(id));
+    if (partner) {
+      dispatch(getAdminPartnerDetail(id))
+    } else {
+      dispatch(adminGetUserDetail(id))
+    }
   }, [id, dispatch]);
   return (
     <div className="setting">
@@ -54,18 +59,21 @@ const DetailUser = ({ partner }) => {
                 <PartnerProfile partner={partner} />
               </>
             ) : (
-              <UserProfile role={location?.state.role} />
+              <>
+                <UserInfor type={"profile"} partner={partner} />
+                <UserProfile role={location?.state.role} />
+              </>
             )}
           </div>
         </TabPane>
         {location?.state.role === "DOCTOR" &&
-          partnerDetail?.certificates.length > 0 && (
+          partnerDetail?.certificates?.length > 0 && (
             <TabPane
               key={2}
               tab={
                 <span>
                   Certification{" "}
-                  <span>({partnerDetail?.certificates.length})</span>
+                  <span>({partnerDetail?.certificates?.length})</span>
                 </span>
               }
             >
@@ -74,13 +82,13 @@ const DetailUser = ({ partner }) => {
             </TabPane>
           )}
         {location?.state.role === "DOCTOR" &&
-          partnerDetail?.workingProcess.length > 0 && (
+          partnerDetail?.workingProcess?.length > 0 && (
             <TabPane
               key={3}
               tab={
                 <span>
                   Experience{" "}
-                  <span>({partnerDetail?.workingProcess.length})</span>
+                  <span>({partnerDetail?.workingProcess?.length})</span>
                 </span>
               }
             >
@@ -89,13 +97,13 @@ const DetailUser = ({ partner }) => {
             </TabPane>
           )}
         {location?.state.role === "DOCTOR" &&
-          partnerDetail?.trainingProcess.length > 0 && (
+          partnerDetail?.trainingProcess?.length > 0 && (
             <TabPane
               key={4}
               tab={
                 <span>
                   Education{" "}
-                  <span>({partnerDetail?.trainingProcess.length})</span>
+                  <span>({partnerDetail?.trainingProcess?.length})</span>
                 </span>
               }
             >

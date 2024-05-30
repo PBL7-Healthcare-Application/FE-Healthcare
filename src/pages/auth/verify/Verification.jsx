@@ -19,7 +19,7 @@ const Verification = () => {
   const navigate = useNavigate();
   const [amountOfResend, setAmountOfResend] = useState(3);
   const [api, contextHolder] = notification.useNotification();
-  const { user, error } = useSelector((state) => state.auth);
+  const { user, error, loading } = useSelector((state) => state.auth);
   const [otpValues, setOtpValues] = useState(Array(6).fill(""));
   const otpRefs = Array.from({ length: 6 }, () => createRef());
   const [seconds, setSeconds] = useState(120);
@@ -186,6 +186,7 @@ const Verification = () => {
               htmlType="submit"
               className="login-form-button"
               style={{ letterSpacing: 0.8, fontWeight: 600 }}
+              loading={loading}
             >
               Verify OTP
             </Button>

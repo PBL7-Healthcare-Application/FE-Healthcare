@@ -20,7 +20,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { debounce } from "lodash";
+import { debounce, set } from "lodash";
 import { icon } from "../../helpers/icon";
 
 import doctorDefault from "../../assets/images/doctor.jpeg";
@@ -29,18 +29,20 @@ import dolar from "../../assets/images/dollar.png";
 import personDefault from "../../assets/images/personDefault.png";
 import location from "../../assets/images/location.png";
 import problem from "../../assets/images/problem.png";
+import { adminGetAppointment } from "../../stores/admin/AdminThunk";
+import { da } from "date-fns/locale/da";
+import { getAppointmentDetail } from "../../api/admin.api";
+import { formatDate } from "../../helpers/timeBooking";
 const ManagementAppointment = () => {
-  const [tableParams, setTableParams] = useState({
-    pagination: {
-      current: 1,
-    },
-  });
+  const { paging, listAppointment } =
+    useSelector((state) => state.admin);
+  const [page, setPage] = useState(paging?.currentPage);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputSearch, setInputSearch] = useState("");
+  const [date, setDate] = useState(null);
   const [status, setStatus] = useState(null);
-  const [filterAvailable, setFilterAvailable] = useState(null);
-  const { ListAppointments, TotalItems, CurrentPage, ItemsPerPage } =
-    useSelector((state) => state.doctor);
+  const [detail, setDetail] = useState(null);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const contentRef = useRef(null);
@@ -72,42 +74,49 @@ const ManagementAppointment = () => {
       align: "center",
     },
   ];
-  const data = [
-    {
-      key: 1,
-      doctor: "Dr. Smith",
-      patient: "John Doe",
-      created: "2022-01-01",
-      status: 1,
-    },
-    {
-      key: 2,
-      doctor: "Dr. Johnson",
-      patient: "Jane Doe",
-      created: "2022-01-02",
-      status: 2,
-    },
-  ];
+  useEffect(() => {
+    dispatch(
+      adminGetAppointment({ page: 1 })
+    )
+  }, [dispatch])
   //
 
   const handleStatusChange = (value) => {
-    setStatus(value);
+    setStatus(value !== "All" ? value : null);
+    dispatch(
+      adminGetAppointment({
+        date: date !== null ? date : undefined,
+        status: value !== "All" ? value : undefined,
+        page: page,
+      })
+    );
   };
-  const handleAvailableChange = (value) => {
-    setFilterAvailable(value);
-  };
+  const handlePicker = (value, stringDate) => {
+    setDate(stringDate);
+    dispatch(
+      adminGetAppointment({
+        status: status !== null ? status : undefined,
+        date: stringDate,
+        page: page,
+      })
+    );
+  }
+
+
 
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
     setInputSearch(newValue);
-    debounceInputKey(newValue, status, 1, filterAvailable);
+    debounceInputKey(newValue, status, 1);
   };
   const debounceInputKey = useRef(
-    debounce((nextValue, status, page, filterAvailable) => {}, 500)
+    debounce((nextValue, status, page, filterAvailable) => { }, 500)
   ).current;
-  const handleClick = () => {};
-
-  useEffect(() => {}, [dispatch]);
+  const handleClick = () => { };
+  useEffect(() => {
+    console.log(detail)
+  }, [detail])
+  useEffect(() => { }, [dispatch]);
   return (
     <div className="DoctorAppointment">
       <Modal
@@ -123,7 +132,7 @@ const ManagementAppointment = () => {
         >
           <div className="appointment-left__infor--box">
             <Image
-              src={""}
+              src={detail?.avatarUser}
               width={90}
               className="appointment-left__infor--img"
               fallback={doctorDefault}
@@ -137,13 +146,13 @@ const ManagementAppointment = () => {
                 className="appointment-font"
                 style={{ fontSize: 20, fontWeight: 500, letterSpacing: 0.4 }}
               >
-                {"Bui Van Huy"}
+                {detail?.nameDoctor}
               </Typography>
               <Typography
                 className="appointment-font"
                 style={{ fontSize: 15, fontWeight: 400, color: "#6c81a0" }}
               >
-                {"Tim mach"}
+                {detail?.specialty}
               </Typography>
             </div>
           </div>
@@ -152,7 +161,7 @@ const ManagementAppointment = () => {
               className="appointment-font"
               style={{ fontSize: 16, fontWeight: 500, color: "#6c81a0" }}
             >
-              Appointment schedule information
+              Information
             </Typography>
             <div className="appointment-right__box">
               <div className="appointment-right__content">
@@ -172,7 +181,7 @@ const ManagementAppointment = () => {
                       letterSpacing: 0.4,
                     }}
                   >
-                    7:00 - 8:00
+                    {detail?.startTime} - {detail?.endTime}
                   </Typography>
                   <Typography
                     className="appointment-font"
@@ -182,7 +191,7 @@ const ManagementAppointment = () => {
                       color: "#6c81a0",
                     }}
                   >
-                    Tuesday, May 21, 2024
+                    {formatDate(detail?.date)}
                   </Typography>
                 </div>
               </div>
@@ -202,7 +211,7 @@ const ManagementAppointment = () => {
                       letterSpacing: 0.4,
                     }}
                   >
-                    Enclinic
+                    {detail?.nameClinic}
                   </Typography>
                   <Typography
                     className="appointment-font"
@@ -212,7 +221,7 @@ const ManagementAppointment = () => {
                       color: "#6c81a0",
                     }}
                   >
-                    Hoa Phong, Hoa Vang, Da Nang
+                    {detail?.address}
                   </Typography>
                 </div>
               </div>
@@ -232,7 +241,7 @@ const ManagementAppointment = () => {
                       color: "#6c81a0",
                     }}
                   >
-                    I had problems with my heart
+                    {detail?.issue}
                   </Typography>
                 </div>
               </div>
@@ -253,7 +262,7 @@ const ManagementAppointment = () => {
                       color: "#D84023",
                     }}
                   >
-                    500.000 ₫
+                    VND {detail?.price.toLocaleString('vi-VN')}
                   </Typography>
                 </div>
               </div>
@@ -266,11 +275,11 @@ const ManagementAppointment = () => {
               className="appointment-font"
               style={{ fontSize: 16, fontWeight: 500, color: "#6c81a0" }}
             >
-              Service User
+              User
             </Typography>
             <div className="appointment-right__box successBooking-service">
               <Image
-                src={""}
+                src={detail?.avatarUser}
                 width={60}
                 style={{ borderRadius: "50%" }}
                 fallback={personDefault}
@@ -285,18 +294,9 @@ const ManagementAppointment = () => {
                     letterSpacing: 0.4,
                   }}
                 >
-                  {"Ngueyn Van A"}
+                  {detail?.nameUser}
                 </Typography>
-                <Typography
-                  className="appointment-font"
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 400,
-                    color: "#6c81a0",
-                  }}
-                >
-                  {"van Huy Bui"}
-                </Typography>
+
               </div>
             </div>
           </div>
@@ -322,13 +322,14 @@ const ManagementAppointment = () => {
             <Input
               type="text"
               className="search__input-text"
-              placeholder="Search for a patient..."
-              style={{ border: "1px solid #a1a1aa" }}
+              placeholder="Search..."
+              style={{ border: "1px solid #a1a1aa", fontSize: 13 }}
               onChange={handleChangeInput}
             />
             <Button
               className="Schedule-content__left-button"
               onClick={handleClick}
+              style={{ height: 43 }}
             >
               Search
             </Button>
@@ -337,11 +338,11 @@ const ManagementAppointment = () => {
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Status</span>
           <Select
-            placeholder="-- select --"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
+            defaultValue={"All"}
+            style={{ width: 150, height: 43, color: "#6c81a0" }}
             onChange={handleStatusChange}
             options={[
-              { value: 0, label: "All" },
+              { value: "All", label: "All" },
               { value: 1, label: "Booked" },
               { value: 3, label: "Completed" },
               { value: 2, label: "Canceled" },
@@ -350,18 +351,18 @@ const ManagementAppointment = () => {
         </div>
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Date</span>
-          <DatePicker style={{ width: 150, height: 46, color: "#6c81a0" }} />
+          <DatePicker style={{ width: 150, height: 43, color: "#6c81a0" }} onChange={handlePicker} />
         </div>
       </div>
       <div className="DoctorAppointment-filter">
         <Table
           columns={columns}
-          dataSource={data.map((item, index) => ({
-            id: item.key,
+          dataSource={listAppointment.map((item, index) => ({
+            id: item?.idAppointment,
             key: index + 1,
-            doctor: item.doctor,
-            patient: item.patient,
-            created: item.created,
+            doctor: item?.doctor?.name,
+            patient: item?.user?.name,
+            created: item.createdAt.split("T")[0],
             status: (
               <div
                 style={{
@@ -376,15 +377,27 @@ const ManagementAppointment = () => {
           }))}
           onRow={(record, rowIndex) => {
             return {
-              onClick: (event) => {
+              onClick: async (event) => {
                 setIsModalOpen(true);
+                const res = await getAppointmentDetail(record.id);
+                setDetail(res.data);
               },
             };
           }}
           pagination={{
-            pageSize: ItemsPerPage,
-            total: TotalItems,
-            current: CurrentPage,
+            pageSize: paging?.itemsPerPage,
+            total: paging?.totalItems,
+            current: paging?.currentPage,
+          }}
+          onChange={(pagination) => {
+            setPage(pagination.current);
+            dispatch(
+              adminGetAppointment({
+                date: date !== "" ? date : undefined,
+                status: status !== null ? status : undefined,
+                page: pagination.current,
+              })
+            );
           }}
         />
       </div>

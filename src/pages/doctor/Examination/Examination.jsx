@@ -27,6 +27,7 @@ import {
   doctorCreateMedical,
   doctorGetUserMedical,
   doctorGetlistMedical,
+  doctorReschedule,
 } from "../../../stores/doctor/DoctorThunk";
 import { debounce } from "lodash";
 import CardDay from "../../../components/Doctor/cardDay/CardDay";
@@ -70,6 +71,7 @@ const Examination = () => {
   //=======rescheduled================================
   const [times, setTimes] = useState([]);
   const [chooseTime, setChooseTime] = useState(null);
+  const [reason, setReason] = useState(null);
   const [chooseDate, setChooseDate] = useState(null);
 
   const {
@@ -150,6 +152,7 @@ const Examination = () => {
     dispatch(doctorGetlistMedical(search !== "" ? search : undefined));
   };
   const handlePicker = (date, dateString) => {
+    setChooseDate(dateString);
     const timeOff = doctorDetail?.timeOffs.filter((item) => item.status !== 2);
     const timeBreak = doctorDetail?.timeOffs.filter(
       (item) => item.status !== 1
@@ -166,6 +169,23 @@ const Examination = () => {
 
     setTimes([...time]);
   };
+  const handleBooking = () => {
+    dispatch(
+      doctorReschedule({
+        idDoctor: profile?.idDoctor,
+        idUser: user?.idUser,
+        idAppointment: user?.idAppointment,
+        date: chooseDate,
+        startTime: chooseTime?.startTime,
+        endTime: chooseTime?.endTime,
+        issue: reason,
+        type: true,
+        price: profile?.price,
+        address: profile?.address,
+        nameClinic: profile?.nameClinic,
+      })
+    );
+  }
 
   const handleCreateMedical = (values) => {
     dispatch(
@@ -197,12 +217,20 @@ const Examination = () => {
         temperature: "",
         disease: "",
       });
+      setChooseTime(null);
+      setChooseDate(null);
+      setReason(null);
+      setIsScheduled(false);
     }
     if (error !== null) {
-      openNotificationWithIcon("error", api, "", "Disable Account Failed!");
+      openNotificationWithIcon("error", api, "", error);
       dispatch(setError(null));
       setIsCreate(false);
       setUser(null);
+      setChooseTime(null);
+      setChooseDate(null);
+      setReason(null);
+      setIsScheduled(false);
     }
   }, [statusCode, dispatch, api, error]);
 
@@ -310,11 +338,19 @@ const Examination = () => {
               </div>
             </TabPane>
           </Tabs>
+          <Typography
+            className="detailDr-content__right-appointment--titleType"
+            style={{ marginTop: 20, marginBottom: 12 }}
+          >
+            Availability
+          </Typography>
+          <TextArea maxLength={100} onChange={(e) => setReason(e.target.value)} />
 
           <Button
             className="detailDr-content__right-appointment__button"
-            // onClick={() => handleBooking()}
+            onClick={() => handleBooking()}
             disabled={!chooseTime}
+            loading={loading}
           >
             Book
           </Button>
@@ -385,6 +421,7 @@ const Examination = () => {
                       setIsList(true);
                       setUser({
                         idAppointment: record?.idAppointment,
+                        idUser: record?.idUser,
                       });
                       dispatch(doctorGetUserMedical(record?.idUser));
                     },

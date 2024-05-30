@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { addVerifyExperience } from "../../../stores/admin/AdminSlice";
 
-const ExperienceAdmin = () => {
+const ExperienceAdmin = ({ partner }) => {
   const { partnerDetail } = useSelector((state) => state.admin);
   const [isAdd, setIsAdd] = useState(false);
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(partnerDetail?.isVerifiedInfoWorkingProcess);
   const dispatch = useDispatch();
   const handleVerify = (value, record) => {
     dispatch(
@@ -54,7 +54,9 @@ const ExperienceAdmin = () => {
       align: "center",
       width: "15%",
     },
-    {
+  ];
+  if (partner === "partner") {
+    columns.push({
       title: "Action",
       key: "function",
       dataIndex: "function",
@@ -73,7 +75,7 @@ const ExperienceAdmin = () => {
           <Select
             disabled={isDisable}
             onChange={(value) => handleVerify(value, record)}
-            placeholder="-- select --"
+            placeholder="--Select--"
             style={{ height: 32, color: "#6c81a0" }}
             //   onChange={handleTypePartnerChange}
             options={[
@@ -83,8 +85,8 @@ const ExperienceAdmin = () => {
           />
         </Space>
       ),
-    },
-  ];
+    });
+  }
 
   return (
     <div className="certificate-main">

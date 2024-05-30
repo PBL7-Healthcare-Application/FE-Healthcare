@@ -17,6 +17,7 @@ import {
   getMedical,
   getProfile,
   getUserMedical,
+  reschedule,
   setSchedule,
   updateCertificate,
   updateEducation,
@@ -288,4 +289,16 @@ export const doctorDeleteExperience = createAsyncThunk(
     }
   }
 );
+export const doctorReschedule = createAsyncThunk(
+  "doctor/doctorReschedule",
+  async (data, thunkApi) => {
+    try {
+      const response = await reschedule(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
 

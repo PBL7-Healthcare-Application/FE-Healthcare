@@ -20,7 +20,7 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   // const [messageApi, contextHolder] = message.useMessage();
-  const { user, error } = useSelector((state) => state.auth);
+  const { user, error, loading } = useSelector((state) => state.auth);
   const [api, contextHolder] = notification.useNotification();
   const { chatUser } = useSelector((state) => state.chat);
   const handleChat = async (email) => {
@@ -156,6 +156,7 @@ const SignIn = () => {
               htmlType="submit"
               className="login-form-button"
               style={{ marginTop: 10 }}
+              loading={loading}
             >
               Sign in
             </Button>

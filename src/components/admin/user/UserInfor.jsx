@@ -33,6 +33,20 @@ const UserInfor = ({ type, partner }) => {
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (type === "profile") {
+      //  setDisabled(partnerDetail?.isVerifiedInfo);
+    }
+    if (type === "certificate") {
+      setDisabled(partnerDetail?.isVerifiedInfoCertificate);
+    }
+    if (type === "education") {
+      setDisabled(partnerDetail?.isVerifiedInfoTrainingProcess);
+    }
+    if (type === "experience") {
+      setDisabled(partnerDetail?.isVerifiedInfoWorkingProcess);
+    }
+  }, [partnerDetail, type])
   const handleApproval = () => {
     if (type === "profile") {
       dispatch(

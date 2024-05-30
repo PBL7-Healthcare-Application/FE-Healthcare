@@ -16,7 +16,7 @@ const Rating = ({ item }) => {
                         <span className="review__text">{format(item?.createdAt)}</span>
                     </div>
                 </div>
-                <Rate value={4} />
+                <Rate value={item?.ratingScore} />
             </div>
             <span className="review__text" style={{ letterSpacing: 0.6, fontSize: 15 }}>{item?.comment}</span>
         </div>

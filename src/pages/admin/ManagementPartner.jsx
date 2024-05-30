@@ -23,23 +23,19 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
-import { icon, iconPartner } from "../../helpers/icon";
+import { iconPartner } from "../../helpers/icon";
 
-import doctorDefault from "../../assets/images/doctor.jpeg";
-import calender from "../../assets/images/calandar.png";
-import dolar from "../../assets/images/dollar.png";
-import personDefault from "../../assets/images/personDefault.png";
-import location from "../../assets/images/location.png";
-import problem from "../../assets/images/problem.png";
+
 import Specialty from "../../components/specialty/Specialty";
 import { getAdminPartner } from "../../stores/admin/AdminThunk";
+import { getAllSpecialty } from "../../api/doctor.api";
 const ManagementPartner = () => {
   const { partner, paging } = useSelector((state) => state.admin);
   const [inputSearch, setInputSearch] = useState("");
   const [specialty, setSpecialty] = useState(null);
   const [typePartner, setTypePartner] = useState(null);
   const [page, setPage] = useState(paging?.currentPage);
-
+  const [specialties, setSpecialties] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const contentRef = useRef(null);
@@ -98,23 +94,16 @@ const ManagementPartner = () => {
       ),
     },
   ];
-  const data = [
-    {
-      key: 1,
-      doctor: "Dr. Smith",
-      specialty: "Dentistry",
-      created: "2022-01-01",
-      status: 1,
-    },
-    {
-      key: 2,
-      doctor: "Dr. Johnson",
-      specialty: "Dentistry",
-      created: "2022-01-02",
-      status: 2,
-    },
-  ];
-  //
+
+  const getSpecialties = async () => {
+    try {
+      const response = await getAllSpecialty();
+
+      setSpecialties(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSpecialty = (value) => {
     setSpecialty(value !== 0 ? value : null);
@@ -174,6 +163,11 @@ const ManagementPartner = () => {
       })
     );
   }, [dispatch]);
+
+  useEffect(() => {
+    getSpecialties();
+
+  }, [])
   return (
     <div className="DoctorAppointment">
       <div
@@ -212,7 +206,18 @@ const ManagementPartner = () => {
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Specialty</span>
           <div style={{ width: 200 }}>
-            <Specialty onChange={(value) => handleSpecialty(value)} />
+            <Select
+              defaultValue={"All"}
+              style={{ height: 43, width: 200 }}
+              options={[
+                { value: 0, label: "All" },
+                ...specialties.map((item) => ({
+                  label: item.name,
+                  value: item.idSpecialty,
+                })),
+              ]}
+              onChange={(value) => handleSpecialty(value)}
+            />
           </div>
         </div>
         <div className="DoctorAppointment-select">
@@ -222,7 +227,7 @@ const ManagementPartner = () => {
             style={{ width: 150, height: 42, color: "#6c81a0" }}
             onChange={handleTypePartnerChange}
             options={[
-              { value: "All", label: "All" },
+              // { value: "All", label: "All" },
               { value: 1, label: "New Partner" },
               { value: 2, label: "Old Partner" },
             ]}

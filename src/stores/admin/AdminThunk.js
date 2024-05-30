@@ -1,8 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   disableAccount,
+  getAppointment,
+  getAppointmentDetail,
   getPartner,
   getPartnerDetail,
+  getUserDetail,
   getUsers,
   unlockAccount,
   verifyCertificate,
@@ -119,3 +122,41 @@ export const verifyAdminExperience = createAsyncThunk(
     }
   }
 );
+export const adminGetUserDetail = createAsyncThunk(
+  "admin/adminGetUserDetail",
+  async (id, thunkApi) => {
+    try {
+      const response = await getUserDetail(id);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+export const adminGetAppointment = createAsyncThunk(
+  "admin/adminGetAppointment",
+  async (params, thunkApi) => {
+    try {
+      const { date, status, page } = params;
+      const response = await getAppointment(date, status, page);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+
+
+export const adminGetAppointmentDetail = createAsyncThunk(
+  "admin/adminGetAppointmentDetail",
+  async (id, thunkApi) => {
+    try {
+      const response = await getAppointmentDetail(id);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+

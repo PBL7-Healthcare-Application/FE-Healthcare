@@ -13,6 +13,22 @@ export const getUsers = (search, role, status, page = 1) => {
   }
   return http.get(url);
 };
+export const getUserDetail = (id) => {
+  return http.get(`/Admin/User/GetUserDetail/${id}`);
+}
+export const getAppointment = (date, status, page = 1) => {
+  let url = `/Admin/Appointment/ViewAppointment?page=${page}`;
+  if (date !== undefined) {
+    url += `&date=${date}`;
+  }
+  if (status !== undefined) {
+    url += `&status=${status}`;
+  }
+  return http.get(url);
+}
+export const getAppointmentDetail = (id) => {
+  return http.get(`/Admin/Appointment/ViewAppointment/${id}`);
+}
 export const disableAccount = (email) => {
   return http.post(`/Admin/User/DisableAccount`, email);
 };
