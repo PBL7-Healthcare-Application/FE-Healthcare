@@ -276,6 +276,11 @@ const Chat = () => {
             className="chat-bottom__input"
             onChange={(e) => setText(e.target.value)}
             value={text}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleSend();
+              }
+            }}
           />
           <IoSend
             size={25}

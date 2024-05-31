@@ -33,6 +33,7 @@ import ManagementUser from "../pages/admin/ManagementUser";
 import DetailUser from "../components/admin/user/DetailUser";
 import ManagementAppointment from "../pages/admin/ManagementAppointment";
 import ManagementPartner from "../pages/admin/ManagementPartner";
+import Chatbot from "../pages/chatbot/Chatbot";
 
 const routers = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const routers = createBrowserRouter([
       {
         path: "",
         element: <Main />,
+      },
+      {
+        path: "chatbot",
+        element: <Chatbot />,
       },
       {
         path: "search/doctor",

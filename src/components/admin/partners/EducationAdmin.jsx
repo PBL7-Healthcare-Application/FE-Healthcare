@@ -76,7 +76,7 @@ const EducationAdmin = ({ partner }) => {
       render: (text, record) => (
         <Space size={"middle"}>
           <Select
-            disabled={isDisable}
+            disabled={record.verify === 1 ? true : false}
             onChange={(value) => handleVerify(value, record)}
             placeholder="--Select--"
             style={{ height: 32, color: "#6c81a0" }}
@@ -116,6 +116,7 @@ const EducationAdmin = ({ partner }) => {
                 {iconCertificate(item?.statusVerified)}
               </div>
             ),
+            verify: item?.statusVerified,
           }))}
           bordered
         />

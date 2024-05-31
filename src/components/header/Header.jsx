@@ -28,7 +28,7 @@ export const Header = () => {
     },
     {
       label: "Chatbot",
-      href: "/a",
+      href: "/chatbot",
     },
 
     // {
