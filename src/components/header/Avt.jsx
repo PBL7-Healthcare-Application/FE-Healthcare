@@ -66,10 +66,14 @@ const Avt = (props) => {
         ...doc.data(), // get the data of the document
       }));
       const listFilter = notifyData.filter((item) => {
+        // console.log(item);
         if (item?.idReceiver) {
-          return item.idReceiver === profile?.idUser && !item.isRead;
+          if (!item.isRead) {
+            return item.idReceiver === profile?.idUser;
+          }
         }
       });
+      console.log(listFilter);
       setCountNoti(listFilter?.length);
       dispatch(setNotify(listFilter));
     });
@@ -77,7 +81,7 @@ const Avt = (props) => {
     return () => {
       unSub();
     };
-  }, []);
+  }, [dispatch, profile]);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isNoti && event.target.closest(".notification-icon") === null) {

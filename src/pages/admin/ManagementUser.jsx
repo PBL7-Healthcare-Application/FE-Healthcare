@@ -231,7 +231,9 @@ const ManagementUser = () => {
             flexDirection: "column",
           }}
         >
-          <span className="ChangePass-title">Disable Account</span>
+          <span className="ChangePass-title">
+            {isLock ? "Unlock Account" : "Lock Account"}
+          </span>
           <div
             style={{
               width: "100%",

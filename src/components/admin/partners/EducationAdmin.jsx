@@ -8,7 +8,9 @@ import { addVerifyEducation } from "../../../stores/admin/AdminSlice";
 const EducationAdmin = ({ partner }) => {
   const { partnerDetail } = useSelector((state) => state.admin);
   const [isAdd, setIsAdd] = useState(false);
-  const [isDisable, setIsDisable] = useState(partnerDetail?.isVerifiedInfoTrainingProcess);
+  const [isDisable, setIsDisable] = useState(
+    partnerDetail?.isVerifiedInfoTrainingProcess
+  );
   const dispatch = useDispatch();
   const handleVerify = (value, record) => {
     dispatch(
@@ -76,7 +78,7 @@ const EducationAdmin = ({ partner }) => {
           <Select
             disabled={isDisable}
             onChange={(value) => handleVerify(value, record)}
-            placeholder="-- select --"
+            placeholder="--Select--"
             style={{ height: 32, color: "#6c81a0" }}
             //   onChange={handleTypePartnerChange}
             options={[

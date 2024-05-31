@@ -151,6 +151,14 @@ const DetailDoctor = () => {
     longitude: 108.17229941300008,
     zoom: 16,
   });
+
+  useEffect(() => {
+    const element = document.getElementById("detail");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      // window.scrollTop = element.offsetTop;
+    }
+  }, []);
   const handleTab = (key) => {
     if (key === "2") {
       dispatch(
@@ -163,7 +171,7 @@ const DetailDoctor = () => {
   };
   const { TabPane } = Tabs;
   return (
-    <div className="detailDr-main">
+    <div className="detailDr-main" id="detail">
       {contextHolder}
       <div className="detailDr-content">
         <div className="detailDr-content__left">

@@ -56,7 +56,7 @@ const DoctorLayout = () => {
       dispatch(getDoctorProfile());
       dispatch(getDoctorCalendar());
     }
-    return () => { };
+    return () => {};
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -139,7 +139,7 @@ const DoctorLayout = () => {
     return () => {
       unSub();
     };
-  }, []);
+  }, [dispatch, profile]);
   return (
     <Layout style={{ backgroundColor: "#fff" }}>
       <Sider trigger={null} collapsible className="customSlider">
@@ -208,7 +208,6 @@ const DoctorLayout = () => {
                 >
                   {profile && profile?.name[0]}
                 </Avatar>
-
               </Space>
               <Badge
                 count={countSeen}
@@ -256,7 +255,6 @@ const DoctorLayout = () => {
                   {isNoti && <Notify onClose={() => setIsNoti(!isNoti)} />}
                 </div>
               </Badge>
-
             </Space>
           ) : (
             <SignInBtn />

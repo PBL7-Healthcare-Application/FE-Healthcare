@@ -34,8 +34,7 @@ import { da } from "date-fns/locale/da";
 import { getAppointmentDetail } from "../../api/admin.api";
 import { formatDate } from "../../helpers/timeBooking";
 const ManagementAppointment = () => {
-  const { paging, listAppointment } =
-    useSelector((state) => state.admin);
+  const { paging, listAppointment } = useSelector((state) => state.admin);
   const [page, setPage] = useState(paging?.currentPage);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputSearch, setInputSearch] = useState("");
@@ -75,10 +74,8 @@ const ManagementAppointment = () => {
     },
   ];
   useEffect(() => {
-    dispatch(
-      adminGetAppointment({ page: 1 })
-    )
-  }, [dispatch])
+    dispatch(adminGetAppointment({ page: 1 }));
+  }, [dispatch]);
   //
 
   const handleStatusChange = (value) => {
@@ -100,9 +97,7 @@ const ManagementAppointment = () => {
         page: page,
       })
     );
-  }
-
-
+  };
 
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
@@ -110,13 +105,13 @@ const ManagementAppointment = () => {
     debounceInputKey(newValue, status, 1);
   };
   const debounceInputKey = useRef(
-    debounce((nextValue, status, page, filterAvailable) => { }, 500)
+    debounce((nextValue, status, page, filterAvailable) => {}, 500)
   ).current;
-  const handleClick = () => { };
+  const handleClick = () => {};
   useEffect(() => {
-    console.log(detail)
-  }, [detail])
-  useEffect(() => { }, [dispatch]);
+    console.log(detail);
+  }, [detail]);
+  useEffect(() => {}, [dispatch]);
   return (
     <div className="DoctorAppointment">
       <Modal
@@ -262,7 +257,7 @@ const ManagementAppointment = () => {
                       color: "#D84023",
                     }}
                   >
-                    VND {detail?.price.toLocaleString('vi-VN')}
+                    VND {detail?.price.toLocaleString("vi-VN")}
                   </Typography>
                 </div>
               </div>
@@ -296,7 +291,6 @@ const ManagementAppointment = () => {
                 >
                   {detail?.nameUser}
                 </Typography>
-
               </div>
             </div>
           </div>
@@ -351,7 +345,10 @@ const ManagementAppointment = () => {
         </div>
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Date</span>
-          <DatePicker style={{ width: 150, height: 43, color: "#6c81a0" }} onChange={handlePicker} />
+          <DatePicker
+            style={{ width: 150, height: 43, color: "#6c81a0" }}
+            onChange={handlePicker}
+          />
         </div>
       </div>
       <div className="DoctorAppointment-filter">
@@ -393,7 +390,7 @@ const ManagementAppointment = () => {
             setPage(pagination.current);
             dispatch(
               adminGetAppointment({
-                date: date !== "" ? date : undefined,
+                date: date !== null ? date : undefined,
                 status: status !== null ? status : undefined,
                 page: pagination.current,
               })
