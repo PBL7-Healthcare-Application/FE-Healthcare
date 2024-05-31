@@ -40,13 +40,13 @@ const Setting = () => {
                 if (e === "1") navigate("/dr.Enclinic/setting/profile/personal")
                 if (e === "3") navigate("/dr.Enclinic/setting/account/password")
             }}>
-                <TabPane key={1} tab="Doctor's profile">
+                <TabPane key={1} tab="Profile">
                     <div className="setting-tab1">
                         <div className="setting-tab1__left">{navItem}</div>
                         <div className="setting-tab1__right"><Outlet /></div>
                     </div>
                 </TabPane>
-                <TabPane key={2} tab="Setting work schedule">
+                <TabPane key={2} tab="Schedule">
                     <Outlet />
                 </TabPane>
                 <TabPane key={3} tab="Account">

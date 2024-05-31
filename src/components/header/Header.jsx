@@ -31,10 +31,10 @@ export const Header = () => {
       href: "/a",
     },
 
-    {
-      label: "Health Tool",
-      href: "/b",
-    },
+    // {
+    //   label: "Health Tool",
+    //   href: "/b",
+    // },
     {
       label: "For Partners",
       href: "/partner",

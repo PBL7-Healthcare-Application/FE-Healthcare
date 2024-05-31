@@ -99,7 +99,7 @@ const MyAppointment = () => {
                   );
                 })
               ) : (
-                <NotFound />
+                <NotFound content={"You don't have any appointments "} />
               )}
             </div>
             <Modal
@@ -121,9 +121,7 @@ const MyAppointment = () => {
                     className="myAppointment-cancel__content-text"
                     style={{ fontSize: 14, fontWeight: 400 }}
                   >
-                    Please help us understand more about the reason behind
-                    canceling your appointment so we can improve our service in
-                    the future.
+                    Please tell me your reason behind canceling your appointment for my future service improvement.
                   </span>
                 </div>
                 <div
@@ -148,15 +146,17 @@ const MyAppointment = () => {
             </Modal>
           </TabPane>
           <TabPane tab="Completed" key={3}>
-            {ListAppointments !== null ? (
-              ListAppointments.map((item, index) => {
-                return (
-                  <CardAppointment key={index} appointment={item} type={2} />
-                );
-              })
-            ) : (
-              <NotFound />
-            )}
+            <div className="myAppointment">
+              {ListAppointments !== null ? (
+                ListAppointments.map((item, index) => {
+                  return (
+                    <CardAppointment key={index} appointment={item} type={2} />
+                  );
+                })
+              ) : (
+                <NotFound />
+              )}
+            </div>
           </TabPane>
           <TabPane tab="Canceled" key={2}>
             <div className="myAppointment">

@@ -16,14 +16,18 @@ import personDefaults from "../../../assets/images/personDefault.png";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { updateUserProfile } from "../../../stores/user/UserThunk";
 import dayjs from "dayjs";
+import { setError, setStatusCode } from "../../../stores/user/UserSlice";
+import { useNavigate } from "react-router-dom";
+import { delay } from "lodash";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const { profile } = useSelector((state) => state.profile);
+  const { profile, statusCode, error } = useSelector((state) => state.profile);
   const [profiles, setProfiles] = useState(profile);
   const [isDisabled, setIsDisabled] = useState(true);
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleChange = (field) => {
     setIsDisabled(false);
     setProfiles((prev) => ({
@@ -74,6 +78,35 @@ const Profile = () => {
     }
   }, [profile]);
 
+  useEffect(() => {
+    if (statusCode === 200) {
+      openNotificationWithIcon(
+        "success",
+        api,
+        "",
+        "The profile has been successfully updated!"
+      );
+      dispatch(setStatusCode(null));
+      localStorage.removeItem("user");
+      localStorage.setItem("user", JSON.stringify(profile));
+      delay(() => {
+        if (JSON.parse(localStorage.getItem("partner")) !== null) {
+          navigate("/partner")
+        }
+      }, 1500);
+    }
+    if (error !== null) {
+      openNotificationWithIcon(
+        "error",
+        api,
+        "",
+        "The profile has been unsuccessfully updated!"
+      );
+      dispatch(setError(null));
+      setProfiles(profile);
+    }
+  }, [statusCode, dispatch, api, profile, error, navigate]);
+
   return (
     <div style={{ padding: "20px 0" }}>
       <span className="profile-title">My Profile</span>
@@ -120,12 +153,11 @@ const Profile = () => {
         <div className="profile-content">
           <div style={{ width: "100%" }}>
             <Typography className="profile-header__font profile-header__label">
-              Name
+              Full Name
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -142,9 +174,8 @@ const Profile = () => {
               Date Of Birth
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-radio-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
+                }`}
             >
               {!isEdit ? (
                 <input
@@ -172,9 +203,8 @@ const Profile = () => {
               Gender
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-radio-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
+                }`}
             >
               {!isEdit ? (
                 <input
@@ -213,9 +243,8 @@ const Profile = () => {
               Address
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -234,9 +263,8 @@ const Profile = () => {
               Phone Number
             </Typography>
             <div
-              className={`profile-content__coverInput ${
-                isEdit ? "profile-content__coverInput-active" : ""
-              }`}
+              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
+                }`}
             >
               <input
                 className="profile-input"
@@ -245,8 +273,8 @@ const Profile = () => {
                   profiles?.phoneNumber
                     ? profiles?.phoneNumber
                     : isEdit
-                    ? ""
-                    : "--"
+                      ? ""
+                      : "--"
                 }
                 onChange={(e) =>
                   handleChange({ name: "phoneNumber", value: e.target.value })

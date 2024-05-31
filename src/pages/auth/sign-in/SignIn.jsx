@@ -11,24 +11,57 @@ import { SetError } from "../../../stores/auth/AuthSlice";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { delay } from "lodash";
 import { getUserProfile } from "../../../stores/user/UserThunk";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../helpers/firebase";
+import { handleUpdateStatus } from "../../../helpers/chat";
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   // const [messageApi, contextHolder] = message.useMessage();
-  const { user, error } = useSelector((state) => state.auth);
+  const { user, error, loading } = useSelector((state) => state.auth);
   const [api, contextHolder] = notification.useNotification();
+  const { chatUser } = useSelector((state) => state.chat);
+  const handleChat = async (email) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, email);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (chatUser !== null) {
+      handleUpdateStatus(chatUser.id, true);
+    }
+  }, [chatUser]);
+
   useEffect(() => {
     if (user) {
       if (user.role === "User") {
+        handleChat(user.email);
         openNotificationWithIcon("success", api, "", "Sign In Success!");
         delay(() => {
           if (localStorage.getItem("appointment") !== null) {
             dispatch(getUserProfile());
             navigate("/booking/doctor");
+          } else if (localStorage.getItem("partner") !== null) {
+            navigate("/partner");
           } else {
             navigate("/");
           }
+        }, 1500);
+      } else if (user.role === "Doctor") {
+        handleChat(user.email);
+        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        delay(() => {
+          navigate("/dr.Enclinic/appointment");
+        }, 1500);
+      } else if (user.role === "Admin") {
+        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        delay(() => {
+          navigate("/admin/users");
         }, 1500);
       }
     }
@@ -36,7 +69,7 @@ const SignIn = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
 
   const onFinish = (values) => {
@@ -47,16 +80,15 @@ const SignIn = () => {
     <Space className="in-main">
       <Space className="in-left">
         <Space className="in-left_title">
-          <Typography className="in-left_title--main">
-            The Next Generation
-          </Typography>
+          <Typography className="in-left_title--main">Take Care Of</Typography>
           <Typography className="in-left_title--sub">
-            Of Any Health Concern
+            Your Health Mission
           </Typography>
         </Space>
         <Feature />
       </Space>
       <Space className="in-right">
+        {contextHolder}
         <Form
           name="normal_login"
           className="login-form"
@@ -65,12 +97,11 @@ const SignIn = () => {
           }}
           onFinish={onFinish}
         >
-          {contextHolder}
           <Typography className="in-right__title--main">
             Welcome Back
           </Typography>
           <Typography className="in-right__title--sub">
-            Please enter your details below to continue
+            Enter your details below
           </Typography>
 
           <Typography className="label">Email</Typography>
@@ -125,6 +156,7 @@ const SignIn = () => {
               htmlType="submit"
               className="login-form-button"
               style={{ marginTop: 10 }}
+              loading={loading}
             >
               Sign in
             </Button>

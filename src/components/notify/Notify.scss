@@ -1,0 +1,23 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+.cardNotify {
+  display: flex;
+  flex-direction: row;
+  padding: 20px 20px;
+  gap: 10px;
+  &:hover {
+    opacity: 0.5;
+  }
+  &-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  &-font {
+    font-family: $font-main;
+    font-size: 16px;
+    font-weight: 600;
+    color: #6c81a0;
+  }
+}

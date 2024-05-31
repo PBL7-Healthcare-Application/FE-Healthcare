@@ -1,96 +1,125 @@
 /* eslint-disable no-unused-vars */
-import { CheckCircleOutlined, CloseCircleOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SearchOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import "./Appointment.scss";
 import { Button, Input, Select, Table, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getDetailDoctorAppointment, getDoctorAppointment } from "../../../stores/doctor/DoctorThunk";
+import { debounce } from "lodash";
+import { getDetailAppointment } from "../../../api/doctor.api";
+import { icon } from "../../../helpers/icon";
 
 const DoctorAppointment = () => {
+
+  const [inputSearch, setInputSearch] = useState("");
+  const [status, setStatus] = useState(null);
+  const [filterAvailable, setFilterAvailable] = useState(null);
+  const { ListAppointments, paging } = useSelector((state) => state.doctor)
+  const [page, setPage] = useState(paging?.currentPage);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const contentRef = useRef(null);
   const columns = [
     {
       title: "Id",
       dataIndex: "key",
-      align: 'center'
+      align: "center",
+      width: "5%",
     },
     {
       title: "Name",
       dataIndex: "name",
-      align: 'center'
+      align: "center",
     },
 
     {
       title: "Phone",
       dataIndex: "phone",
-      align: 'center'
+      align: "center",
     },
     {
       title: "Date",
       dataIndex: "date",
-      align: 'center'
+      align: "center",
     },
     {
       title: "Time",
       dataIndex: "time",
-      align: 'center'
+      align: "center",
     },
     {
       title: "Status",
       dataIndex: "status",
-      align: 'center'
+      align: "center",
     },
   ];
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      phone: 18889898989,
-      date: "2021-10-10",
-      time: "09:00 - 10:00",
-      status: <Tag icon={<CheckCircleOutlined />} color="success">
-        Completed
-      </Tag>
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      phone: 18889898888,
-      date: "2021-10-10",
-      time: "09:00 - 10:00",
-      status: <Tag icon={<CheckCircleOutlined />} color="success">
-        Completed
-      </Tag>
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      phone: 18900010002,
-      date: "2021-10-10",
-      time: "09:00 - 10:00",
-      status: <Tag icon={<SyncOutlined spin />} color="processing">
-        Upcoming
-      </Tag>
-    },
-    {
-      key: "4",
-      name: "Jim Red",
-      phone: 18900010002,
-      date: "2021-10-10",
-      time: "09:00 - 10:00",
-      status: <Tag icon={<SyncOutlined spin />} color="processing">
-        Upcoming
-      </Tag>
-    },
-    {
-      key: "5",
-      name: "Jake White",
-      phone: 18900010002,
-      date: "2021-10-10",
-      time: "09:00 - 10:00",
-      status: <Tag icon={<CloseCircleOutlined />} color="error">
-        Canceled
-      </Tag>
-    },
-  ];
+
+
+  const handleStatusChange = (value) => {
+    setStatus(value);
+    dispatch(getDoctorAppointment({
+      search: inputSearch !== "" ? inputSearch : undefined,
+      status: value,
+      page: 1,
+      filterAvailable: filterAvailable !== null ? filterAvailable : undefined
+    }
+    ));
+  }
+  const handleAvailableChange = (value) => {
+    setFilterAvailable(value === "all" ? null : value);
+    dispatch(getDoctorAppointment({
+      search: inputSearch !== "" ? inputSearch : undefined,
+      status: status !== null ? status : undefined,
+      page: 1,
+      filterAvailable: value === "all" ? undefined : value
+    }
+    ));
+
+  }
+
+  const handleChangeInput = (e) => {
+    const newValue = e.target.value;
+    setInputSearch(newValue);
+    debounceInputKey(
+      newValue,
+      status,
+      1,
+      filterAvailable,
+    );
+  };
+  const debounceInputKey = useRef(
+    debounce((nextValue, status, page, filterAvailable) => {
+      dispatch(
+        getDoctorAppointment({
+          search: nextValue,
+          status: status !== null ? status : undefined,
+          page: page,
+          filterAvailable: filterAvailable !== null ? filterAvailable : undefined
+        })
+      );
+    }, 500)
+  ).current;
+  const handleClick = () => {
+    dispatch(
+      getDoctorAppointment({
+        search: inputSearch !== "" ? inputSearch : undefined,
+        status: status !== null ? status : undefined,
+        page: 1,
+        filterAvailable: filterAvailable !== null ? filterAvailable : undefined
+      })
+    );
+  }
+
+
+  useEffect(() => {
+    dispatch(getDoctorAppointment({ page: 1 }));
+  }, [dispatch])
   return (
     <div className="DoctorAppointment">
       <div
@@ -107,51 +136,84 @@ const DoctorAppointment = () => {
               gap: 10,
               alignItems: "center",
             }}
+            ref={contentRef}
           >
             <SearchOutlined className="search-box-content_icon" />
             <Input
               type="text"
               className="search__input-text"
               placeholder="Search for a patient..."
-              style={{ border: "1px solid #a1a1aa" }}
+              style={{ border: "1px solid #a1a1aa", fontSize: 13 }}
+              onChange={handleChangeInput}
             />
-            <Button className="Schedule-content__left-button">Search</Button>
+            <Button className="Schedule-content__left-button" style={{ height: 42 }} onClick={handleClick}>Search</Button>
           </div>
         </div>
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Status</span>
           <Select
-            defaultValue="Upcoming"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
-            //   onChange={handleChange}
+            defaultValue={"Booked"}
+            style={{ width: 150, height: 42, color: "#6c81a0" }}
+            onChange={handleStatusChange}
             options={[
-              { value: "upcoming", label: "Upcoming" },
-              { value: "complete", label: "Completed" },
-              { value: "canceled", label: "Canceled" },
+              { value: 0, label: "All" },
+              { value: 1, label: "Booked" },
+              { value: 3, label: "Completed" },
+              { value: 2, label: "Canceled" },
             ]}
           />
         </div>
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Available</span>
           <Select
-            defaultValue="Today"
-            style={{ width: 150, height: 46, color: "#6c81a0" }}
-            //   onChange={handleChange}
+            defaultValue={"All"}
+            style={{ width: 150, height: 42, color: "#6c81a0" }}
+            onChange={handleAvailableChange}
             options={[
-              { value: "today", label: "Today" },
-              { value: "tomorrow", label: "Tomorrow" },
+              { value: "all", label: "All" },
+              { value: "TODAY", label: "Today" },
+              { value: "TOMORROW", label: "Tomorrow" },
             ]}
           />
         </div>
       </div>
       <div className="DoctorAppointment-filter">
-        <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
-          return {
-            onClick: event => {
-              navigate(`/dr.Enclinic/appointment/${record.key}`)
-            },
-          };
-        }} />
+        <Table
+          columns={columns}
+          dataSource={ListAppointments.map((item, index) => ({
+            id: item.idAppointment,
+            key: index + 1,
+            name: item.namePatient,
+            phone: item.phoneNumber,
+            date: item.date.split("T")[0],
+            time: `${item.startTime} - ${item.endTime}`,
+            status: <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>{icon(item.status)}</div>,
+          }))}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                dispatch(getDetailDoctorAppointment(record.id));
+                navigate(`/dr.Enclinic/appointment/${record.id}`);
+              },
+            };
+          }}
+          pagination={{
+            pageSize: paging?.itemsPerPage,
+            total: paging?.totalItems,
+            current: paging?.currentPage,
+          }}
+          onChange={(pagination) => {
+            setPage(pagination.current);
+            dispatch(
+              getDoctorAppointment({
+                search: inputSearch !== "" ? inputSearch : undefined,
+                status: status !== null ? status : 0,
+                page: pagination.current,
+                filterAvailable: filterAvailable !== null ? filterAvailable : undefined
+              })
+            );
+          }}
+        />
       </div>
     </div>
   );

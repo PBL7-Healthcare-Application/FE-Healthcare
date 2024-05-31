@@ -1,0 +1,34 @@
+@import "../../assets/scss/font.scss";
+@import "../../assets/scss/variable.scss";
+
+
+.review {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px 0;
+    border-bottom: 1px solid rgb(228, 232, 236);
+
+    &__box {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    &__infor {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: center;
+        // align-items: center;
+    }
+
+    &__text {
+        font-family: $font-main;
+        font-weight: 400;
+        font-size: 14px;
+        color: rgb(64, 64, 64);
+    }
+
+}

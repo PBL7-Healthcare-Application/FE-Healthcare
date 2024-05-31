@@ -5,16 +5,16 @@ import { passwordRegex } from "../../../constant/regex";
 import { useDispatch, useSelector } from "react-redux";
 import { changeUserPassword } from "../../../stores/user/UserThunk";
 import { useEffect } from "react";
-import deleteToken from "../../../helpers/deleteToken";
-import { setStatusCode } from "../../../stores/user/UserSlice";
+
+import { setError, setStatusCode } from "../../../stores/user/UserSlice";
 import { useNavigate } from "react-router-dom";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
-import { delay } from "lodash";
-import { logOut } from "../../../stores/auth/AuthSlice";
+
 
 const ChangePassword = () => {
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const { statusCode } = useSelector((state) => state.profile);
+  const { statusCode, error } = useSelector((state) => state.profile);
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
   const onSubmit = (values) => {
@@ -30,14 +30,19 @@ const ChangePassword = () => {
     if (statusCode === 200) {
       openNotificationWithIcon("success", api, "", "Change Password Success!");
       dispatch(setStatusCode(null));
-      dispatch(logOut());
-      localStorage.removeItem("user");
-      deleteToken();
-      delay(() => {
-        navigate("/");
-      }, 1500);
+      form.resetFields();
+      // dispatch(logOut());
+      // localStorage.removeItem("user");
+      // deleteToken();
+      // delay(() => {
+      //   navigate("/");
+      // }, 1500);
     }
-  }, [statusCode, dispatch, navigate, api]);
+    if (error !== null) {
+      openNotificationWithIcon("error", api, "", "Change Password Failed!");
+      dispatch(setError(null));
+    }
+  }, [statusCode, dispatch, navigate, api, error]);
   return (
     <div className="ChangePass">
       <span className="ChangePass-title">Change Password</span>
@@ -51,10 +56,10 @@ const ChangePassword = () => {
         }}
       >
         <span className="ChangePass-text">
-          Protect your account with a strong and unique password. We recommend
-          changing your password regularly
+          To Protect your account, We recommend user to change your password regularly
         </span>
         <Form
+          form={form}
           name="normal_login"
           className="ChangePass-form"
           initialValues={{

@@ -8,11 +8,25 @@ import {
   StarFilled,
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getDoctorDetail } from "../../../stores/search-doctor/SearchThunk";
-import { setIsSelected } from "../../../stores/search-doctor/SearchSlice";
+import { resetTime, setIsSelected } from "../../../stores/search-doctor/SearchSlice";
 
 import doctorDefault from "../../../assets/images/doctor.jpeg";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../helpers/firebase";
+
 // eslint-disable-next-line react/prop-types
 const CardResult = ({ doctor }) => {
   const dispatch = useDispatch();
@@ -21,7 +35,74 @@ const CardResult = ({ doctor }) => {
     // eslint-disable-next-line react/prop-types
     dispatch(setIsSelected(0));
     dispatch(getDoctorDetail(doctor?.idDoctor));
-    navigate(`/doctor/{doctor.idDoctor}`);
+    navigate(`/doctor/${doctor.idDoctor}`);
+  };
+  const { chatUser } = useSelector((state) => state.chat);
+
+  const checkExist = async (user) => {
+    try {
+      const userChatsRef = collection(db, "userchats");
+      const userChatsDoc = await getDoc(doc(userChatsRef, user.id));
+      if (userChatsDoc.exists()) {
+        const userChatsData = userChatsDoc.data();
+        const userChatIds = userChatsData.chats.map((chat) => chat.receiverId);
+        if (userChatIds.includes(chatUser.id)) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handAddNewChat = async () => {
+    const chatRef = collection(db, "chats");
+    const userChatsRef = collection(db, "userchats");
+
+    try {
+      let user = null;
+      const userRef = collection(db, "users");
+
+      const q = query(userRef, where("email", "==", doctor.email));
+
+      const querySnapShot = await getDocs(q);
+
+      if (!querySnapShot.empty) {
+        user = querySnapShot.docs[0].data();
+      }
+      console.log(user);
+      const exist = await checkExist(user);
+      if (exist) {
+        const newChatRef = doc(chatRef);
+        await setDoc(newChatRef, {
+          createdAt: serverTimestamp(),
+          messages: [],
+        });
+        await updateDoc(doc(userChatsRef, user.id), {
+          chats: arrayUnion({
+            chatId: newChatRef.id,
+            lastMessage: "",
+            receiverId: chatUser.id,
+            updatedAt: Date.now(),
+          }),
+        });
+        await updateDoc(doc(userChatsRef, chatUser.id), {
+          chats: arrayUnion({
+            chatId: newChatRef.id,
+            lastMessage: "",
+            receiverId: user.id,
+            updatedAt: Date.now(),
+          }),
+        });
+      }
+      navigate("/chatting");
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <div className="result" onClick={handleDetail}>
@@ -43,7 +124,7 @@ const CardResult = ({ doctor }) => {
           <Typography className="result-second__name">
             {doctor?.name}
           </Typography>
-          <CheckCircleFilled style={{ color: "green" }} />
+          {/* <CheckCircleFilled style={{ color: "green" }} /> */}
         </Space>
         <Typography className="result-second__specialty">
           {doctor?.medicalSpecialty}
@@ -58,22 +139,29 @@ const CardResult = ({ doctor }) => {
           <Space className="result-second__address">
             <DollarOutlined className="result-second__address-icon" />
             <Typography className="result-second__specialty">
-              {doctor.price.toLocaleString("vi-VN")} ₫
+              {doctor?.price && doctor?.price.toLocaleString("vi-VN")} ₫
             </Typography>
           </Space>
         </div>
       </div>
       <div className="result-third">
         <div className="result-third__rate">
-          <Space className="result-third__rate-item">
-            <StarFilled className="result-third__rate-icon" />
-            <Typography className="result-third__rate-text">5.0/5</Typography>
-          </Space>
-          <Link to="/doctor" className="result-third__rate-link">
-            31 rating
-          </Link>
+          {
+            doctor?.rateAverage && (
+              <Space className="result-third__rate-item">
+                <StarFilled className="result-third__rate-icon" />
+                <Typography className="result-third__rate-text">{doctor?.rateAverage}/5</Typography>
+              </Space>
+            )
+          }
         </div>
-        <div className="result-third__button">
+        <div
+          className="result-third__button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handAddNewChat();
+          }}
+        >
           <Button className="result-third__button-text">Chat now</Button>
           {/* <Button className="result-third__button-text">View details</Button> */}
         </div>

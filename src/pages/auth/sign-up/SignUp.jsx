@@ -16,7 +16,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
-  const { user, error } = useSelector((state) => state.auth);
+  const { user, error, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (user) {
@@ -38,10 +38,10 @@ const SignUp = () => {
       <Space className="up-left">
         <Space className="up-left_title">
           <Typography className="up-left_title--main">
-            The Next Generation
+            Take Care Of
           </Typography>
           <Typography className="up-left_title--sub">
-            Of Any Health Concern
+            Your Health Mission
           </Typography>
         </Space>
         <Feature />
@@ -164,6 +164,7 @@ const SignUp = () => {
               htmlType="submit"
               className="login-form-button"
               style={{ marginTop: 10 }}
+              loading={loading}
             >
               Sign up
             </Button>

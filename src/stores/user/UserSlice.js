@@ -6,7 +6,10 @@ import {
   disableUserAccount,
   getUserAppointment,
   getUserProfile,
+  regisDoctor,
   updateUserProfile,
+  userCreateRating,
+  userGetMedical,
 } from "./UserThunk";
 
 const profileSlice = createSlice({
@@ -18,6 +21,7 @@ const profileSlice = createSlice({
     statusCode: null,
     error: null,
     ListAppointments: [],
+    MedicalHistory: []
   },
   reducers: {
     setStatusCode: (state, action) => {
@@ -74,6 +78,7 @@ const profileSlice = createSlice({
           return;
         }
         state.profile = action.payload.data;
+        state.statusCode = action.payload.statusCode;
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = false;
@@ -101,6 +106,10 @@ const profileSlice = createSlice({
       })
       .addCase(changeUserPassword.fulfilled, (state, action) => {
         state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
         state.statusCode = action.payload.statusCode;
       })
       .addCase(changeUserPassword.rejected, (state, action) => {
@@ -138,7 +147,53 @@ const profileSlice = createSlice({
       .addCase(cancelUserAppointment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
-      });
+      })
+
+      //=====================================
+      .addCase(regisDoctor.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(regisDoctor.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(regisDoctor.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
+      //=====================================
+      .addCase(userCreateRating.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userCreateRating.fulfilled, (state) => {
+        state.loading = false;
+
+      })
+      .addCase(userCreateRating.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
+      //=====================================
+      .addCase(userGetMedical.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userGetMedical.fulfilled, (state, action) => {
+        state.loading = false;
+        state.MedicalHistory = action.payload.data;
+      })
+      .addCase(userGetMedical.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
   },
 });
 export default profileSlice.reducer;

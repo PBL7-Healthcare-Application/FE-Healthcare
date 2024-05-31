@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getDoctorDetail, getSearchResult } from "./SearchThunk";
+import { getDoctorDetail, getDoctorRating, getSearchResult } from "./SearchThunk";
 import { convertToInt, doctorSchedule } from "../../helpers/timeBooking";
 
 
 const searchSlice = createSlice({
   name: "search",
   initialState: {
+    listRate: [],
     isSelected: null,
     isTimeSelected: null,
     keyword: null,
@@ -15,6 +16,8 @@ const searchSlice = createSlice({
     doctorDetail: null,
     error: null,
     loading: false,
+    paging: null,
+    tableOfrate: null
   },
   reducers: {
     setIsSelected: (state, action) => {
@@ -29,6 +32,9 @@ const searchSlice = createSlice({
     },
     setIdSpecialty: (state, action) => {
       state.id_Specialty = action.payload.id;
+    },
+    resetIdSpecialty: (state) => {
+      state.id_Specialty = null;
     }
 
   },
@@ -42,6 +48,7 @@ const searchSlice = createSlice({
 
         state.loading = false;
         state.searchResult = action.payload.data;
+        state.paging = action.payload.pagingInfo;
       })
       .addCase(getSearchResult.rejected, (state, action) => {
         state.loading = false;
@@ -61,9 +68,10 @@ const searchSlice = createSlice({
         state.schedule = doctorSchedule(
           convertToInt(action.payload.data?.workingTimeStart),
           convertToInt(action.payload.data?.workingTimeEnd),
-          60,
+          action.payload.data?.durationPerAppointment,
           timeOff,
-          timeBreak
+          timeBreak,
+          action.payload.data?.slotAppointments
         ).map(item => ({
           ...item,
           date: item.date.toString(), // Convert date to ISO string
@@ -72,9 +80,24 @@ const searchSlice = createSlice({
       .addCase(getDoctorDetail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      ///////////////
+      .addCase(getDoctorRating.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDoctorRating.fulfilled, (state, action) => {
+
+        state.loading = false;
+        state.listRate = action.payload.data;
+        state.tableOfrate = action.payload.statisticalTableOfRating;
+      })
+      .addCase(getDoctorRating.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
       });
   },
 });
 
 export default searchSlice.reducer;
-export const { setIsSelected, setIsTimeSelected, setSearch, setIdSpecialty } = searchSlice.actions;
+export const { setIsSelected, setIsTimeSelected, setSearch, setIdSpecialty, resetTime, resetIdSpecialty } = searchSlice.actions;

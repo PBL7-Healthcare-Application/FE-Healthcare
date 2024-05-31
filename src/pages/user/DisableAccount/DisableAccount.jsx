@@ -15,6 +15,7 @@ const DisableAccount = () => {
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
   const [isDisable, setIsDisable] = useState(true);
+  const user = JSON.parse(localStorage.getItem("user"));
   const handleSelect = () => {
     setIsDisable(false);
   };
@@ -77,7 +78,7 @@ const DisableAccount = () => {
           className="ChangePass-text"
           style={{ width: "80%", textAlign: "left", margin: "10px 0" }}
         >
-          Dear nguyenhoc0721@gmail.com
+          Dear {user?.email}
         </span>
         <span
           className="ChangePass-text"

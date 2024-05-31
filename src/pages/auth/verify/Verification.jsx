@@ -9,18 +9,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { ResendOTP, VerifyEmail } from "../../../stores/auth/AuthThunk";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { delay } from "lodash";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { getUserProfile } from "../../../stores/user/UserThunk";
+import { auth, db } from "../../../helpers/firebase";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 const otpFields = new Array(6).fill(0);
 const Verification = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [amountOfResend, setAmountOfResend] = useState(3);
   const [api, contextHolder] = notification.useNotification();
-  const { user, error } = useSelector((state) => state.auth);
+  const { user, error, loading } = useSelector((state) => state.auth);
   const [otpValues, setOtpValues] = useState(Array(6).fill(""));
   const otpRefs = Array.from({ length: 6 }, () => createRef());
   const [seconds, setSeconds] = useState(120);
   const [reSend, setResend] = useState(false);
+
   const handleInputChange = (e, index) => {
     const newOtpValues = [...otpValues];
     newOtpValues[index] = e.target.value;
@@ -59,9 +63,27 @@ const Verification = () => {
     setAmountOfResend(amountOfResend - 1);
     setResend(false);
   };
-
+  const createAccountFirebase = async (email, name) => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, email);
+      await setDoc(doc(db, "users", res.user.uid), {
+        usename: name,
+        email: email,
+        id: res.user.uid,
+        online: true,
+        lastSeen: serverTimestamp(),
+      });
+      await setDoc(doc(db, "userchats", res.user.uid), {
+        chats: [],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     if (user) {
+      createAccountFirebase(user.email, user.name);
+
       if (user.role === "User") {
         openNotificationWithIcon("success", api, "", "Sign Up Success!");
         delay(() => {
@@ -79,7 +101,7 @@ const Verification = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
 
   const minutes = Math.floor(seconds / 60);
@@ -96,10 +118,10 @@ const Verification = () => {
       <Space className="in-left">
         <Space className="in-left_title">
           <Typography className="in-left_title--main">
-            The Next Generation
+            Take Care Of
           </Typography>
           <Typography className="in-left_title--sub">
-            Of Any Health Concern
+            Your Health Mission
           </Typography>
         </Space>
         <Feature />
@@ -164,6 +186,7 @@ const Verification = () => {
               htmlType="submit"
               className="login-form-button"
               style={{ letterSpacing: 0.8, fontWeight: 600 }}
+              loading={loading}
             >
               Verify OTP
             </Button>

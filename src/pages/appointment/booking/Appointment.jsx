@@ -221,7 +221,7 @@ const Appointment = () => {
         <div className="appointment-right" style={{ border: 0 }}>
           <div className="appointment-box">
             <Typography className="appointment-left__title">
-              Your appointment schedule
+              Your appointment
             </Typography>
             <div className="appointment-left__infor--box">
               <Image
@@ -253,7 +253,7 @@ const Appointment = () => {
                 className="appointment-font"
                 style={{ fontSize: 16, fontWeight: 500, color: "#6c81a0" }}
               >
-                Appointment schedule information
+                Information
               </Typography>
               <div className="appointment-right__box">
                 <div className="appointment-right__content">
@@ -348,7 +348,7 @@ const Appointment = () => {
           {/* Phuong thuc thanh toan */}
           <div className="appointment-box" style={{ marginTop: 30 }}>
             <Typography className="appointment-left__title">
-              Your appointment schedule
+              Payment
             </Typography>
             <div
               className="appointment-right__box appointment-right__payment"

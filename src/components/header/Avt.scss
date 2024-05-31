@@ -4,9 +4,10 @@
 .avt {
   display: flex;
   flex-direction: row;
-  gap: 30px;
+  gap: 15px;
   align-items: center;
   justify-content: center;
+
   &-notify {
     font-size: 35px;
     color: $text-secondary-color;
@@ -36,13 +37,14 @@
   &-popover {
     transition: all 1s cubic-bezier(0.215, 0.61, 0.355, 1);
     position: absolute;
-    bottom: -266px;
+    bottom: -270px;
     right: 0;
-    width: 368px;
+    width: 370px;
     border-radius: 6px;
     box-shadow: rgb(217, 217, 217) 0px 4px 8px;
     background-color: rgb(248 250 252);
     padding: 10px 15px;
+    z-index: 1000;
 
     &::before,
     &::after {

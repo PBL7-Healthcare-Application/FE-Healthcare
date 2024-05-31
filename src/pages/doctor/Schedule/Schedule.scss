@@ -3,9 +3,12 @@
 
 th,
 td {
+
   text-align: center;
-  border: 0.25px solid #ddd;
+  border: 0.25px solid #f1f5f9;
+  max-width: 30px;
   padding: 20px;
+
 
   &:first-child {
     color: #3b82f6;
@@ -13,8 +16,6 @@ td {
     font-weight: 600;
   }
 }
-
-
 
 .border {
   &-first {
@@ -35,16 +36,32 @@ td {
 }
 
 .selected {
-  background-color: red;
+  background-color: #f3f4f6;
 }
 
 .selectedItem {
-  background-color: yellow;
+  background-color: #f3f4f6;
 }
 
 .Schedule {
-  border: 1px solid #ddd;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
+
+  &-today {
+    cursor: pointer;
+    background-color: #3b82f6;
+    color: #fff;
+    font-size: 18;
+    padding: 5px 20px;
+    font-family: $font-main;
+    font-weight: 500;
+    margin-right: 20px;
+    border-radius: 20px;
+
+    &-noToday {
+      background-color: #344858;
+    }
+  }
 
   &-header {
     display: flex;
@@ -54,7 +71,6 @@ td {
       font-family: $font-main;
       font-weight: 600;
       font-size: 16px;
-
     }
   }
 
@@ -63,6 +79,7 @@ td {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: fit-content;
   }
 
   &-title {
@@ -81,7 +98,6 @@ td {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-
   }
 
   &-buttonDate {
@@ -100,7 +116,7 @@ td {
     background-color: #3b82f6;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
-
+    cursor: pointer;
   }
 
   &-prev {
@@ -108,6 +124,12 @@ td {
     background-color: #3b82f6;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+    cursor: pointer;
+
+    &__disable {
+      opacity: 0.5;
+      pointer-events: none;
+    }
   }
 
   &-content {
@@ -140,11 +162,8 @@ td {
         color: #fff;
         font-family: $font-main;
         font-weight: 600;
-
       }
     }
-
-
   }
 
   &-status {
@@ -155,7 +174,7 @@ td {
     &-color {
       padding: 10px;
       border-radius: 50%;
-      background-color: #FFC700;
+      background-color: #ffc700;
     }
 
     &-text {
@@ -168,6 +187,28 @@ td {
     font-family: $font-main;
     font-size: 20px;
     margin-top: -20px;
-
   }
+}
+
+.busy {
+  font-size: 12px;
+  font-family: $font-main;
+  background-color: #A5ADF3;
+  pointer-events: none;
+}
+
+.examination {
+  background-color: #ffc700;
+  // pointer-events: none;
+}
+
+.break {
+  background-color: #FFA996;
+  pointer-events: none;
+}
+
+.disableItem {
+  pointer-events: none;
+  // opacity: 0.5;
+  background-color: #e2e8f0;
 }

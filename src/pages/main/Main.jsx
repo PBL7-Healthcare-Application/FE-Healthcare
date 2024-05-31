@@ -75,12 +75,12 @@ export const Main = () => {
       <div className="content">
         <div className="left">
           <Space className="left_title">
-            <Typography className="left_title--first">Consult Top</Typography>
+            <Typography className="left_title--first">Top Online</Typography>
             <Typography className="left_title--second">
-              Doctors Online
+              Doctors Consultation
             </Typography>
             <Typography className="left_title--sub">
-              for any health concern
+              for health concerns
             </Typography>
           </Space>
           <Feature />
@@ -145,7 +145,7 @@ export const Main = () => {
       </div>
       <div className="doctor" style={{ marginBottom: "60px" }}>
         <Typography className="left_title--sub doctor-title">
-          Enclinic brings you the health information you need.
+          Enclinic provides the health information you require
         </Typography>
         <div className="card-content">
           <CardContent

@@ -125,11 +125,19 @@
     &-bottom {
         margin-top: auto;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         gap: 20px;
         padding: 0 20px;
         width: 100%;
         align-items: center;
+
+        &__content {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            align-items: center;
+            flex-direction: row;
+        }
 
         &__icon {
             cursor: pointer;

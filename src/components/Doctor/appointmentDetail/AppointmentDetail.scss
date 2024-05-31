@@ -65,21 +65,43 @@
             align-items: center;
             width: 100%;
             margin-top: 40px;
+            gap: 30px;
         }
 
         &__button {
             background-color: #ef4444;
             color: #fff;
             height: 38px;
-            padding: 0 40px;
+            // padding: 0 40px;
             border-radius: 6px;
             font-family: $font-main;
             font-weight: 500;
+            width: 150px;
+            text-align: center;
 
 
             &:hover {
                 border: 1px solid #ef4444 !important;
                 color: #ef4444 !important;
+                background-color: #fff !important;
+            }
+        }
+
+        &__buttonEx {
+            background-color: $text-color;
+            color: #fff;
+            height: 38px;
+            // padding: 0 40px;
+            border-radius: 6px;
+            font-family: $font-main;
+            font-weight: 500;
+            width: 150px;
+            text-align: center;
+
+
+            &:hover {
+                border: 1px solid $text-color !important;
+                color: $text-color !important;
                 background-color: #fff !important;
             }
         }

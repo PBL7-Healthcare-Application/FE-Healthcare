@@ -1,0 +1,27 @@
+@import "../../../assets/scss/font.scss";
+@import "../../../assets/scss/variable.scss";
+
+
+
+.btn-cancel {
+    background-color: #fff;
+    border: 1px solid $text-color;
+    color: $text-color;
+}
+
+.modalConflict {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+
+    &-text {
+        font-size: 20px;
+    }
+
+    &-reason {
+        width: 100%;
+        margin-top: 40px;
+    }
+}

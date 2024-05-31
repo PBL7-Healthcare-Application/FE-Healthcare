@@ -2,16 +2,15 @@
 import { useSelector } from "react-redux";
 import "./CardTime.scss";
 
-const CardTime = ({ startTime, endTime, hadleClick }) => {
+const CardTime = ({ startTime, endTime, hadleClick, isBooking }) => {
   const { isTimeSelected } = useSelector((state) => state.search);
   return (
     <div
-      className={`cardTime ${
-        (isTimeSelected?.startTime === startTime) &
+      className={`cardTime ${(isTimeSelected?.startTime === startTime) &
         (isTimeSelected?.endTime === endTime)
-          ? " cardTime__active"
-          : ""
-      }`}
+        ? " cardTime__active"
+        : ""
+        } ${isBooking ? "cardTime__disable" : ""}`}
       onClick={() => {
         hadleClick({
           startTime: startTime,

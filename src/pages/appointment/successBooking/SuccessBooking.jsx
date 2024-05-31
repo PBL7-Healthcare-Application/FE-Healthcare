@@ -22,7 +22,7 @@ const SuccessBooking = () => {
           className="successBooking-font"
           style={{ fontSize: 16, color: "#595959", fontWeight: 400 }}
         >
-          You successfully created your booking. Thank you for using the service
+          Your appointment has successfully booked. Thank you for using the service
           at Enclinic.
         </Typography>
         <div
@@ -60,7 +60,7 @@ const SuccessBooking = () => {
               className="appointment-font"
               style={{ fontSize: 16, fontWeight: 500, color: "#6c81a0" }}
             >
-              Appointment schedule information
+              Information
             </Typography>
             <div className="appointment-right__box">
               <div className="appointment-right__content">
@@ -154,7 +154,7 @@ const SuccessBooking = () => {
               className="appointment-font"
               style={{ fontSize: 16, fontWeight: 500, color: "#6c81a0" }}
             >
-              Service User
+              User
             </Typography>
             <div className="appointment-right__box successBooking-service">
               <Image

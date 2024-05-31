@@ -36,7 +36,7 @@
 
         &:hover {
           background-color: #fff;
-          color: $background-primary ;
+          color: $background-primary;
           border: 1px solid $background-primary;
         }
       }
@@ -45,7 +45,6 @@
     &__right {
       flex: 5;
       max-width: 700px;
-
 
       &-img {
         width: 680px;
@@ -174,5 +173,13 @@
     font-weight: 700;
     line-height: 57px;
     color: $text-color;
+  }
+  &-button {
+    background-color: $text-color;
+    color: #fff;
+    padding: 0 20px;
+    height: 40px;
+    font-size: 15px;
+    font-weight: 500;
   }
 }

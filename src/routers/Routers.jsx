@@ -27,6 +27,12 @@ import Experience from "../components/DoctorProfile/Experience/Experience";
 import { AppointmentDetail } from "../components/Doctor/appointmentDetail/AppointmentDetail";
 import SetUpSchedule from "../components/DoctorProfile/SetUpSchedule/SetUpSchedule";
 import Chatting from "../pages/chatting/Chatting";
+import Examination from "../pages/doctor/Examination/Examination";
+import AdminLayout from "../layouts/Admin/AdminLayout";
+import ManagementUser from "../pages/admin/ManagementUser";
+import DetailUser from "../components/admin/user/DetailUser";
+import ManagementAppointment from "../pages/admin/ManagementAppointment";
+import ManagementPartner from "../pages/admin/ManagementPartner";
 
 const routers = createBrowserRouter([
   {
@@ -93,11 +99,9 @@ const routers = createBrowserRouter([
         element: <Partner />,
       },
       {
-        path: '/chatting',
-        element:
-          <Chatting />
-
-      }
+        path: "/chatting",
+        element: <Chatting />,
+      },
     ],
   },
   {
@@ -133,12 +137,15 @@ const routers = createBrowserRouter([
             path: ":id",
             element: <AppointmentDetail />,
           },
-
-        ]
+        ],
       },
       {
         path: "calendar",
         element: <Schedule />,
+      },
+      {
+        path: "examination",
+        element: <Examination />,
       },
       {
         path: "setting",
@@ -149,21 +156,21 @@ const routers = createBrowserRouter([
             children: [
               {
                 path: "personal",
-                element: <ProfileDr />
+                element: <ProfileDr />,
               },
               {
                 path: "certification",
-                element: <Certification />
+                element: <Certification type={"DOCTOR"} />,
               },
               {
                 path: "education",
-                element: <Education />
+                element: <Education type={"DOCTOR"} />,
               },
               {
                 path: "experience",
-                element: <Experience />
-              }
-            ]
+                element: <Experience type={"DOCTOR"} />,
+              },
+            ],
           },
           {
             path: "work-schedule",
@@ -181,13 +188,52 @@ const routers = createBrowserRouter([
                 element: <DisableAccount />,
               },
             ],
-
-          }
-        ]
+          },
+        ],
+      },
+      {
+        path: "chatting",
+        element: <Chatting />,
       },
     ],
   },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "users",
 
+        children: [
+          {
+            path: "",
+            element: <ManagementUser />,
+          },
+          {
+            path: "detail/:id",
+            element: <DetailUser />,
+          },
+        ],
+      },
+      {
+        path: "appointments",
+        element: <ManagementAppointment />,
+      },
+      {
+        path: "partners",
+        children: [
+          {
+            path: "",
+            element: <ManagementPartner />,
+          },
+          {
+            path: ":id",
+            element: <DetailUser partner={"partner"} />,
+          },
+        ],
+      },
+    ],
+  },
 ]);
 
 export default routers;
