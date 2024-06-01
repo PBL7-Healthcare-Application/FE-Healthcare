@@ -34,6 +34,9 @@ import DetailUser from "../components/admin/user/DetailUser";
 import ManagementAppointment from "../pages/admin/ManagementAppointment";
 import ManagementPartner from "../pages/admin/ManagementPartner";
 import Chatbot from "../pages/chatbot/Chatbot";
+import HealthTool from "../pages/healthTool/HealthTool";
+import BMI from "../pages/healthTool/BMI";
+import BMR from "../pages/healthTool/BMR";
 
 const routers = createBrowserRouter([
   {
@@ -47,6 +50,24 @@ const routers = createBrowserRouter([
       {
         path: "chatbot",
         element: <Chatbot />,
+      },
+      {
+        path: "health-tools/",
+
+        children: [
+          {
+            path: "",
+            element: <HealthTool />,
+          },
+          {
+            path: "bmi",
+            element: <BMI />
+          },
+          {
+            path: "bmr",
+            element: <BMR />
+          }
+        ]
       },
       {
         path: "search/doctor",

@@ -47,9 +47,10 @@ const ManagementAppointment = () => {
   const contentRef = useRef(null);
   const columns = [
     {
-      title: "Id",
+      title: "",
       dataIndex: "key",
       align: "center",
+      width: "5%",
     },
     {
       title: "Doctor",
@@ -63,7 +64,7 @@ const ManagementAppointment = () => {
       align: "center",
     },
     {
-      title: "Created Date",
+      title: "Date",
       dataIndex: "created",
       align: "center",
     },
@@ -105,13 +106,13 @@ const ManagementAppointment = () => {
     debounceInputKey(newValue, status, 1);
   };
   const debounceInputKey = useRef(
-    debounce((nextValue, status, page, filterAvailable) => {}, 500)
+    debounce((nextValue, status, page, filterAvailable) => { }, 500)
   ).current;
-  const handleClick = () => {};
+  const handleClick = () => { };
   useEffect(() => {
     console.log(detail);
   }, [detail]);
-  useEffect(() => {}, [dispatch]);
+  useEffect(() => { }, [dispatch]);
   return (
     <div className="DoctorAppointment">
       <Modal
@@ -127,7 +128,7 @@ const ManagementAppointment = () => {
         >
           <div className="appointment-left__infor--box">
             <Image
-              src={detail?.avatarUser}
+              src={detail?.avatarDoctor}
               width={90}
               className="appointment-left__infor--img"
               fallback={doctorDefault}
@@ -147,7 +148,7 @@ const ManagementAppointment = () => {
                 className="appointment-font"
                 style={{ fontSize: 15, fontWeight: 400, color: "#6c81a0" }}
               >
-                {detail?.specialty}
+                {detail?.medicalSpecialty}
               </Typography>
             </div>
           </div>
@@ -257,7 +258,7 @@ const ManagementAppointment = () => {
                       color: "#D84023",
                     }}
                   >
-                    VND {detail?.price.toLocaleString("vi-VN")}
+                    {detail?.price.toLocaleString("vi-VN")} VND
                   </Typography>
                 </div>
               </div>
@@ -357,9 +358,9 @@ const ManagementAppointment = () => {
           dataSource={listAppointment.map((item, index) => ({
             id: item?.idAppointment,
             key: index + 1,
-            doctor: item?.doctor?.name,
-            patient: item?.user?.name,
-            created: item.createdAt.split("T")[0],
+            doctor: item?.nameDoctor,
+            patient: item?.nameUser,
+            created: item.date ? item.date.split("T")[0] : "--",
             status: (
               <div
                 style={{

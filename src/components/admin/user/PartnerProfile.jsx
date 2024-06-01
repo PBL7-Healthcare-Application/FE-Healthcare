@@ -17,7 +17,7 @@ const PartnerProfile = () => {
           initialValues={{
             remember: true,
           }}
-          //   onFinish={onFinish}
+        //   onFinish={onFinish}
         >
           <div
             style={{
@@ -38,15 +38,16 @@ const PartnerProfile = () => {
               <Form.Item
                 name="Name"
                 normalize={(value) => value.trim()}
-                // style={{
-                //     display: "inline-block",
-                //     width: "calc(50% - 30px)",
-                // }}
+              // style={{
+              //     display: "inline-block",
+              //     width: "calc(50% - 30px)",
+              // }}
               >
                 <Typography className="label">Business License</Typography>
                 <Image
-                  src="https://californiahealthskills.com/wp-content/uploads/2023/03/Business-License.png"
+                  src={partnerDetail?.businessLicense}
                   style={{ marginTop: 8 }}
+                  width={600}
                 />
               </Form.Item>
             </div>
@@ -55,17 +56,16 @@ const PartnerProfile = () => {
                 name="Name"
                 normalize={(value) => value.trim()}
                 style={{ marginRight: 30 }}
-                // style={{
-                //     display: "inline-block",
-                //     width: "calc(50% - 30px)",
-                // }}
+              // style={{
+              //     display: "inline-block",
+              //     width: "calc(50% - 30px)",
+              // }}
               >
                 <Typography className="label">Specialty</Typography>
                 <Input
                   value={partnerDetail?.medicalSpecialty}
-                  className={`input__username input ${
-                    !isEdit && "profileDr-input"
-                  }`}
+                  className={`input__username input ${!isEdit && "profileDr-input"
+                    }`}
                   disabled={!isEdit}
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
@@ -77,17 +77,16 @@ const PartnerProfile = () => {
                 name="email"
                 normalize={(value) => value.trim()}
                 style={{ marginRight: 30 }}
-                // style={{
-                //     display: "inline-block",
-                //     width: "calc(50% - 30px)",
-                //     margin: "0 30px",
-                // }}
+              // style={{
+              //     display: "inline-block",
+              //     width: "calc(50% - 30px)",
+              //     margin: "0 30px",
+              // }}
               >
                 <Typography className="label">Phone Number</Typography>
                 <Input
-                  className={`input__username input ${
-                    !isEdit && "profileDr-input"
-                  }`}
+                  className={`input__username input ${!isEdit && "profileDr-input"
+                    }`}
                   disabled={!isEdit}
                   // defaultValue={partnerDetail?.price?.toLocaleString("vi-VN")}
                   style={{ margin: "8px 0", height: 46 }}
@@ -110,9 +109,8 @@ const PartnerProfile = () => {
               <Typography className="label">Clinic Name</Typography>
               <Input
                 value={partnerDetail?.nameClinic}
-                className={`input__username input ${
-                  !isEdit && "profileDr-input"
-                }`}
+                className={`input__username input ${!isEdit && "profileDr-input"
+                  }`}
                 disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
@@ -130,9 +128,8 @@ const PartnerProfile = () => {
               <Typography className="label">Address</Typography>
               <Input
                 value={partnerDetail?.address}
-                className={`input__username input ${
-                  !isEdit && "profileDr-input"
-                }`}
+                className={`input__username input ${!isEdit && "profileDr-input"
+                  }`}
                 disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();

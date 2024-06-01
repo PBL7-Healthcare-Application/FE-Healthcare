@@ -56,7 +56,7 @@ const DoctorLayout = () => {
       dispatch(getDoctorProfile());
       dispatch(getDoctorCalendar());
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const DoctorLayout = () => {
   const handleLogout = async () => {
     console.log("ok");
     try {
-      await handleUpdateStatus(chatUser.id, false);
+      await handleUpdateStatus(chatUser?.id, false);
       auth.signOut();
     } catch (error) {
       console.log(error);
@@ -118,7 +118,7 @@ const DoctorLayout = () => {
 
   useEffect(() => {
     const notifyCollection = collection(dbNotify, "notifications");
-    const q = query(notifyCollection, orderBy("createAt", "asc")); // replace 'yourCollectionName' with the name of your collection
+    const q = query(notifyCollection, orderBy("createAt", "desc")); // replace 'yourCollectionName' with the name of your collection
     const unSub = onSnapshot(q, (snapshot) => {
       const notifyData = snapshot.docs.map((doc) => ({
         id: doc.id, // get the id of the document
@@ -132,6 +132,7 @@ const DoctorLayout = () => {
           return item.idReceiver === profile?.idDoctor && !item.isRead;
         }
       });
+      console.log(listFilter);
       setCountNoti(listFilter?.length);
       dispatch(setNotify(listFilter));
     });

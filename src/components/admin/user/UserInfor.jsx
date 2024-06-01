@@ -35,7 +35,7 @@ const UserInfor = ({ type, partner }) => {
 
   useEffect(() => {
     if (type === "profile") {
-      //  setDisabled(partnerDetail?.isVerifiedInfo);
+      setDisabled(partnerDetail?.statusVerified === 1 ? true : false);
     }
     if (type === "certificate") {
       setDisabled(partnerDetail?.isVerifiedInfoCertificate);

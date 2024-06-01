@@ -15,7 +15,6 @@ import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import Notify from "../notify/Notify";
 import { FaFacebookMessenger } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
-import CardNotify from "../notify/CardNotify";
 import { setNotify } from "../../stores/Chat/ChatSlice";
 import { orderBy } from "lodash";
 
@@ -32,7 +31,6 @@ const Avt = (props) => {
     setvisible(!visible);
   };
   const handleLogout = async () => {
-    await handleUpdateStatus(chatUser.id, false);
     auth.signOut();
     dispatch(logOut());
     localStorage.removeItem("profile");
@@ -40,6 +38,8 @@ const Avt = (props) => {
     deleteToken();
     setvisible(!visible);
     navigate("/");
+    await handleUpdateStatus(chatUser?.id, false);
+
   };
   useEffect(() => {
     if (chatUser?.id) {

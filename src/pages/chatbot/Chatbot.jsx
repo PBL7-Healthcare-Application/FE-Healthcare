@@ -63,18 +63,18 @@ const Chatbot = () => {
             <div ref={endRef}></div>
           </div>
           <div className="chat-bottom">
-            <div className="chat-bottom__content" style={{ width: "60%" }}>
+            <div className="chat-bottom__content" >
               <input
                 placeholder="Ask somthing else..."
                 className="chat-bottom__input"
-                // onChange={(e) => setText(e.target.value)}
-                // value={text}
+              // onChange={(e) => setText(e.target.value)}
+              // value={text}
               />
               <IoSend
                 size={25}
                 className="chat-bottom__icon"
                 style={{ marginRight: 10 }}
-                // onClick={handleSend}
+              // onClick={handleSend}
               />
             </div>
           </div>

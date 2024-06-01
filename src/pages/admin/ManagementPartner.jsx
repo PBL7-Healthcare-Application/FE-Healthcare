@@ -41,7 +41,7 @@ const ManagementPartner = () => {
   const contentRef = useRef(null);
   const columns = [
     {
-      title: "Id",
+      title: "",
       dataIndex: "key",
       align: "center",
       width: "5%",

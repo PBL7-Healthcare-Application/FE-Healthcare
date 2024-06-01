@@ -142,7 +142,7 @@ const CardResult = ({ doctor }) => {
           <Space className="result-second__address">
             <DollarOutlined className="result-second__address-icon" />
             <Typography className="result-second__specialty">
-              {doctor?.price && doctor?.price.toLocaleString("vi-VN")} ₫
+              {doctor?.price && doctor?.price.toLocaleString("vi-VN")} VND
             </Typography>
           </Space>
         </div>
@@ -153,7 +153,7 @@ const CardResult = ({ doctor }) => {
             <Space className="result-third__rate-item">
               <StarFilled className="result-third__rate-icon" />
               <Typography className="result-third__rate-text">
-                {doctor?.rateAverage}/5
+                {parseFloat(doctor?.rateAverage).toFixed(1)}/5
               </Typography>
             </Space>
           )}
