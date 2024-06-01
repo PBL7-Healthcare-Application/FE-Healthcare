@@ -28,13 +28,12 @@ export const Header = () => {
     },
     {
       label: "Chatbot",
-      href: "/a",
+      href: "/chatbot",
     },
-
-    // {
-    //   label: "Health Tool",
-    //   href: "/b",
-    // },
+    {
+      label: "Health Tool",
+      href: "/health-tools",
+    },
     {
       label: "For Partners",
       href: "/partner",
@@ -53,7 +52,7 @@ export const Header = () => {
       dispatch(getUserProfile());
     }
 
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
   useEffect(() => {
     if (user === null) {
@@ -68,12 +67,11 @@ export const Header = () => {
     return (
       <div key={index} className="nav__item ">
         <Link
-          className={`nav__item-content ${
-            pathname.split("/").filter(Boolean)[0] ===
+          className={`nav__item-content ${pathname.split("/").filter(Boolean)[0] ===
             item.href.split("/").filter(Boolean)[0]
-              ? "active"
-              : ""
-          } `}
+            ? "active"
+            : ""
+            } `}
           to={item.href}
         >
           {item.label}

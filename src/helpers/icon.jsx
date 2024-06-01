@@ -6,6 +6,8 @@ import {
 import { Image, Tag } from "antd";
 import appointmentIcon from "../assets/images/appointmentIcon.png";
 import cancel from "../assets/images/cancel.png";
+import { FaRegBookmark } from "react-icons/fa";
+import { FcApproval } from "react-icons/fc";
 export const icon = (status) => {
   switch (status) {
     case 1:
@@ -97,8 +99,12 @@ export const statusNotify = (status) => {
   switch (status) {
     case "New Appointment":
       return <Image src={appointmentIcon} width={45} preview={false} />;
+    case "Approval of Information":
+      return <FcApproval size={40} />;
     case "Cancel Appointment":
       return <Image src={cancel} width={45} preview={false} />;
+    case "New Registration Application":
+      return <FaRegBookmark size={32} />;
     default:
       return <SyncOutlined spin />;
   }

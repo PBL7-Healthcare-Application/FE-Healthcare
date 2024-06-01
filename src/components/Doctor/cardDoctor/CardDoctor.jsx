@@ -2,16 +2,23 @@
 import { Button, Image, Space, Typography } from "antd";
 import "./cardDoctor.scss";
 import { EnvironmentOutlined } from "@ant-design/icons";
-export const CardDoctor = ({ value }) => {
+import doctorDefault from "../../../assets/images/doctor.jpeg";
+import { useNavigate } from "react-router-dom";
+import { getDoctorDetail } from "../../../stores/search-doctor/SearchThunk";
+import { useDispatch } from "react-redux";
+export const CardDoctor = ({ item }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div className="cardDoctor">
       <Image
-        src="https://cdn-healthcare.hellohealthgroup.com/2024/01/1704954266_659f899a308898.23855932.jpg"
+        src={item?.avatar}
         width={80}
         className="cardDoctor_img"
         preview={false}
+        fallback={doctorDefault}
       ></Image>
-      <Space className="cardDoctor_name">Dr Nguyen Lan Viet {value}</Space>
+      <Space className="cardDoctor_name">{item?.name}</Space>
       <Space className="cardDoctor_item">
         <svg
           width="22"
@@ -26,7 +33,7 @@ export const CardDoctor = ({ value }) => {
           ></path>
         </svg>
         <Typography className="cardDoctor_item-text">
-          Cardiology Dept
+          {item?.medicalSpecialty}
         </Typography>
       </Space>
       <Space className="cardDoctor_item">
@@ -48,9 +55,14 @@ export const CardDoctor = ({ value }) => {
       </Space>
       <Space className="cardDoctor_item">
         <EnvironmentOutlined className="cardDoctor_icon" />
-        <Typography className="cardDoctor_item-text">Ha Noi</Typography>
+        <Typography className="cardDoctor_item-text">
+          {item?.address}
+        </Typography>
       </Space>
-      <Button className="cardDoctor_button cardDoctor_item-text">
+      <Button className="cardDoctor_button cardDoctor_item-text" onClick={() => {
+        dispatch(getDoctorDetail(item?.idDoctor));
+        navigate(`/doctor/${item.idDoctor}`)
+      }}>
         Book Appointment
       </Button>
     </div>

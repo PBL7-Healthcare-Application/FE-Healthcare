@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
 import {
+  Badge,
   Button,
   DatePicker,
   Divider,
   Image,
   Radio,
+  Spin,
   Typography,
   notification,
 } from "antd";
@@ -19,10 +21,25 @@ import dayjs from "dayjs";
 import { setError, setStatusCode } from "../../../stores/user/UserSlice";
 import { useNavigate } from "react-router-dom";
 import { delay } from "lodash";
+import { IoImages } from "react-icons/io5";
+import { FaCamera } from "react-icons/fa";
+import getImageUpload from "../../../helpers/uploadCloudinary";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../helpers/firebase";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const { profile, statusCode, error } = useSelector((state) => state.profile);
+  const { profile, statusCode, error, loading } = useSelector(
+    (state) => state.profile
+  );
   const [profiles, setProfiles] = useState(profile);
   const [isDisabled, setIsDisabled] = useState(true);
   const [api, contextHolder] = notification.useNotification();
@@ -72,6 +89,31 @@ const Profile = () => {
     setIsEdit(!isEdit);
   };
 
+  const handleImg = async (e) => {
+    const file = e.target.files[0];
+    const url = await getImageUpload(file);
+    dispatch(
+      updateUserProfile({
+        ...profile,
+        avatar: url,
+      })
+    );
+    try {
+      const userSnapshot = await getDocs(
+        query(collection(db, "users"), where("email", "==", profile?.email))
+      );
+      if (!userSnapshot.empty) {
+        const userDoc = userSnapshot.docs[0];
+        console.log(userDoc);
+        await updateDoc(doc(db, "users", userDoc.id), {
+          avatar: url,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (profile !== null) {
       setProfiles(profile);
@@ -91,7 +133,7 @@ const Profile = () => {
       localStorage.setItem("user", JSON.stringify(profile));
       delay(() => {
         if (JSON.parse(localStorage.getItem("partner")) !== null) {
-          navigate("/partner")
+          navigate("/partner");
         }
       }, 1500);
     }
@@ -121,13 +163,47 @@ const Profile = () => {
         >
           {contextHolder}
           <div className="profile-header">
-            <Image
-              src={profiles?.avatar}
-              width={110}
-              className="profile-header__img"
-              fallback={personDefaults}
-              preview={false}
-            />
+            <div style={{ position: "relative" }}>
+              <Image
+                src={profiles?.avatar}
+                width={110}
+                className="profile-header__img"
+                fallback={personDefaults}
+                preview={false}
+              />
+              <label
+                htmlFor="file"
+                style={{
+                  position: "absolute",
+                  right: 10,
+                  bottom: 0,
+                  width: 35,
+                  height: 35,
+                  backgroundColor: "#B1B8C3",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "50%",
+                }}
+              >
+                {loading ? (
+                  <Spin />
+                ) : (
+                  <FaCamera
+                    size={20}
+                    className="chat-bottom__icon"
+                    color="#172C4C"
+                  />
+                )}
+              </label>
+              <input
+                type="file"
+                id="file"
+                style={{ display: "none" }}
+                onChange={handleImg}
+                accept="image/*"
+              />
+            </div>
             <div className="profile-header__info">
               <span className="profile-header__font">{profiles?.name}</span>
               <span
@@ -156,8 +232,9 @@ const Profile = () => {
               Full Name
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-content__coverInput-active" : ""
+              }`}
             >
               <input
                 className="profile-input"
@@ -174,8 +251,9 @@ const Profile = () => {
               Date Of Birth
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-radio-active" : ""
+              }`}
             >
               {!isEdit ? (
                 <input
@@ -203,8 +281,9 @@ const Profile = () => {
               Gender
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-radio-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-radio-active" : ""
+              }`}
             >
               {!isEdit ? (
                 <input
@@ -243,8 +322,9 @@ const Profile = () => {
               Address
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-content__coverInput-active" : ""
+              }`}
             >
               <input
                 className="profile-input"
@@ -263,8 +343,9 @@ const Profile = () => {
               Phone Number
             </Typography>
             <div
-              className={`profile-content__coverInput ${isEdit ? "profile-content__coverInput-active" : ""
-                }`}
+              className={`profile-content__coverInput ${
+                isEdit ? "profile-content__coverInput-active" : ""
+              }`}
             >
               <input
                 className="profile-input"
@@ -273,8 +354,8 @@ const Profile = () => {
                   profiles?.phoneNumber
                     ? profiles?.phoneNumber
                     : isEdit
-                      ? ""
-                      : "--"
+                    ? ""
+                    : "--"
                 }
                 onChange={(e) =>
                   handleChange({ name: "phoneNumber", value: e.target.value })

@@ -10,7 +10,10 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDoctorDetail } from "../../../stores/search-doctor/SearchThunk";
-import { resetTime, setIsSelected } from "../../../stores/search-doctor/SearchSlice";
+import {
+  resetTime,
+  setIsSelected,
+} from "../../../stores/search-doctor/SearchSlice";
 
 import doctorDefault from "../../../assets/images/doctor.jpeg";
 import {
@@ -139,21 +142,21 @@ const CardResult = ({ doctor }) => {
           <Space className="result-second__address">
             <DollarOutlined className="result-second__address-icon" />
             <Typography className="result-second__specialty">
-              {doctor?.price && doctor?.price.toLocaleString("vi-VN")} ₫
+              {doctor?.price && doctor?.price.toLocaleString("vi-VN")} VND
             </Typography>
           </Space>
         </div>
       </div>
       <div className="result-third">
         <div className="result-third__rate">
-          {
-            doctor?.rateAverage && (
-              <Space className="result-third__rate-item">
-                <StarFilled className="result-third__rate-icon" />
-                <Typography className="result-third__rate-text">{doctor?.rateAverage}/5</Typography>
-              </Space>
-            )
-          }
+          {doctor?.rateAverage && (
+            <Space className="result-third__rate-item">
+              <StarFilled className="result-third__rate-icon" />
+              <Typography className="result-third__rate-text">
+                {parseFloat(doctor?.rateAverage).toFixed(1)}/5
+              </Typography>
+            </Space>
+          )}
         </div>
         <div
           className="result-third__button"

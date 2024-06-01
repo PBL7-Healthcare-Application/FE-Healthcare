@@ -12,15 +12,16 @@ import content1 from "../../assets/images/content_1.webp";
 import content2 from "../../assets/images/content_2.webp";
 import content3 from "../../assets/images/content_3.webp";
 import content4 from "../../assets/images/content_4.webp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { responsive } from "../../constant/responsiveCarousel";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
 import { setSearch } from "../../stores/search-doctor/SearchSlice";
 export const Main = () => {
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState("All specialties");
+  const { searchResult } = useSelector((state) => state.search);
   const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -44,6 +45,10 @@ export const Main = () => {
       </li>
     );
   };
+
+  useEffect(() => {
+    dispatch(getSearchResult({ sortBy: "exp_desc" }));
+  }, [dispatch]);
   const handleChange = (value) => {
     setSpecialty(value);
   };
@@ -136,8 +141,8 @@ export const Main = () => {
               arrows={false}
               autoPlaySpeed={3000}
             >
-              {listGameItem.map((item, index) => {
-                return <CardDoctor key={index} />;
+              {searchResult.map((item, index) => {
+                return <CardDoctor key={index} item={item} />;
               })}
             </Carousel>
           </div>

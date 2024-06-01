@@ -293,7 +293,7 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
                 letterSpacing: 0.4,
               }}
             >
-              {appointment?.price.toLocaleString("vi-VN")} ₫
+              {appointment?.price.toLocaleString("vi-VN")} VND
             </Typography>
           </div>
         </div>

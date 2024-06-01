@@ -203,7 +203,7 @@ const DetailDoctor = () => {
                   >
                     <StarFilled className="result-third__rate-icon" />
                     <Typography className="result-third__rate-text">
-                      {doctorDetail?.rateAverage}/5
+                      {parseFloat(doctorDetail?.rateAverage).toFixed(1)}/5
                     </Typography>
                   </Space>
                 </div>
@@ -552,7 +552,7 @@ const DetailDoctor = () => {
                     <div className="rate__box">
                       <div className="rate__box__child">
                         <span className="rate__text rate__totalPoint">
-                          {doctorDetail?.rateAverage}
+                          {parseFloat(doctorDetail?.rateAverage).toFixed(1)}
                           <span className="rate__text rate__scale-point">
                             /5
                           </span>
@@ -593,8 +593,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.five > 0
                                 ? (tableOfrate?.five /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"
@@ -623,8 +623,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.four > 0
                                 ? (tableOfrate?.four /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"
@@ -653,8 +653,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.three > 0
                                 ? (tableOfrate?.three /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"
@@ -683,8 +683,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.two > 0
                                 ? (tableOfrate?.two /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"
@@ -713,8 +713,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.one > 0
                                 ? (tableOfrate?.one /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"

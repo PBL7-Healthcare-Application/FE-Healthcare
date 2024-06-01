@@ -4,7 +4,7 @@ import "./Notify.scss";
 import { statusNotify } from "../../helpers/icon";
 import { format } from "timeago.js";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getDetailDoctorAppointment } from "../../stores/doctor/DoctorThunk";
 import { doc, updateDoc } from "firebase/firestore";
 import { dbNotify } from "../../helpers/firebase";
@@ -13,17 +13,24 @@ import { dbNotify } from "../../helpers/firebase";
 function CardNotify({ item }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { profile } = useSelector((state) => state.doctor);
   const handleRedirect = async () => {
     await updateDoc(doc(dbNotify, "notifications", item.id), {
       isRead: true, // replace with the fields you want to update
     })
-    if (profile) {
-      dispatch(getDetailDoctorAppointment(item?.idAppointment));
-      navigate(`/dr.Enclinic/appointment/${item?.idAppointment}`)
+    if (item?.title === "New Appointment" || item?.title === "Cancel Appointment") {
+      if (item?.idDoctor) {
+        dispatch(getDetailDoctorAppointment(item?.idAppointment));
+        navigate(`/dr.Enclinic/appointment/${item?.idAppointment}`)
+      }
+      else {
+        navigate(`/user/appointment`)
+      }
     }
-    else {
-      navigate(`/user/appointment`)
+    if (item?.title === "Approval of Information") {
+      navigate(`/dr.Enclinic/setting/profile/personal`)
+    }
+    if (item?.title === "New Registration Application") {
+      navigate(`/admin/partners`)
     }
   }
   return (

@@ -7,6 +7,7 @@ import {
   Image,
   Input,
   Select,
+  Spin,
   Typography,
   notification,
 } from "antd";
@@ -16,11 +17,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { EditFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { getAllSpecialty } from "../../../api/doctor.api";
-import { getDoctorProfile, updateDoctorProfile } from "../../../stores/doctor/DoctorThunk";
+import {
+  getDoctorProfile,
+  updateDoctorProfile,
+} from "../../../stores/doctor/DoctorThunk";
 import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
 import { openNotificationWithIcon } from "../../notification/CustomNotify";
+import { FaCamera } from "react-icons/fa";
+import getImageUpload from "../../../helpers/uploadCloudinary";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../helpers/firebase";
 const ProfileDr = () => {
-  const { profile, statusCode, error, loading } = useSelector((state) => state.doctor);
+  const { profile, statusCode, error, loading } = useSelector(
+    (state) => state.doctor
+  );
   const [form] = Form.useForm();
   const [isEdit, setIsEdit] = useState(false);
   const [specialties, setSpecialties] = useState([]);
@@ -29,7 +46,9 @@ const ProfileDr = () => {
     form.setFieldsValue({
       name: profile?.name,
       year: profile?.yearExperience,
-      idSpecialty: specialties.find(item => item.name === profile?.medicalSpecialty)?.idSpecialty,
+      idSpecialty: specialties.find(
+        (item) => item.name === profile?.medicalSpecialty
+      )?.idSpecialty,
       dob: dayjs(new Date(profile?.dob)),
       gender: profile?.gender,
       phone: profile?.phoneNumber,
@@ -37,8 +56,7 @@ const ProfileDr = () => {
       clinicName: profile?.nameClinic,
       address: profile?.address,
       description: profile?.description,
-
-    })
+    });
     setIsEdit(false);
   };
   const dispatch = useDispatch();
@@ -53,13 +71,14 @@ const ProfileDr = () => {
   };
   useEffect(() => {
     getSpecialties();
-
-  }, [])
+  }, []);
   useEffect(() => {
     form.setFieldsValue({
       name: profile?.name,
       year: profile?.yearExperience,
-      idSpecialty: specialties?.find(item => item.name === profile?.medicalSpecialty)?.idSpecialty,
+      idSpecialty: specialties?.find(
+        (item) => item.name === profile?.medicalSpecialty
+      )?.idSpecialty,
       dob: dayjs(new Date(profile?.dob)),
       gender: profile?.gender,
       phone: profile?.phoneNumber,
@@ -67,14 +86,18 @@ const ProfileDr = () => {
       clinicName: profile?.nameClinic,
       address: profile?.address,
       description: profile?.description,
-
-    })
-  }, [form, profile, specialties])
+    });
+  }, [form, profile, specialties]);
 
   useEffect(() => {
     if (statusCode === 200) {
       dispatch(setStatusCode(null));
-      openNotificationWithIcon("success", api, "", "Update Profile Successfully!");
+      openNotificationWithIcon(
+        "success",
+        api,
+        "",
+        "Update Profile Successfully!"
+      );
       dispatch(getDoctorProfile());
       setIsEdit(false);
     }
@@ -94,11 +117,36 @@ const ProfileDr = () => {
       yearExperience: values.year,
       price: values.fee,
       description: values.description,
-      idSpecialty: values.idSpecialty
-
-    }
+      idSpecialty: values.idSpecialty,
+    };
     dispatch(updateDoctorProfile(body));
-  }
+  };
+
+  const handleImg = async (e) => {
+    const file = e.target.files[0];
+    const url = await getImageUpload(file);
+    dispatch(
+      updateDoctorProfile({
+        ...profile,
+        avatar: url,
+      })
+    );
+    try {
+      const userSnapshot = await getDocs(
+        query(collection(db, "users"), where("email", "==", profile?.email))
+      );
+      if (!userSnapshot.empty) {
+        const userDoc = userSnapshot.docs[0];
+        console.log(userDoc);
+        await updateDoc(doc(db, "users", userDoc.id), {
+          avatar: url,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="profileDr">
       <div
@@ -106,13 +154,48 @@ const ProfileDr = () => {
         style={{ width: "100%", justifyContent: "flex-start" }}
       >
         {contextHolder}
-        <Image
-          src={profile?.avatar}
-          width={120}
-          className="profile-header__img"
-          fallback={doctorDefault}
-          preview={false}
-        />
+        <div style={{ position: "relative" }}>
+          <Image
+            src={profile?.avatar}
+            width={120}
+            className="profile-header__img"
+            fallback={doctorDefault}
+            preview={false}
+            style={{ backgroundColor: "#f1f5f9" }}
+          />
+          <label
+            htmlFor="file"
+            style={{
+              position: "absolute",
+              right: 10,
+              bottom: 0,
+              width: 35,
+              height: 35,
+              backgroundColor: "#B1B8C3",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "50%",
+            }}
+          >
+            {loading ? (
+              <Spin />
+            ) : (
+              <FaCamera
+                size={20}
+                className="chat-bottom__icon"
+                color="#172C4C"
+              />
+            )}
+          </label>
+          <input
+            type="file"
+            id="file"
+            style={{ display: "none" }}
+            onChange={handleImg}
+            accept="image/*"
+          />
+        </div>
         <div
           style={{
             width: "100%",
@@ -147,7 +230,6 @@ const ProfileDr = () => {
         <Form
           name="normal_login"
           className="profileDr-content__form"
-
           form={form}
           onFinish={onFinish}
         >
@@ -158,7 +240,8 @@ const ProfileDr = () => {
             }}
           >
             <Typography className="label">Name</Typography>
-            <Form.Item name="name"
+            <Form.Item
+              name="name"
               normalize={(value) => value.trim()}
               rules={[
                 {
@@ -167,10 +250,10 @@ const ProfileDr = () => {
                 },
               ]}
             >
-
               <Input
-                className={`input__username input ${!isEdit && "profileDr-input"
-                  }`}
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
                 disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
@@ -186,7 +269,7 @@ const ProfileDr = () => {
               width: "97%",
               flexDirection: "row",
               display: "flex",
-              gap: 40
+              gap: 40,
             }}
           >
             <div style={{ flex: 1 }}>
@@ -202,8 +285,9 @@ const ProfileDr = () => {
                 ]}
               >
                 <Input
-                  className={`input__username input ${!isEdit && "profileDr-input"
-                    }`}
+                  className={`input__username input ${
+                    !isEdit && "profileDr-input"
+                  }`}
                   disabled={!isEdit}
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
@@ -212,10 +296,7 @@ const ProfileDr = () => {
               </Form.Item>
             </div>
 
-
-            <div
-              style={{ flex: 1 }}
-            >
+            <div style={{ flex: 1 }}>
               <Typography className="label">Specialty</Typography>
               <Form.Item
                 name="idSpecialty"
@@ -246,7 +327,7 @@ const ProfileDr = () => {
               width: "97%",
               flexDirection: "row",
               display: "flex",
-              gap: 40
+              gap: 40,
             }}
           >
             <div style={{ flex: 1 }}>
@@ -261,7 +342,6 @@ const ProfileDr = () => {
                   },
                 ]}
               >
-
                 <DatePicker
                   className="profile-datePicker"
                   style={{ marginTop: 10 }}
@@ -280,7 +360,6 @@ const ProfileDr = () => {
                   },
                 ]}
               >
-
                 <Select
                   options={[
                     {
@@ -290,7 +369,7 @@ const ProfileDr = () => {
                     {
                       label: "Female",
                       value: false,
-                    }
+                    },
                   ]}
                   style={{ margin: "8px 0", height: 46 }}
                   onChange={(e) => {
@@ -302,14 +381,13 @@ const ProfileDr = () => {
             </div>
           </div>
 
-
           <div
             style={{
               marginBottom: 0,
               width: "97%",
               flexDirection: "row",
               display: "flex",
-              gap: 40
+              gap: 40,
             }}
           >
             <div style={{ flex: 1 }}>
@@ -324,11 +402,10 @@ const ProfileDr = () => {
                   },
                 ]}
               >
-
                 <Input
-
-                  className={`input__username input ${!isEdit && "profileDr-input"
-                    }`}
+                  className={`input__username input ${
+                    !isEdit && "profileDr-input"
+                  }`}
                   disabled={!isEdit}
                   onChange={(e) => {
                     e.target.value = e.target.value.trim();
@@ -348,10 +425,10 @@ const ProfileDr = () => {
                   },
                 ]}
               >
-
                 <Input
-                  className={`input__username input ${!isEdit && "profileDr-input"
-                    }`}
+                  className={`input__username input ${
+                    !isEdit && "profileDr-input"
+                  }`}
                   disabled={!isEdit}
                   style={{ margin: "8px 0", height: 46 }}
                   onChange={(e) => {
@@ -375,10 +452,10 @@ const ProfileDr = () => {
           >
             <Typography className="label">Enclinic Name</Typography>
             <Form.Item name="clinicName" normalize={(value) => value.trim()}>
-
               <Input
-                className={`input__username input ${!isEdit && "profileDr-input"
-                  }`}
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
                 disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
@@ -394,7 +471,8 @@ const ProfileDr = () => {
           >
             <Typography className="label">Address</Typography>
             <Form.Item
-              name="address" normalize={(value) => value.trim()}
+              name="address"
+              normalize={(value) => value.trim()}
               rules={[
                 {
                   required: isEdit,
@@ -402,26 +480,28 @@ const ProfileDr = () => {
                 },
               ]}
             >
-
               <Input
-                className={`input__username input ${!isEdit && "profileDr-input"
-                  }`}
+                className={`input__username input ${
+                  !isEdit && "profileDr-input"
+                }`}
                 disabled={!isEdit}
                 onChange={(e) => {
                   e.target.value = e.target.value.trim();
                 }}
-
               />
             </Form.Item>
           </Form.Item>
           <Typography className="label">Desciption</Typography>
-          <Form.Item name="description" style={{ marginRight: 30 }} rules={[
-            {
-              required: isEdit,
-              message: "Desciption is required",
-            },
-          ]}>
-
+          <Form.Item
+            name="description"
+            style={{ marginRight: 30 }}
+            rules={[
+              {
+                required: isEdit,
+                message: "Desciption is required",
+              },
+            ]}
+          >
             <TextArea
               className={`profileDr-font ${!isEdit && "profileDr-input"}`}
               placeholder="Controlled autosize"
@@ -455,7 +535,6 @@ const ProfileDr = () => {
           )}
         </Form>
       </div>
-
     </div>
   );
 };

@@ -342,7 +342,7 @@ const Examination = () => {
             className="detailDr-content__right-appointment--titleType"
             style={{ marginTop: 20, marginBottom: 12 }}
           >
-            Availability
+            Issues
           </Typography>
           <TextArea maxLength={100} onChange={(e) => setReason(e.target.value)} />
 

@@ -41,7 +41,7 @@ const Experience = ({ type }) => {
   const [api, contextHolder] = notification.useNotification();
   const columns = [
     {
-      title: "Id",
+      title: "",
       dataIndex: "key",
       align: "center",
       width: "5%",

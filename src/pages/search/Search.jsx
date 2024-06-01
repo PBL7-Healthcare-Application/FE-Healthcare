@@ -16,9 +16,9 @@ import CardResult from "../../components/Doctor/cardResult/CardResult";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSkeleton from "../../components/customSkeleton/CustomSkeleton";
-import { debounce, set } from "lodash";
+import { debounce } from "lodash";
 import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setIdSpecialty } from "../../stores/search-doctor/SearchSlice";
 const Search = () => {
   const { searchResult, loading, keyword, id_Specialty, paging } = useSelector(
@@ -34,7 +34,6 @@ const Search = () => {
   const [maxPrice, setMaxPrice] = useState(1000000);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params = useParams();
   const contentRef = useRef(null);
 
   const handleClear = () => {

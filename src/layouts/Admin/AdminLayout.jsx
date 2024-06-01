@@ -16,6 +16,10 @@ import { TiThList } from "react-icons/ti";
 import { getUserProfile } from "../../stores/user/UserThunk";
 import { IoNotifications } from "react-icons/io5";
 import Notify from "../../components/notify/Notify";
+import { setNotify } from "../../stores/Chat/ChatSlice";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { dbNotify } from "../../helpers/firebase";
+import { orderBy } from "lodash";
 const { Header, Sider, Content } = Layout;
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -49,13 +53,34 @@ const AdminLayout = () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [isNoti]);
+  useEffect(() => {
+    const notifyCollection = collection(dbNotify, "notifications");
+    const q = query(notifyCollection, orderBy("createAt", "asc")); // replace 'yourCollectionName' with the name of your collection
+    const unSub = onSnapshot(q, (snapshot) => {
+      const notifyData = snapshot.docs.map((doc) => ({
+        id: doc.id, // get the id of the document
+        ...doc.data(), // get the data of the document
+      }));
+      const listFilter = notifyData.filter((item) => {
+        if (item?.idAdmin) {
+          return item.idAdmin === profile?.idUser && !item.isRead;
+        }
+
+      });
+      setCountNoti(listFilter?.length);
+      dispatch(setNotify(listFilter));
+    })
+    return () => {
+      unSub();
+    };
+  }, [dispatch, profile]);
 
   useEffect(() => {
     if (token) {
       setIsLogin(true);
       dispatch(getUserProfile());
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {

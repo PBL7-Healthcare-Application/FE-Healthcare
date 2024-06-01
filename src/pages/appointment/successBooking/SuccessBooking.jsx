@@ -141,7 +141,7 @@ const SuccessBooking = () => {
                       color: "#D84023",
                     }}
                   >
-                    {appointment?.price.toLocaleString('vi-VN')} ₫
+                    {appointment?.price.toLocaleString('vi-VN')} VND
                   </Typography>
                 </div>
               </div>

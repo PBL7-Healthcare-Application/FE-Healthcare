@@ -2,165 +2,173 @@
 @import "../../../assets/scss/variable.scss";
 
 .chat {
-    flex: 7;
-    padding: 10px 0;
+  flex: 7;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  // background-color: green;
+  &-top {
+    padding: 0 20px;
+    padding-bottom: 10px;
+    display: flex;
+    border-bottom: 1px solid #dbdfe5;
+    justify-content: space-between;
+    align-items: center;
+
+    &__user {
+      display: flex;
+      gap: 20px;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    &__dot {
+      width: 10px;
+      height: 10px;
+      background-color: green;
+      border-radius: 50%;
+    }
+
+    &__texts {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    &__status {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      align-items: center;
+    }
+  }
+
+  &-middle {
+    padding: 20px;
+    flex: 1;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    height: 100%;
-
-    // background-color: green;
-    &-top {
-
-        padding: 0 20px;
-        padding-bottom: 10px;
-        display: flex;
-        border-bottom: 1px solid #dbdfe5;
-        justify-content: space-between;
-        align-items: center;
-
-        &__user {
-            display: flex;
-            gap: 20px;
-            flex-direction: row;
-            align-items: center;
-
-        }
-
-        &__dot {
-            width: 10px;
-            height: 10px;
-            background-color: green;
-            border-radius: 50%;
-        }
-
-        &__texts {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        &__status {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            align-items: center;
-        }
+    gap: 25px;
+    &::-webkit-scrollbar {
+      width: 4px; // Độ rộng của thanh cuộn
     }
 
-    &-middle {
-        padding: 20px;
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1; // Màu nền của thanh cuộn
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888; // Màu của thanh cuộn
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555; // Màu của thanh cuộn khi rê chuột vào
+    }
+
+    &__message {
+      max-width: 70%;
+      display: flex;
+      gap: 20px;
+
+      &.own {
+        align-self: flex-end;
+
+        .texts {
+          align-items: flex-end;
+
+          p {
+            background-color: $text-color;
+            width: fit-content;
+            color: #fff;
+            text-align: right;
+          }
+        }
+      }
+
+      .texts {
         flex: 1;
-        overflow-y: scroll;
         display: flex;
         flex-direction: column;
-        gap: 25px;
+        gap: 5px;
 
-        &__message {
-            max-width: 70%;
-            display: flex;
-            gap: 20px;
-
-            &.own {
-                align-self: flex-end;
-
-                .texts {
-                    align-items: flex-end;
-
-                    p {
-                        background-color: $text-color;
-                        width: fit-content;
-                        color: #fff;
-                        text-align: right;
-                    }
-                }
-            }
-
-            .texts {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-
-
-                p {
-                    width: fit-content;
-                    border-radius: 10px;
-                    padding: 10px;
-                    // padding-left: 10px;
-                    // padding-right: 5px;
-                    background-color: #F1F1F1;
-                    letter-spacing: 0.5px;
-
-                }
-
-                img {
-                    width: 100%;
-                    height: 200px;
-                    object-fit: cover;
-                    border-radius: 10px;
-                }
-            }
+        p {
+          width: fit-content;
+          border-radius: 10px;
+          padding: 10px;
+          // padding-left: 10px;
+          // padding-right: 5px;
+          background-color: #f1f1f1;
+          letter-spacing: 0.5px;
         }
 
-        &__img {
-            border-radius: 50%;
-            object-fit: cover;
+        img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 10px;
         }
-
-        &__content {
-            font-family: $font-main;
-            font-size: 13px;
-            font-weight: 400;
-        }
-
-        &__time {
-            font-family: $font-main;
-            font-size: 12px;
-            font-weight: 300;
-        }
+      }
     }
 
-
-
-    &-bottom {
-        margin-top: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding: 0 20px;
-        width: 100%;
-        align-items: center;
-
-        &__content {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            align-items: center;
-            flex-direction: row;
-        }
-
-        &__icon {
-            cursor: pointer;
-            color: $text-color;
-        }
-
-        &__input {
-            flex: 1;
-            font-family: $font-main;
-            font-size: 15px;
-            font-weight: 400;
-            border: none;
-            outline: none;
-            background-color: #e5e7eb;
-            padding: 8px 20px;
-            border-radius: 10px;
-            letter-spacing: 0.4px;
-
-            &:hover {
-                border: none;
-                outline: none;
-            }
-        }
-
+    &__img {
+      border-radius: 50%;
+      object-fit: cover;
     }
+
+    &__content {
+      font-family: $font-main;
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    &__time {
+      font-family: $font-main;
+      font-size: 12px;
+      font-weight: 300;
+    }
+  }
+
+  &-bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+    width: 100%;
+    align-items: center;
+
+    &__content {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      align-items: center;
+      flex-direction: row;
+    }
+
+    &__icon {
+      cursor: pointer;
+      color: $text-color;
+    }
+
+    &__input {
+      flex: 1;
+      font-family: $font-main;
+      font-size: 15px;
+      font-weight: 400;
+      border: none;
+      outline: none;
+      background-color: #e5e7eb;
+      padding: 8px 20px;
+      border-radius: 10px;
+      letter-spacing: 0.4px;
+
+      &:hover {
+        border: none;
+        outline: none;
+      }
+    }
+  }
 }
