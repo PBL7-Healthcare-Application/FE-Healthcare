@@ -33,6 +33,7 @@ import { adminGetAppointment } from "../../stores/admin/AdminThunk";
 import { da } from "date-fns/locale/da";
 import { getAppointmentDetail } from "../../api/admin.api";
 import { formatDate } from "../../helpers/timeBooking";
+import { se } from "date-fns/locale";
 const ManagementAppointment = () => {
   const { paging, listAppointment } = useSelector((state) => state.admin);
   const [page, setPage] = useState(paging?.currentPage);
@@ -84,6 +85,7 @@ const ManagementAppointment = () => {
     dispatch(
       adminGetAppointment({
         date: date !== null ? date : undefined,
+        search: inputSearch !== "" ? inputSearch : undefined,
         status: value !== "All" ? value : undefined,
         page: page,
       })
@@ -94,6 +96,7 @@ const ManagementAppointment = () => {
     dispatch(
       adminGetAppointment({
         status: status !== null ? status : undefined,
+        search: inputSearch !== "" ? inputSearch : undefined,
         date: stringDate,
         page: page,
       })
@@ -103,12 +106,31 @@ const ManagementAppointment = () => {
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
     setInputSearch(newValue);
-    debounceInputKey(newValue, status, 1);
+    debounceInputKey(newValue, status, date, 1);
   };
   const debounceInputKey = useRef(
-    debounce((nextValue, status, page, filterAvailable) => { }, 500)
+    debounce((nextValue, status, date, page) => {
+      dispatch(
+        adminGetAppointment({
+          status: status !== null ? status : undefined,
+          search: nextValue,
+          date: date !== null ? date : undefined,
+          page: page,
+        })
+      );
+    }, 500)
   ).current;
-  const handleClick = () => { };
+  const handleClick = () => {
+    dispatch(
+      adminGetAppointment({
+        status: status !== null ? status : undefined,
+        search: inputSearch !== "" ? inputSearch : undefined,
+        date: date !== null ? date : undefined,
+        page: page,
+      })
+    )
+
+  };
   useEffect(() => {
     console.log(detail);
   }, [detail]);
@@ -258,7 +280,7 @@ const ManagementAppointment = () => {
                       color: "#D84023",
                     }}
                   >
-                    {detail?.price.toLocaleString("vi-VN")} VND
+                    VND {detail?.price.toLocaleString("vi-VN")}
                   </Typography>
                 </div>
               </div>

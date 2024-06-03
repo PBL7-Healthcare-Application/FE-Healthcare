@@ -8,11 +8,9 @@ import { SetError } from "../../../stores/auth/AuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ResendOTP, VerifyEmail } from "../../../stores/auth/AuthThunk";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
-import { delay } from "lodash";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { delay } from "lodash"
 import { getUserProfile } from "../../../stores/user/UserThunk";
-import { auth, db } from "../../../helpers/firebase";
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { createAccountFirebase } from "../../../helpers/firebaseHelper";
 const otpFields = new Array(6).fill(0);
 const Verification = () => {
   const dispatch = useDispatch();
@@ -63,27 +61,10 @@ const Verification = () => {
     setAmountOfResend(amountOfResend - 1);
     setResend(false);
   };
-  const createAccountFirebase = async (email, name) => {
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, email);
-      await setDoc(doc(db, "users", res.user.uid), {
-        usename: name,
-        email: email,
-        id: res.user.uid,
-        online: true,
-        lastSeen: serverTimestamp(),
-      });
-      await setDoc(doc(db, "userchats", res.user.uid), {
-        chats: [],
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   useEffect(() => {
     if (user) {
       createAccountFirebase(user.email, user.name);
-
       if (user.role === "User") {
         openNotificationWithIcon("success", api, "", "Sign Up Success!");
         delay(() => {

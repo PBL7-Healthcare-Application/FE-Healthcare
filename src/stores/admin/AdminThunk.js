@@ -138,8 +138,8 @@ export const adminGetAppointment = createAsyncThunk(
   "admin/adminGetAppointment",
   async (params, thunkApi) => {
     try {
-      const { date, status, page } = params;
-      const response = await getAppointment(date, status, page);
+      const { date, search, status, page } = params;
+      const response = await getAppointment(date, search, status, page);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

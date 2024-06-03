@@ -421,7 +421,7 @@ const Search = () => {
                     </Typography>
                     <div style={{ position: "relative" }}>
                       <input
-                        value={minPrice}
+                        value={minPrice.toLocaleString("vi-VN")}
                         className="search-result__filter__experience--input"
                         style={{ width: "100%", paddingLeft: 10 }}
                         onChange={(e) => setMinPrice(e.target.value)}
@@ -451,10 +451,10 @@ const Search = () => {
                           position: "absolute",
                           left: 0,
                           color: "#000",
-                          fontSize: 20,
+                          fontSize: 10,
                         }}
                       >
-                        ₫
+
                       </span>
                     </div>
                   </Space>
@@ -464,7 +464,7 @@ const Search = () => {
                     </Typography>
                     <div style={{ position: "relative" }}>
                       <input
-                        value={maxPrice}
+                        value={maxPrice.toLocaleString("vi-VN")}
                         className="search-result__filter__experience--input"
                         style={{ width: "100%", paddingLeft: 10 }}
                         onChange={(e) => setMaxPrice(e.target.value)}
@@ -495,10 +495,10 @@ const Search = () => {
                           position: "absolute",
                           left: 0,
                           color: "#000",
-                          fontSize: 20,
+                          fontSize: 10,
                         }}
                       >
-                        ₫
+
                       </span>
                     </div>
                   </Space>

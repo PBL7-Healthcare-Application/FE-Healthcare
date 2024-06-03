@@ -14,6 +14,7 @@ import { getUserProfile } from "../../../stores/user/UserThunk";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../helpers/firebase";
 import { handleUpdateStatus } from "../../../helpers/chat";
+import { createAccountFirebase } from "../../../helpers/firebaseHelper";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (user) {
+      createAccountFirebase(user.email, user.name);
       if (user.role === "User") {
         handleChat(user.email);
         openNotificationWithIcon("success", api, "", "Sign In Success!");

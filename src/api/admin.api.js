@@ -16,13 +16,16 @@ export const getUsers = (search, role, status, page = 1) => {
 export const getUserDetail = (id) => {
   return http.get(`/Admin/User/GetUserDetail/${id}`);
 }
-export const getAppointment = (date, status, page = 1) => {
+export const getAppointment = (date, search, status, page = 1) => {
   let url = `/Admin/Appointment/ViewAppointment?page=${page}`;
   if (date !== undefined) {
     url += `&date=${date}`;
   }
   if (status !== undefined) {
     url += `&status=${status}`;
+  }
+  if (search !== undefined) {
+    url += `&search=${search}`;
   }
   return http.get(url);
 }

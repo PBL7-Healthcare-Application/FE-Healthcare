@@ -769,10 +769,10 @@ const DetailDoctor = () => {
                       color: "#185FA0",
                     }}
                   >
-                    {doctorDetail?.price}₫
+                    VND {doctorDetail?.price}
                   </Typography>
                 </div>
-                <div className="detailDr-content__right-appointment--box__type">
+                {/* <div className="detailDr-content__right-appointment--box__type">
                   <div className="detailDr-content__right-appointment--box__type-item">
                     <Radio value={2} />
                     <Typography className="detailDr-content__right-appointment--box__type-label">
@@ -789,7 +789,7 @@ const DetailDoctor = () => {
                   >
                     Free
                   </Typography>
-                </div>
+                </div> */}
               </div>
             </Radio.Group>
 

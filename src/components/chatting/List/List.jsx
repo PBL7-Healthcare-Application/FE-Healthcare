@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import ItemUser from "./ItemUser";
 import "./List.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
-import { Divider, Empty } from "antd";
+import { Empty } from "antd";
 import { changeChat } from "../../../stores/Chat/ChatSlice";
 
 const ListUser = () => {

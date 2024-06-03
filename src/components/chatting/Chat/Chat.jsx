@@ -162,6 +162,7 @@ const Chat = () => {
             src={user.avatar}
             fallback={personDefault}
             width={60}
+            height={60}
             preview={false}
             style={{ borderRadius: "50%" }}
           />

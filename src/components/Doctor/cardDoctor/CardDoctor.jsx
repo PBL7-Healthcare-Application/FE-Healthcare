@@ -50,7 +50,7 @@ export const CardDoctor = ({ item }) => {
           ></path>
         </svg>
         <Typography className="cardDoctor_item-text">
-          Medical Center Japan T-Matsuoka
+          {item?.nameClinic}
         </Typography>
       </Space>
       <Space className="cardDoctor_item">

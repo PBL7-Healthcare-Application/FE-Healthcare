@@ -18,6 +18,7 @@ import PartnerProfile from "./PartnerProfile";
 import CertificateAdmin from "../partners/CertificateAdmin";
 import ExperienceAdmin from "../partners/ExperienceAdmin";
 import EducationAdmin from "../partners/EducationAdmin";
+import { FaCheck, FaRegCheckCircle } from "react-icons/fa";
 
 const DetailUser = ({ partner }) => {
   const { TabPane } = Tabs;
@@ -71,9 +72,10 @@ const DetailUser = ({ partner }) => {
             <TabPane
               key={2}
               tab={
-                <span>
+                <span style={{ display: 'flex', justifyContent: 'center' }}>
                   Certification{" "}
                   <span>({partnerDetail?.certificates?.length})</span>
+                  {partner === "partner" && !partnerDetail.isVerifiedInfoCertificate && <span style={{ marginLeft: 2 }}><FaRegCheckCircle color="#4ade80" size={20} /></span>}
                 </span>
               }
             >
@@ -86,9 +88,10 @@ const DetailUser = ({ partner }) => {
             <TabPane
               key={3}
               tab={
-                <span>
+                <span style={{ display: 'flex', justifyContent: 'center' }}>
                   Experience{" "}
                   <span>({partnerDetail?.workingProcess?.length})</span>
+                  {partner === "partner" && !partnerDetail.isVerifiedInfoWorkingProcess && <span style={{ marginLeft: 2 }}><FaRegCheckCircle color="#4ade80" size={20} /></span>}
                 </span>
               }
             >
@@ -101,9 +104,10 @@ const DetailUser = ({ partner }) => {
             <TabPane
               key={4}
               tab={
-                <span>
+                <span style={{ display: 'flex', justifyContent: 'center' }}>
                   Education{" "}
                   <span>({partnerDetail?.trainingProcess?.length})</span>
+                  {partner === "partner" && !partnerDetail.isVerifiedInfoTrainingProcess && <span style={{ marginLeft: 2 }}><FaRegCheckCircle color="#4ade80" size={20} /></span>}
                 </span>
               }
             >

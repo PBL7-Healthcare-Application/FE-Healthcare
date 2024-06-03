@@ -37,6 +37,7 @@ import Chatbot from "../pages/chatbot/Chatbot";
 import HealthTool from "../pages/healthTool/HealthTool";
 import BMI from "../pages/healthTool/BMI";
 import BMR from "../pages/healthTool/BMR";
+import RatingDoctor from "../pages/doctor/Rating/Rating";
 
 const routers = createBrowserRouter([
   {
@@ -221,6 +222,10 @@ const routers = createBrowserRouter([
         path: "chatting",
         element: <Chatting />,
       },
+      {
+        path: "rating",
+        element: <RatingDoctor />
+      }
     ],
   },
   {
