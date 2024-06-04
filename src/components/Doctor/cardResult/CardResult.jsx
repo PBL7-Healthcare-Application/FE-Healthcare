@@ -27,6 +27,8 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
+import getToken from "../../../helpers/getToken";
+
 
 // eslint-disable-next-line react/prop-types
 const CardResult = ({ doctor }) => {
@@ -39,6 +41,9 @@ const CardResult = ({ doctor }) => {
     navigate(`/doctor/${doctor.idDoctor}`);
   };
   const { chatUser } = useSelector((state) => state.chat);
+
+  const token = getToken();
+  console.log(token);
 
   const checkExist = async (user) => {
     try {
@@ -156,16 +161,20 @@ const CardResult = ({ doctor }) => {
             </Space>
           )}
         </div>
-        <div
-          className="result-third__button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handAddNewChat();
-          }}
-        >
-          <Button className="result-third__button-text">Chat now</Button>
-          {/* <Button className="result-third__button-text">View details</Button> */}
-        </div>
+        {
+          token && (
+            <div
+              className="result-third__button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handAddNewChat();
+              }}
+            >
+              <Button className="result-third__button-text">Chat now</Button>
+              {/* <Button className="result-third__button-text">View details</Button> */}
+            </div>
+          )
+        }
       </div>
     </div>
   );
