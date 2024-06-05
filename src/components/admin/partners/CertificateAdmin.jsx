@@ -73,7 +73,7 @@ const CertificateAdmin = ({ partner }) => {
         <>
           <Space size={"middle"}>
             <Select
-              disabled={record.verify === 1 ? true : false}
+              // disabled={record.verify === 1 ? true : false}
               onChange={(value) => handleVerify(value, record)}
               placeholder="--Select--"
               style={{ height: 32, color: "#6c81a0" }}

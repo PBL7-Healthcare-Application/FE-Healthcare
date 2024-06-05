@@ -28,6 +28,7 @@ import { IoNotifications } from "react-icons/io5";
 import Notify from "../../components/notify/Notify";
 import { orderBy } from "lodash";
 import { setNotify } from "../../stores/Chat/ChatSlice";
+import { VscFeedback } from "react-icons/vsc";
 const { Header, Sider, Content } = Layout;
 const DoctorLayout = () => {
   const navigate = useNavigate();
@@ -125,7 +126,7 @@ const DoctorLayout = () => {
         ...doc.data(), // get the data of the document
       }));
       const listFilter = notifyData.filter((item) => {
-        if (item?.idDoctor) {
+        if (item?.idDoctor && item?.title !== "New information needs to be verified") {
           return item.idDoctor === profile?.idDoctor && !item.isRead;
         }
         if (item?.idReceiver) {
@@ -172,6 +173,11 @@ const DoctorLayout = () => {
               key: "/setting",
               icon: <FaRegSun size={25} color="#b5bad4" />,
               label: "Setting",
+            },
+            {
+              key: "/rating",
+              icon: <VscFeedback size={25} color="#b5bad4" />,
+              label: "Rating",
             },
           ]}
           onClick={onNavItemClick}

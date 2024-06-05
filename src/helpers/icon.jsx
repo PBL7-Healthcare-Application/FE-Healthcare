@@ -6,13 +6,15 @@ import {
 import { Image, Tag } from "antd";
 import appointmentIcon from "../assets/images/appointmentIcon.png";
 import cancel from "../assets/images/cancel.png";
+import star from "../assets/images/star.png";
+import correct from "../assets/images/correct.png";
 import { FaRegBookmark } from "react-icons/fa";
 import { FcApproval } from "react-icons/fc";
 export const icon = (status) => {
   switch (status) {
     case 1:
       return (
-        <Tag icon={<SyncOutlined spin />} color="processing" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
+        <Tag icon={<CheckCircleOutlined />} color="processing" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Booked
         </Tag>
       );
@@ -105,6 +107,10 @@ export const statusNotify = (status) => {
       return <Image src={cancel} width={45} preview={false} />;
     case "New Registration Application":
       return <FaRegBookmark size={32} />;
+    case "New information needs to be verified":
+      return <Image src={correct} width={45} preview={false} />;
+    case "New Rating":
+      return <Image src={star} width={45} preview={false} />;
     default:
       return <SyncOutlined spin />;
   }

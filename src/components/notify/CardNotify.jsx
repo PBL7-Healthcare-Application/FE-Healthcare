@@ -5,7 +5,7 @@ import { statusNotify } from "../../helpers/icon";
 import { format } from "timeago.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { getDetailDoctorAppointment } from "../../stores/doctor/DoctorThunk";
+import { getDetailDoctorAppointment, getDoctorProfile } from "../../stores/doctor/DoctorThunk";
 import { doc, updateDoc } from "firebase/firestore";
 import { dbNotify } from "../../helpers/firebase";
 
@@ -27,10 +27,17 @@ function CardNotify({ item }) {
       }
     }
     if (item?.title === "Approval of Information") {
+      dispatch(getDoctorProfile())
       navigate(`/dr.Enclinic/setting/profile/personal`)
     }
     if (item?.title === "New Registration Application") {
       navigate(`/admin/partners`)
+    }
+    if (item?.title === "New information needs to be verified") {
+      navigate(`/admin/partners`)
+    }
+    if (item?.title === "New Rating") {
+      navigate(`/dr.Enclinic/rating`)
     }
   }
   return (

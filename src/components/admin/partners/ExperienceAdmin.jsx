@@ -8,9 +8,7 @@ import { addVerifyExperience } from "../../../stores/admin/AdminSlice";
 const ExperienceAdmin = ({ partner }) => {
   const { partnerDetail } = useSelector((state) => state.admin);
   const [isAdd, setIsAdd] = useState(false);
-  const [isDisable, setIsDisable] = useState(
-    partnerDetail?.isVerifiedInfoWorkingProcess
-  );
+
   const dispatch = useDispatch();
   const handleVerify = (value, record) => {
     dispatch(
@@ -75,7 +73,7 @@ const ExperienceAdmin = ({ partner }) => {
       render: (text, record) => (
         <Space size={"middle"}>
           <Select
-            disabled={record.verify === 1 ? true : false}
+            // disabled={record.verify === 1 ? true : false}
             onChange={(value) => handleVerify(value, record)}
             placeholder="--Select--"
             style={{ height: 32, color: "#6c81a0" }}

@@ -37,15 +37,15 @@ const UserInfor = ({ type, partner }) => {
     if (type === "profile") {
       setDisabled(partnerDetail?.statusVerified === 1 ? true : false);
     }
-    if (type === "certificate") {
-      setDisabled(partnerDetail?.isVerifiedInfoCertificate);
-    }
-    if (type === "education") {
-      setDisabled(partnerDetail?.isVerifiedInfoTrainingProcess);
-    }
-    if (type === "experience") {
-      setDisabled(partnerDetail?.isVerifiedInfoWorkingProcess);
-    }
+    // if (type === "certificate") {
+    //   setDisabled(partnerDetail?.isVerifiedInfoCertificate);
+    // }
+    // if (type === "education") {
+    //   setDisabled(partnerDetail?.isVerifiedInfoTrainingProcess);
+    // }
+    // if (type === "experience") {
+    //   setDisabled(partnerDetail?.isVerifiedInfoWorkingProcess);
+    // }
   }, [partnerDetail, type])
   const handleApproval = () => {
     if (type === "profile") {
@@ -86,7 +86,7 @@ const UserInfor = ({ type, partner }) => {
       openNotificationWithIcon("success", api, "", message);
       dispatch(setStatusCode(null));
       dispatch(setMessage(null));
-      setDisabled(true);
+      // setDisabled(true);
       if (type === "certificate") {
         dispatch(setVerifyCertificate());
       }

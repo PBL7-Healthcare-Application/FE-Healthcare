@@ -2,16 +2,14 @@
 import { Button, Image, Space, Typography } from "antd";
 import "./CardResult.scss";
 import {
-  CheckCircleFilled,
   DollarOutlined,
   EnvironmentOutlined,
   StarFilled,
 } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getDoctorDetail } from "../../../stores/search-doctor/SearchThunk";
 import {
-  resetTime,
   setIsSelected,
 } from "../../../stores/search-doctor/SearchSlice";
 
@@ -29,6 +27,8 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
+import getToken from "../../../helpers/getToken";
+
 
 // eslint-disable-next-line react/prop-types
 const CardResult = ({ doctor }) => {
@@ -41,6 +41,9 @@ const CardResult = ({ doctor }) => {
     navigate(`/doctor/${doctor.idDoctor}`);
   };
   const { chatUser } = useSelector((state) => state.chat);
+
+  const token = getToken();
+  console.log(token);
 
   const checkExist = async (user) => {
     try {
@@ -142,7 +145,7 @@ const CardResult = ({ doctor }) => {
           <Space className="result-second__address">
             <DollarOutlined className="result-second__address-icon" />
             <Typography className="result-second__specialty">
-              {doctor?.price && doctor?.price.toLocaleString("vi-VN")} VND
+              VND {doctor?.price && doctor?.price.toLocaleString("vi-VN")}
             </Typography>
           </Space>
         </div>
@@ -158,16 +161,20 @@ const CardResult = ({ doctor }) => {
             </Space>
           )}
         </div>
-        <div
-          className="result-third__button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handAddNewChat();
-          }}
-        >
-          <Button className="result-third__button-text">Chat now</Button>
-          {/* <Button className="result-third__button-text">View details</Button> */}
-        </div>
+        {
+          token && (
+            <div
+              className="result-third__button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handAddNewChat();
+              }}
+            >
+              <Button className="result-third__button-text">Chat now</Button>
+              {/* <Button className="result-third__button-text">View details</Button> */}
+            </div>
+          )
+        }
       </div>
     </div>
   );

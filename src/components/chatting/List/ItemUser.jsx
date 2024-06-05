@@ -2,12 +2,12 @@
 import { Image } from "antd";
 import "./List.scss";
 import personDefault from "../../../assets/images/personDefault.png";
+import { BsFillRecordFill } from "react-icons/bs";
 
 const ItemUser = ({ chat, onSelect }) => {
+  console.log(`chat`, chat);
   return (
-    <div className="listUser-item" onClick={() => onSelect(chat)} style={{
-      backgroundColor: chat?.isSeen ? "transparent" : "#e3f0ff",
-    }}>
+    <div className="listUser-item" onClick={() => onSelect(chat)} style={{ position: 'relative' }}>
       <Image
         src={chat.user?.avatar}
         fallback={personDefault}
@@ -21,11 +21,12 @@ const ItemUser = ({ chat, onSelect }) => {
         </span>
         <p
           className="listUser-item__name"
-          style={{ fontWeight: 400, fontSize: 12, color: "#a5a5a5" }}
+          style={{ fontWeight: 500, fontSize: 14, color: !chat?.isSeen ? "#000" : "#6c81a0" }}
         >
           {chat.lastMessage ? chat.lastMessage : "---"}
         </p>
       </div>
+      {!chat?.isSeen && <span style={{ position: 'absolute', right: 10 }}><BsFillRecordFill size={20} color="#0866FF" /></span>},
     </div>
   );
 };

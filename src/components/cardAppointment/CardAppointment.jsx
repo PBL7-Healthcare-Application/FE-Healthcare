@@ -41,7 +41,8 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
         ratingScore: rate,
         comment: content,
         idDoctor: appointment?.idDoctor,
-        idAppointment: appointment?.idAppointment
+        idAppointment: appointment?.idAppointment,
+        nameUser: JSON.parse(localStorage.getItem('user')).name,
       })
     )
     setIsRate(false)
@@ -293,7 +294,7 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
                 letterSpacing: 0.4,
               }}
             >
-              {appointment?.price.toLocaleString("vi-VN")} VND
+              VND {appointment?.price.toLocaleString("vi-VN")}
             </Typography>
           </div>
         </div>

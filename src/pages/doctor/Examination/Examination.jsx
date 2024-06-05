@@ -200,6 +200,7 @@ const Examination = () => {
         date: new Date(),
       })
     );
+    setIsList(false);
   };
 
   useEffect(() => {
@@ -210,7 +211,7 @@ const Examination = () => {
       dispatch(doctorGetlistMedical());
       setIsCreate(false);
       setUser(null);
-      setIsList(false);
+      // setIsList(false);
       form.setFieldsValue({
         height: "",
         weight: "",
