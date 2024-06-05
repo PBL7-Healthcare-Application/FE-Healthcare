@@ -1,10 +1,23 @@
 import { Image, Typography } from "antd";
-import React, { useRef } from "react";
-import personDefault from "../../assets/images/personDefault.png";
+import { useRef } from "react";
+
 import chatbot from "../../assets/images/chatbot.png";
 import { IoSend } from "react-icons/io5";
+import axios from "axios";
 const Chatbot = () => {
   const endRef = useRef(null);
+
+
+  const handleSend = async () => {
+    const apiUrl = import.meta.env.VITE_API_URL_Chatbot;
+    const res = await axios.post(apiUrl, {
+      message: "Hello",
+      idDocument: null,
+      nameSymptom: null
+    })
+
+    console.log(res)
+  };
   return (
     <div className="chatting">
       <div className="chatting-container">
@@ -74,7 +87,7 @@ const Chatbot = () => {
                 size={25}
                 className="chat-bottom__icon"
                 style={{ marginRight: 10 }}
-              // onClick={handleSend}
+                onClick={handleSend}
               />
             </div>
           </div>
