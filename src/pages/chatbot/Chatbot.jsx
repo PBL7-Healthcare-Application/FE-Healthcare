@@ -1,23 +1,49 @@
 import { Image, Typography } from "antd";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import chatbot from "../../assets/images/chatbot.png";
 import { IoSend } from "react-icons/io5";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { doc, onSnapshot } from "firebase/firestore";
+import { dbChatbot } from "../../helpers/firebase";
+import { createAccountChatbot } from "../../helpers/firebaseHelper";
+import { format } from "timeago.js";
 const Chatbot = () => {
   const endRef = useRef(null);
-
+  const { profile } = useSelector((state) => state.profile);
+  const [chat, setChat] = useState();
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSend = async () => {
     const apiUrl = import.meta.env.VITE_API_URL_Chatbot;
     const res = await axios.post(apiUrl, {
-      message: "Hello",
+      message: message,
       idDocument: null,
-      nameSymptom: null
-    })
-
-    console.log(res)
+      nameSymptom: null,
+      idChat: profile?.idUser,
+    });
+    setLoading(true);
+    setMessage("");
   };
+  useEffect(() => {
+    const docRef = doc(dbChatbot, "chatbot", profile?.idUser);
+    const unSub = onSnapshot(docRef, (res) => {
+      setChat(res?.data()?.messages);
+    });
+    return () => {
+      unSub();
+    };
+  }, [profile?.idUser]);
+
+  useEffect(() => {
+    createAccountChatbot(profile?.idUser);
+  }, []);
+  useEffect(() => {
+    endRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
+
   return (
     <div className="chatting">
       <div className="chatting-container">
@@ -41,47 +67,60 @@ const Chatbot = () => {
             </div>
           </div>
           <div className="chat-middle">
-            <div className="chat-middle__message own">
-              <div className="texts">
-                <p className="chat-middle__content">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Praesentium amet quis est suscipit odio id debitis delectus,
-                  adipisci repellat tempore libero, reiciendis quas recusandae
-                </p>
+            {chat?.map((item, index) => (
+              <div
+                className={`chat-middle__message ${
+                  item?.isUserSender && "own"
+                }`}
+                key={index}
+              >
+                {!item?.isUserSender && (
+                  <Image
+                    fallback={chatbot}
+                    className="chat-middle__img"
+                    width={40}
+                    preview={false}
+                    src={""}
+                    style={{ backgroundColor: "#ccc" }}
+                  />
+                )}
+                <div className="texts">
+                  <p className="chat-middle__content">{item?.text}</p>
 
-                <span className="chat-middle__time">1 ago</span>
+                  <span className="chat-middle__time">
+                    {format(item?.createdAt)}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="chat-middle__message">
-              <Image
-                fallback={chatbot}
-                className="chat-middle__img"
-                width={40}
-                preview={false}
-                src={""}
-                style={{ backgroundColor: "#ccc" }}
-              />
+            ))}
+            {loading && (
+              <div className={`chat-middle__message `}>
+                <Image
+                  fallback={chatbot}
+                  className="chat-middle__img"
+                  width={40}
+                  preview={false}
+                  src={""}
+                  style={{ backgroundColor: "#ccc" }}
+                />
 
-              <div className="texts">
-                <p className="chat-middle__content">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Praesentium amet quis est suscipit odio id debitis delectus,
-                  adipisci repellat tempore libero, reiciendis quas recusandae
-                </p>
-
-                <span className="chat-middle__time">1 ago</span>
+                <div className="texts"></div>
               </div>
-            </div>
-
+            )}
             <div ref={endRef}></div>
           </div>
           <div className="chat-bottom">
-            <div className="chat-bottom__content" >
+            <div className="chat-bottom__content">
               <input
                 placeholder="Ask somthing else..."
                 className="chat-bottom__input"
-              // onChange={(e) => setText(e.target.value)}
-              // value={text}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSend();
+                  }
+                }}
+                value={message}
               />
               <IoSend
                 size={25}

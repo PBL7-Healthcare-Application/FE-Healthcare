@@ -42,6 +42,8 @@ const SignIn = () => {
     if (user) {
       createAccountFirebase(user.email, user.name);
       if (user.role === "User") {
+        console.log(user);
+
         handleChat(user.email);
         openNotificationWithIcon("success", api, "", "Sign In Success!");
         delay(() => {
@@ -71,7 +73,7 @@ const SignIn = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => { };
+    return () => {};
   }, [user, error, navigate, api, dispatch]);
 
   const onFinish = (values) => {

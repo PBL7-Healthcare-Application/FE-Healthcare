@@ -37,15 +37,14 @@ export const authNotify = getAuth(notify);
 export const dbNotify = getFirestore(notify);
 export const storageNotify = getStorage(notify);
 
-
 const chatbotConfig = {
-  apiKey: "AIzaSyDOJq9B7CHXuHLLgM-tPbTxniLQ7N2I60Y",
-  authDomain: "healthcare-2d0e4.firebaseapp.com",
-  projectId: "healthcare-2d0e4",
-  storageBucket: "healthcare-2d0e4.appspot.com",
-  messagingSenderId: "62028396370",
-  appId: "1:62028396370:web:8e7ec3ade116696f11ac8b",
-  measurementId: "G-YK5DTS4CWV",
+  apiKey: "AIzaSyDCis2CjGycG2tpKdzNLT7U3M1e_Rgpmsc",
+  authDomain: "ai-healthcare-chatwithchatbot.firebaseapp.com",
+  projectId: "ai-healthcare-chatwithchatbot",
+  storageBucket: "ai-healthcare-chatwithchatbot.appspot.com",
+  messagingSenderId: "447928152057",
+  appId: "1:447928152057:web:a5fb45389f6d585312d728",
+  measurementId: "G-DHPCT4W6FQ",
 };
 
 // Initialize Firebase
