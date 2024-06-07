@@ -34,6 +34,8 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
+import axios from "axios";
+import { fetchLocation } from "../../../helpers/location";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
@@ -56,7 +58,7 @@ const Profile = () => {
     setIsEdit(!isEdit);
     setProfiles(profile);
   };
-  const handleSave = () => {
+  const handleSave = async () => {
     const { avatar, ...restOfProfiles } = profiles;
     const allValuesNotNull = Object.values(restOfProfiles).every(
       (value) => value !== null
@@ -85,7 +87,10 @@ const Profile = () => {
         return;
       }
     }
-    dispatch(updateUserProfile(profiles));
+    const location = await fetchLocation(profiles.address);
+    (profiles.latitude = location.lat.toString()),
+      (profiles.longtitude = location.lng.toString()),
+      dispatch(updateUserProfile(profiles));
     setIsEdit(!isEdit);
   };
 

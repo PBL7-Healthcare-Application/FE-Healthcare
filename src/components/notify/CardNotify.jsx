@@ -5,10 +5,12 @@ import { statusNotify } from "../../helpers/icon";
 import { format } from "timeago.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { getDetailDoctorAppointment, getDoctorProfile } from "../../stores/doctor/DoctorThunk";
+import {
+  getDetailDoctorAppointment,
+  getDoctorProfile,
+} from "../../stores/doctor/DoctorThunk";
 import { doc, updateDoc } from "firebase/firestore";
 import { dbNotify } from "../../helpers/firebase";
-
 
 function CardNotify({ item }) {
   const navigate = useNavigate();
@@ -16,32 +18,34 @@ function CardNotify({ item }) {
   const handleRedirect = async () => {
     await updateDoc(doc(dbNotify, "notifications", item.id), {
       isRead: true, // replace with the fields you want to update
-    })
-    if (item?.title === "New Appointment" || item?.title === "Cancel Appointment") {
+    });
+    if (
+      item?.title === "New Appointment" ||
+      item?.title === "Cancel Appointment"
+    ) {
       if (item?.idDoctor) {
         dispatch(getDetailDoctorAppointment(item?.idAppointment));
-        navigate(`/dr.Enclinic/appointment/${item?.idAppointment}`)
-      }
-      else {
-        navigate(`/user/appointment`)
+        navigate(`/dr.Enclinic/appointment/${item?.idAppointment}`);
+      } else {
+        navigate(`/user/appointment`);
       }
     }
     if (item?.title === "Approval of Information") {
-      dispatch(getDoctorProfile())
-      navigate(`/dr.Enclinic/setting/profile/personal`)
+      dispatch(getDoctorProfile());
+      navigate(`/dr.Enclinic/setting/profile/personal`);
     }
     if (item?.title === "New Registration Application") {
-      navigate(`/admin/partners`)
+      navigate(`/admin/partners`);
     }
     if (item?.title === "New information needs to be verified") {
-      navigate(`/admin/partners`)
+      navigate(`/admin/partners`);
     }
     if (item?.title === "New Rating") {
-      navigate(`/dr.Enclinic/rating`)
+      navigate(`/dr.Enclinic/rating`);
     }
-  }
+  };
   return (
-    <div style={{ width: "100%", borderBottom: "1px solid #6c81a0" }} onClick={() => handleRedirect()}>
+    <div style={{ width: "100%" }} onClick={() => handleRedirect()}>
       <div className="cardNotify">
         {/* <Image src={appointmentIcon} width={45} preview={false} /> */}
         {statusNotify(item?.title)}

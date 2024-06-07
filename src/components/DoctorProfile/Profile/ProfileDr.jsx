@@ -34,6 +34,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
+import { fetchLocation } from "../../../helpers/location";
 const ProfileDr = () => {
   const { profile, statusCode, error, loading } = useSelector(
     (state) => state.doctor
@@ -106,7 +107,9 @@ const ProfileDr = () => {
       dispatch(setError(null));
     }
   }, [statusCode, error, api, dispatch]);
-  const onFinish = (values) => {
+
+  const onFinish = async (values) => {
+    const location = await fetchLocation(values.address);
     const body = {
       name: values.name,
       dob: values.dob,
@@ -114,6 +117,8 @@ const ProfileDr = () => {
       address: values.address,
       avatar: null,
       gender: values.gender,
+      latitude: location.lat.toString(),
+      longtitude: location.lng.toString(),
       yearExperience: values.year,
       price: values.fee,
       description: values.description,

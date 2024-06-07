@@ -22,7 +22,6 @@ export const Main = () => {
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState("All specialties");
   const { searchResult } = useSelector((state) => state.search);
-  const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // eslint-disable-next-line react/prop-types, no-unused-vars
@@ -79,10 +78,10 @@ export const Main = () => {
     <>
       <div className="content">
         <div className="left">
-          <Space className="left_title">
-            <Typography className="left_title--first">Top Online</Typography>
+          <Space className="left_title" style={{ marginTop: 40 }}>
+            {/* <Typography className="left_title--first">Top Online</Typography> */}
             <Typography className="left_title--second">
-              Doctors Consultation
+              Doctors Consultation Service
             </Typography>
             <Typography className="left_title--sub">
               for health concerns

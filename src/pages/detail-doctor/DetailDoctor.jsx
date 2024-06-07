@@ -147,8 +147,8 @@ const DetailDoctor = () => {
   const [viewport, setViewport] = useState({
     width: "200px",
     height: "100px",
-    latitude: 16.062371862000077,
-    longitude: 108.17229941300008,
+    latitude: 16.059350970000025,
+    longitude: 108.21343231000009,
     zoom: 16,
   });
 
@@ -509,8 +509,8 @@ const DetailDoctor = () => {
                       }
                     >
                       <Marker
-                        longitude={108.17229941300008}
-                        latitude={16.062371862000077}
+                        longitude={108.21343231000009}
+                        latitude={16.059350970000025}
                       >
                         <img
                           width={20}
@@ -593,8 +593,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.five > 0
                                 ? (tableOfrate?.five /
-                                  doctorDetail?.numberOfComment) *
-                                100
+                                    doctorDetail?.numberOfComment) *
+                                  100
                                 : 100
                             }
                             size="small"
@@ -623,8 +623,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.four > 0
                                 ? (tableOfrate?.four /
-                                  doctorDetail?.numberOfComment) *
-                                100
+                                    doctorDetail?.numberOfComment) *
+                                  100
                                 : 100
                             }
                             size="small"
@@ -653,8 +653,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.three > 0
                                 ? (tableOfrate?.three /
-                                  doctorDetail?.numberOfComment) *
-                                100
+                                    doctorDetail?.numberOfComment) *
+                                  100
                                 : 100
                             }
                             size="small"
@@ -683,8 +683,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.two > 0
                                 ? (tableOfrate?.two /
-                                  doctorDetail?.numberOfComment) *
-                                100
+                                    doctorDetail?.numberOfComment) *
+                                  100
                                 : 100
                             }
                             size="small"
@@ -713,8 +713,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.one > 0
                                 ? (tableOfrate?.one /
-                                  doctorDetail?.numberOfComment) *
-                                100
+                                    doctorDetail?.numberOfComment) *
+                                  100
                                 : 100
                             }
                             size="small"

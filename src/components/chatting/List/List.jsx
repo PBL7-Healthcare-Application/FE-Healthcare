@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
 import { Empty } from "antd";
-import { changeChat } from "../../../stores/Chat/ChatSlice";
+import { changeChat, setChatSelected } from "../../../stores/Chat/ChatSlice";
 
 const ListUser = () => {
   const dispatch = useDispatch();
@@ -15,6 +15,7 @@ const ListUser = () => {
   const { chatUser } = useSelector((state) => state.chat);
 
   const handleSelect = async (chat) => {
+    dispatch(setChatSelected(chat.chatId));
     const userChats = chats.map((item) => {
       const { user, ...rest } = item;
       return rest;
