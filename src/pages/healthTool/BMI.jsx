@@ -123,14 +123,14 @@ function BMI() {
                             <div className="bmi-result bmi-result__advice" style={{ marginBottom: 20 }}>
                                 <div className="bmi-result__advice-title">
                                     <MdInfo size={30} color="#2d87f3" />
-                                    <span className="health-font" style={{ fontSize: 18, color: '#404040', fontWeight: 500 }}>Health Status</span>
+                                    <span className="health-font" style={{ fontSize: 18, color: '#404040', fontWeight: 500 }}>Result</span>
                                 </div>
                                 <div className="health-font" style={{ fontSize: 15, color: '#404040', fontWeight: 400 }}>{adviceBMI(result, height).status}</div>
                             </div>
                             <div className="bmi-result bmi-result__advice" style={{ marginBottom: 20, marginTop: 20 }}>
                                 <div className="bmi-result__advice-title">
                                     <BiSolidError size={30} color="rgb(255, 181, 33)" />
-                                    <span className="health-font" style={{ fontSize: 18, color: '#404040', fontWeight: 500 }}>Health Risk</span>
+                                    <span className="health-font" style={{ fontSize: 18, color: '#404040', fontWeight: 500 }}>Assessment</span>
                                 </div>
                                 <div className="health-font" style={{ fontSize: 15, color: '#404040', fontWeight: 400 }}>{adviceBMI(result, height).risk}</div>
                             </div>

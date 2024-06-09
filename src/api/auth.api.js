@@ -14,3 +14,7 @@ export const verifyEmail = (userData) => {
 export const resendOTP = (userData) => {
   return http.post("/Auth/ResendOTP", userData);
 };
+
+export const resetPassword = (userData) => {
+  return http.post("/Auth/ResetPassword", userData);
+};

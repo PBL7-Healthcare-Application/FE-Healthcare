@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Image, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 
@@ -19,15 +20,25 @@ const Chatbot = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [response, setResponse] = useState({
+    idDocument: null,
+    nameSymptom: null,
+
+  });
   const handleSend = async () => {
     const apiUrl = import.meta.env.VITE_API_URL_Chatbot;
     setMessage("");
     const res = await axios.post(apiUrl, {
       message: message,
-      idDocument: null,
-      nameSymptom: null,
+      idDocument: response.idDocument,
+      nameSymptom: response.nameSymptom,
       idChat: profile?.idUser,
     });
+    setResponse({
+      idDocument: res?.data?.idDocument,
+      nameSymptom: res?.data?.nameSymptom,
+    });
+
     setLoading(true);
   };
   useEffect(() => {
@@ -49,7 +60,7 @@ const Chatbot = () => {
     const token = getToken();
     if (token) {
       setIsLogin(true);
-      createAccountChatbot(profile?.idUser);
+      createAccountChatbot(profile?.idUser, profile?.name);
     } else {
       setIsLogin(false);
     }
@@ -86,9 +97,8 @@ const Chatbot = () => {
             <div className="chat-middle">
               {chat?.map((item, index) => (
                 <div
-                  className={`chat-middle__message ${
-                    item?.isUserSender && "own"
-                  }`}
+                  className={`chat-middle__message ${item?.isUserSender && "own"
+                    }`}
                   key={index}
                 >
                   {!item?.isUserSender && (

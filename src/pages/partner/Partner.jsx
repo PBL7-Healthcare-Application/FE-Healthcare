@@ -16,7 +16,7 @@ import {
   notification,
 } from "antd";
 import partner1 from "../../assets/images/partner1.webp";
-import error from "../../assets/images/error.png";
+import logo from "../../assets/images/logo.png";
 import benefit_1 from "../../assets/images/benefit_1.webp";
 import benefit_2 from "../../assets/images/benefit_2.webp";
 import benefit_3 from "../../assets/images/benefit_3.webp";
@@ -53,6 +53,7 @@ const Partner = () => {
   const [certificates] = useState([{}]);
   const [trainingProcesses] = useState([{}]);
   const [workingProcesses] = useState([{}]);
+  const [login, setLogin] = useState(false);
   const { statusCode, error, loading } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
@@ -187,6 +188,13 @@ const Partner = () => {
       trainingProcesses,
     });
   };
+
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      setLogin(true);
+    }
+  }, [])
   return (
     <div className="partner">
       {contextHolder}
@@ -367,468 +375,494 @@ const Partner = () => {
               }}
             >
               {" "}
-              <span
-                className="partner-content3__left-text"
-                style={{ fontSize: 20 }}
-                id="form"
-              >
-                Register as Collaborator
-              </span>
+              {
+                login && (
+                  <span
+                    className="partner-content3__left-text"
+                    style={{ fontSize: 20 }}
+                    id="form"
+                  >
+                    Register as Collaborator
+                  </span>
+                )
+              }
             </div>
             <div style={{ marginTop: 20 }}>
-              <Form
-                name="normal_login"
-                // className="login-form"
-                form={form}
-                onFinish={onFinish}
-                layout="vertical"
-                style={{
-                  width: "100%",
-                  backgroundColor: "#fafafa",
-                  padding: 20,
-                  borderRadius: 10,
-                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <Typography
-                  style={{ marginBottom: 10, fontWeight: 500, fontSize: 20 }}
-                >
-                  Information
-                </Typography>
-                <Form.Item className="login-form" style={{ width: "100%" }}>
-                  <Form.Item
+              {
+                login ? (
+                  <Form
+                    name="normal_login"
+                    // className="login-form"
+                    form={form}
+                    onFinish={onFinish}
+                    layout="vertical"
                     style={{
-                      marginBottom: 0,
+                      width: "100%",
+                      backgroundColor: "#fafafa",
+                      padding: 20,
+                      borderRadius: 10,
+                      boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
                     }}
                   >
-                    <Form.Item
-                      label="Specialty"
-                      name="idSpecialty"
-                      style={{
-                        display: "inline-block",
-                        width: "calc(50% - 8px)",
-                      }}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Specialty is required",
-                        },
-                      ]}
+                    <Typography
+                      style={{ marginBottom: 10, fontWeight: 500, fontSize: 20 }}
                     >
-                      <Select
-                        options={specialties.map((item) => ({
-                          label: item.name,
-                          value: item.idSpecialty,
-                        }))}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="nameClinic"
-                      label="Clinic Name"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Clinic Name is required",
-                        },
-                      ]}
-                      style={{
-                        display: "inline-block",
-                        width: "calc(50% - 8px)",
-                        margin: "0 8px",
-                      }}
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Form.Item>
-
-                  <Form.Item
-                    name="businessLicense"
-                    label="Upload Business License"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Business License is required",
-                      },
-                    ]}
-                  >
-                    <Upload {...propsUpload}>
-                      <Button icon={<UploadOutlined />}>Click to upload</Button>
-                    </Upload>
-                  </Form.Item>
-                </Form.Item>
-                {/* ===== */}
-                <Typography
-                  style={{ marginBottom: 10, fontWeight: 500, fontSize: 20 }}
-                >
-                  Certificates
-                </Typography>
-                <Form.Item className="login-form" style={{ width: "100%" }}>
-                  <Form.List name="certificates" label="Certificates">
-                    {(fields, { add, remove }) => (
-                      <div
+                      Information
+                    </Typography>
+                    <Form.Item className="login-form" style={{ width: "100%" }}>
+                      <Form.Item
                         style={{
-                          display: "flex",
-                          rowGap: 16,
-                          flexDirection: "column",
+                          marginBottom: 0,
                         }}
                       >
-                        {fields.map((field) => (
-                          <Card
-                            size="small"
-                            key={field.key}
-                            extra={
-                              <CloseOutlined
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              />
-                            }
+                        <Form.Item
+                          label="Specialty"
+                          name="idSpecialty"
+                          style={{
+                            display: "inline-block",
+                            width: "calc(50% - 8px)",
+                          }}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Specialty is required",
+                            },
+                          ]}
+                        >
+                          <Select
+                            options={specialties.map((item) => ({
+                              label: item.name,
+                              value: item.idSpecialty,
+                            }))}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="nameClinic"
+                          label="Clinic Name"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Clinic Name is required",
+                            },
+                          ]}
+                          style={{
+                            display: "inline-block",
+                            width: "calc(50% - 8px)",
+                            margin: "0 8px",
+                          }}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Form.Item>
+
+                      <Form.Item
+                        name="businessLicense"
+                        label="Upload Business License"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Business License is required",
+                          },
+                        ]}
+                      >
+                        <Upload {...propsUpload}>
+                          <Button icon={<UploadOutlined />}>Click to upload</Button>
+                        </Upload>
+                      </Form.Item>
+                    </Form.Item>
+                    {/* ===== */}
+                    <Typography
+                      style={{ marginBottom: 10, fontWeight: 500, fontSize: 20 }}
+                    >
+                      Certificates
+                    </Typography>
+                    <Form.Item className="login-form" style={{ width: "100%" }}>
+                      <Form.List name="certificates" label="Certificates">
+                        {(fields, { add, remove }) => (
+                          <div
+                            style={{
+                              display: "flex",
+                              rowGap: 16,
+                              flexDirection: "column",
+                            }}
                           >
-                            <Form.Item
+                            {fields.map((field) => (
+                              <Card
+                                size="small"
+                                key={field.key}
+                                extra={
+                                  <CloseOutlined
+                                    onClick={() => {
+                                      remove(field.name);
+                                    }}
+                                  />
+                                }
+                              >
+                                <Form.Item
+                                  style={{
+                                    marginBottom: 0,
+                                  }}
+                                >
+                                  <Form.Item
+                                    label="Certificate"
+                                    name={[field.name, "name"]}
+                                    style={{
+                                      display: "inline-block",
+                                      width: "calc(50% - 8px)",
+                                    }}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: "Certificate is required",
+                                      },
+                                    ]}
+                                  >
+                                    <Input />
+                                  </Form.Item>
+                                  <Form.Item
+                                    name={[field.name, "year"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: "Year is required",
+                                      },
+                                    ]}
+                                    label="Year"
+                                    style={{
+                                      display: "inline-block",
+                                      width: "calc(50% - 8px)",
+                                      margin: "0 8px",
+                                    }}
+                                  >
+                                    <DatePicker
+                                      picker="year"
+                                      style={{ width: "100%" }}
+                                    />
+                                  </Form.Item>
+                                </Form.Item>
+                                <Form.Item
+                                  name={[field.name, "image"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Image Certificate is required",
+                                    },
+                                  ]}
+                                >
+                                  <Upload {...propsUpload}>
+                                    <Button icon={<UploadOutlined />}>
+                                      Click to upload
+                                    </Button>
+                                  </Upload>
+                                </Form.Item>
+                              </Card>
+                            ))}
+
+                            <Button type="dashed" onClick={() => add()} block>
+                              + Add Item
+                            </Button>
+                          </div>
+                        )}
+                      </Form.List>
+                    </Form.Item>
+
+                    {/* ===== */}
+                    <div className="partner-content3__education">
+                      <Checkbox
+                        value={isEducation}
+                        onChange={(e) => setIsEducation(e.target.checked)}
+                        checked={isEducation}
+                      />
+                      <Typography style={{ fontWeight: 500, fontSize: 20 }}>
+                        Educations
+                      </Typography>
+                    </div>
+                    {isEducation && (
+                      <Form.Item className="login-form" style={{ width: "100%" }}>
+                        <Form.List name="trainingProcesses" label="Certificates">
+                          {(fields, { add, remove }) => (
+                            <div
                               style={{
-                                marginBottom: 0,
+                                display: "flex",
+                                rowGap: 16,
+                                flexDirection: "column",
                               }}
                             >
-                              <Form.Item
-                                label="Certificate"
-                                name={[field.name, "name"]}
-                                style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
-                                }}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Certificate is required",
-                                  },
-                                ]}
-                              >
-                                <Input />
-                              </Form.Item>
-                              <Form.Item
-                                name={[field.name, "year"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Year is required",
-                                  },
-                                ]}
-                                label="Year"
-                                style={{
-                                  display: "inline-block",
-                                  width: "calc(50% - 8px)",
-                                  margin: "0 8px",
-                                }}
-                              >
-                                <DatePicker
-                                  picker="year"
-                                  style={{ width: "100%" }}
-                                />
-                              </Form.Item>
-                            </Form.Item>
-                            <Form.Item
-                              name={[field.name, "image"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Image Certificate is required",
-                                },
-                              ]}
-                            >
-                              <Upload {...propsUpload}>
-                                <Button icon={<UploadOutlined />}>
-                                  Click to upload
-                                </Button>
-                              </Upload>
-                            </Form.Item>
-                          </Card>
-                        ))}
+                              {fields.map((field) => (
+                                <Card
+                                  size="small"
+                                  key={field.key}
+                                  extra={
+                                    <CloseOutlined
+                                      onClick={() => {
+                                        remove(field.name);
+                                      }}
+                                    />
+                                  }
+                                >
+                                  <Form.Item
+                                    style={{
+                                      marginBottom: 0,
+                                    }}
+                                  >
+                                    <Form.Item
+                                      label="School Name"
+                                      name={[field.name, "schoolName"]}
+                                      style={{
+                                        display: "inline-block",
+                                        width: "calc(50% - 8px)",
+                                      }}
+                                      rules={[
+                                        {
+                                          required: isEducation,
+                                          message: "School Name is required",
+                                        },
+                                      ]}
+                                    >
+                                      <Input />
+                                    </Form.Item>
+                                    <Form.Item
+                                      label="Major"
+                                      name={[field.name, "major"]}
+                                      style={{
+                                        display: "inline-block",
+                                        width: "calc(50% - 8px)",
+                                        margin: "0 8px",
+                                      }}
+                                      rules={[
+                                        {
+                                          required: isEducation,
+                                          message: "Major is required",
+                                        },
+                                      ]}
+                                    >
+                                      <Input />
+                                    </Form.Item>
+                                  </Form.Item>
+                                  <Form.Item
+                                    style={{
+                                      marginBottom: 0,
+                                    }}
+                                  >
+                                    <Form.Item
+                                      name={[field.name, "startYear"]}
+                                      label="Start Year"
+                                      style={{
+                                        display: "inline-block",
+                                        width: "calc(50% - 8px)",
+                                      }}
+                                      rules={[
+                                        {
+                                          required: isEducation,
+                                          message: "Start year is required",
+                                        },
+                                      ]}
+                                    >
+                                      <DatePicker
+                                        picker="year"
+                                        style={{ width: "100%" }}
+                                      />
+                                    </Form.Item>
+                                    <Form.Item
+                                      name={[field.name, "endYear"]}
+                                      label="End Year"
+                                      style={{
+                                        display: "inline-block",
+                                        width: "calc(50% - 8px)",
+                                        margin: "0 8px",
+                                      }}
+                                      rules={[
+                                        {
+                                          required: isEducation,
+                                          message: "End year is required",
+                                        },
+                                      ]}
+                                    >
+                                      <DatePicker
+                                        picker="year"
+                                        style={{ width: "100%" }}
+                                      />
+                                    </Form.Item>
+                                  </Form.Item>
+                                </Card>
+                              ))}
 
-                        <Button type="dashed" onClick={() => add()} block>
-                          + Add Item
-                        </Button>
-                      </div>
+                              <Button type="dashed" onClick={() => add()} block>
+                                + Add Item
+                              </Button>
+                            </div>
+                          )}
+                        </Form.List>
+                      </Form.Item>
                     )}
-                  </Form.List>
-                </Form.Item>
 
-                {/* ===== */}
-                <div className="partner-content3__education">
-                  <Checkbox
-                    value={isEducation}
-                    onChange={(e) => setIsEducation(e.target.checked)}
-                    checked={isEducation}
-                  />
-                  <Typography style={{ fontWeight: 500, fontSize: 20 }}>
-                    Educations
-                  </Typography>
-                </div>
-                {isEducation && (
-                  <Form.Item className="login-form" style={{ width: "100%" }}>
-                    <Form.List name="trainingProcesses" label="Certificates">
-                      {(fields, { add, remove }) => (
-                        <div
-                          style={{
-                            display: "flex",
-                            rowGap: 16,
-                            flexDirection: "column",
-                          }}
-                        >
-                          {fields.map((field) => (
-                            <Card
-                              size="small"
-                              key={field.key}
-                              extra={
-                                <CloseOutlined
-                                  onClick={() => {
-                                    remove(field.name);
-                                  }}
-                                />
-                              }
+                    {/* ====== */}
+                    <div className="partner-content3__education">
+                      <Checkbox
+                        value={isExperience}
+                        onChange={(e) => setIsExperience(e.target.checked)}
+                        checked={isExperience}
+                      />
+                      <Typography style={{ fontWeight: 500, fontSize: 20 }}>
+                        Experiences
+                      </Typography>
+                    </div>
+                    {isExperience && (
+                      <Form.Item className="login-form" style={{ width: "100%" }}>
+                        <Form.List name="workingProcesses">
+                          {(fields, { add, remove }) => (
+                            <div
+                              style={{
+                                display: "flex",
+                                rowGap: 16,
+                                flexDirection: "column",
+                              }}
                             >
-                              <Form.Item
-                                style={{
-                                  marginBottom: 0,
-                                }}
-                              >
-                                <Form.Item
-                                  label="School Name"
-                                  name={[field.name, "schoolName"]}
-                                  style={{
-                                    display: "inline-block",
-                                    width: "calc(50% - 8px)",
-                                  }}
-                                  rules={[
-                                    {
-                                      required: isEducation,
-                                      message: "School Name is required",
-                                    },
-                                  ]}
+                              {fields.map((field) => (
+                                <Card
+                                  size="small"
+                                  key={field.key}
+                                  extra={
+                                    <CloseOutlined
+                                      onClick={() => {
+                                        remove(field.name);
+                                      }}
+                                    />
+                                  }
                                 >
-                                  <Input />
-                                </Form.Item>
-                                <Form.Item
-                                  label="Major"
-                                  name={[field.name, "major"]}
-                                  style={{
-                                    display: "inline-block",
-                                    width: "calc(50% - 8px)",
-                                    margin: "0 8px",
-                                  }}
-                                  rules={[
-                                    {
-                                      required: isEducation,
-                                      message: "Major is required",
-                                    },
-                                  ]}
-                                >
-                                  <Input />
-                                </Form.Item>
-                              </Form.Item>
-                              <Form.Item
-                                style={{
-                                  marginBottom: 0,
-                                }}
-                              >
-                                <Form.Item
-                                  name={[field.name, "startYear"]}
-                                  label="Start Year"
-                                  style={{
-                                    display: "inline-block",
-                                    width: "calc(50% - 8px)",
-                                  }}
-                                  rules={[
-                                    {
-                                      required: isEducation,
-                                      message: "Start year is required",
-                                    },
-                                  ]}
-                                >
-                                  <DatePicker
-                                    picker="year"
-                                    style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                                <Form.Item
-                                  name={[field.name, "endYear"]}
-                                  label="End Year"
-                                  style={{
-                                    display: "inline-block",
-                                    width: "calc(50% - 8px)",
-                                    margin: "0 8px",
-                                  }}
-                                  rules={[
-                                    {
-                                      required: isEducation,
-                                      message: "End year is required",
-                                    },
-                                  ]}
-                                >
-                                  <DatePicker
-                                    picker="year"
-                                    style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                              </Form.Item>
-                            </Card>
-                          ))}
+                                  <Form.Item
+                                    style={{
+                                      marginBottom: 0,
+                                    }}
+                                  >
+                                    <Form.Item
+                                      label="Workplace"
+                                      name={[field.name, "workplace"]}
+                                      style={{
+                                        display: "inline-block",
+                                        width: "calc(50% - 8px)",
+                                      }}
+                                      rules={[
+                                        {
+                                          required: isExperience,
+                                          message: "Workplace is required",
+                                        },
+                                      ]}
+                                    >
+                                      <Input />
+                                    </Form.Item>
+                                    <Form.Item
+                                      label="Position"
+                                      name={[field.name, "position"]}
+                                      style={{
+                                        display: "inline-block",
+                                        width: "calc(50% - 8px)",
+                                        margin: "0 8px",
+                                      }}
+                                      rules={[
+                                        {
+                                          required: isExperience,
+                                          message: "Position is required",
+                                        },
+                                      ]}
+                                    >
+                                      <Input />
+                                    </Form.Item>
+                                  </Form.Item>
+                                  <Form.Item
+                                    style={{
+                                      marginBottom: 0,
+                                    }}
+                                  >
+                                    <Form.Item
+                                      name={[field.name, "startYear"]}
+                                      label="Start Year"
+                                      style={{
+                                        display: "inline-block",
+                                        width: "calc(50% - 8px)",
+                                      }}
+                                      rules={[
+                                        {
+                                          required: isExperience,
+                                          message: "Start year is required",
+                                        },
+                                      ]}
+                                    >
+                                      <DatePicker
+                                        picker="year"
+                                        style={{ width: "100%" }}
+                                      />
+                                    </Form.Item>
+                                    <Form.Item
+                                      name={[field.name, "endYear"]}
+                                      label="End Year"
+                                      style={{
+                                        display: "inline-block",
+                                        width: "calc(50% - 8px)",
+                                        margin: "0 8px",
+                                      }}
+                                      rules={[
+                                        {
+                                          required: isExperience,
+                                          message: "End year is required",
+                                        },
+                                      ]}
+                                    >
+                                      <DatePicker
+                                        picker="year"
+                                        style={{ width: "100%" }}
+                                      />
+                                    </Form.Item>
+                                  </Form.Item>
+                                </Card>
+                              ))}
 
-                          <Button type="dashed" onClick={() => add()} block>
-                            + Add Item
-                          </Button>
-                        </div>
-                      )}
-                    </Form.List>
-                  </Form.Item>
-                )}
+                              <Button type="dashed" onClick={() => add()} block>
+                                + Add Item
+                              </Button>
+                            </div>
+                          )}
+                        </Form.List>
+                      </Form.Item>
+                    )}
 
-                {/* ====== */}
-                <div className="partner-content3__education">
-                  <Checkbox
-                    value={isExperience}
-                    onChange={(e) => setIsExperience(e.target.checked)}
-                    checked={isExperience}
-                  />
-                  <Typography style={{ fontWeight: 500, fontSize: 20 }}>
-                    Experiences
-                  </Typography>
-                </div>
-                {isExperience && (
-                  <Form.Item className="login-form" style={{ width: "100%" }}>
-                    <Form.List name="workingProcesses">
-                      {(fields, { add, remove }) => (
-                        <div
-                          style={{
-                            display: "flex",
-                            rowGap: 16,
-                            flexDirection: "column",
-                          }}
-                        >
-                          {fields.map((field) => (
-                            <Card
-                              size="small"
-                              key={field.key}
-                              extra={
-                                <CloseOutlined
-                                  onClick={() => {
-                                    remove(field.name);
-                                  }}
-                                />
-                              }
-                            >
-                              <Form.Item
-                                style={{
-                                  marginBottom: 0,
-                                }}
-                              >
-                                <Form.Item
-                                  label="Workplace"
-                                  name={[field.name, "workplace"]}
-                                  style={{
-                                    display: "inline-block",
-                                    width: "calc(50% - 8px)",
-                                  }}
-                                  rules={[
-                                    {
-                                      required: isExperience,
-                                      message: "Workplace is required",
-                                    },
-                                  ]}
-                                >
-                                  <Input />
-                                </Form.Item>
-                                <Form.Item
-                                  label="Position"
-                                  name={[field.name, "position"]}
-                                  style={{
-                                    display: "inline-block",
-                                    width: "calc(50% - 8px)",
-                                    margin: "0 8px",
-                                  }}
-                                  rules={[
-                                    {
-                                      required: isExperience,
-                                      message: "Position is required",
-                                    },
-                                  ]}
-                                >
-                                  <Input />
-                                </Form.Item>
-                              </Form.Item>
-                              <Form.Item
-                                style={{
-                                  marginBottom: 0,
-                                }}
-                              >
-                                <Form.Item
-                                  name={[field.name, "startYear"]}
-                                  label="Start Year"
-                                  style={{
-                                    display: "inline-block",
-                                    width: "calc(50% - 8px)",
-                                  }}
-                                  rules={[
-                                    {
-                                      required: isExperience,
-                                      message: "Start year is required",
-                                    },
-                                  ]}
-                                >
-                                  <DatePicker
-                                    picker="year"
-                                    style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                                <Form.Item
-                                  name={[field.name, "endYear"]}
-                                  label="End Year"
-                                  style={{
-                                    display: "inline-block",
-                                    width: "calc(50% - 8px)",
-                                    margin: "0 8px",
-                                  }}
-                                  rules={[
-                                    {
-                                      required: isExperience,
-                                      message: "End year is required",
-                                    },
-                                  ]}
-                                >
-                                  <DatePicker
-                                    picker="year"
-                                    style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                              </Form.Item>
-                            </Card>
-                          ))}
-
-                          <Button type="dashed" onClick={() => add()} block>
-                            + Add Item
-                          </Button>
-                        </div>
-                      )}
-                    </Form.List>
-                  </Form.Item>
-                )}
-
-                <Form.Item
-                  style={{
-                    width: "100%",
-                    marginTop: 30,
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Button
-                    htmlType="submit"
-                    className="partner-button"
-                    loading={loading}
+                    <Form.Item
+                      style={{
+                        width: "100%",
+                        marginTop: 30,
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <Button
+                        htmlType="submit"
+                        className="partner-button"
+                        loading={loading}
+                      >
+                        Submit
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                ) : (
+                  <div
+                    className="partner-welcome"
                   >
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Form>
+                    <Image src={logo} width={200} preview={false} />
+                    <span
+                      className="chat-middle__content"
+                      style={{ fontSize: 32, fontWeight: 600, color: "#185FA0" }}
+                    >
+                      Welcome to Enclinic
+                    </span>
+                    <span
+                      className="chat-middle__content"
+                      style={{ fontSize: 20, fontWeight: 500, color: "#185FA0" }}
+                    >
+                      Please login to continue
+                    </span>
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>

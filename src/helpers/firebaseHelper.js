@@ -32,16 +32,16 @@ export const createAccountFirebase = async (email, name) => {
   }
 };
 
-export const createAccountChatbot = async (Id) => {
+export const createAccountChatbot = async (Id, name) => {
   try {
     const q = query(
       collection(dbChatbot, "chatbot"),
       where("idUser", "==", Id)
     );
-    console.log("jhuy");
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
       await setDoc(doc(dbChatbot, "chatbot", Id), {
+        name: name,
         createAt: Date.now(),
         idUser: Id,
         messages: [],

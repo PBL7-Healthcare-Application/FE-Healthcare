@@ -39,7 +39,7 @@ import getToken from "../../helpers/getToken";
 import { openNotificationWithIcon } from "../../components/notification/CustomNotify";
 import { delay } from "lodash";
 import doctorDefault from "../../assets/images/doctor.jpeg";
-import ReactMapGL, { Marker } from "react-map-gl";
+import ReactMapGL, { Marker, NavigationControl } from "react-map-gl";
 import { MdPhone } from "react-icons/md";
 import Rating from "../../components/Rate/Rate";
 import { getDoctorRating } from "../../stores/search-doctor/SearchThunk";
@@ -145,12 +145,14 @@ const DetailDoctor = () => {
   }, [schedule, dispatch]);
 
   const [viewport, setViewport] = useState({
-    width: "200px",
-    height: "100px",
+    width: "100%",
+    height: "100%",
     latitude: 16.059350970000025,
     longitude: 108.21343231000009,
     zoom: 16,
   });
+
+
 
   useEffect(() => {
     const element = document.getElementById("detail");
@@ -502,11 +504,10 @@ const DetailDoctor = () => {
                   <div style={{ width: "90%", height: 300, marginTop: 20 }}>
                     <ReactMapGL
                       {...viewport}
-                      mapStyle="mapbox://styles/mapbox/streets-v12"
+                      mapStyle="mapbox://styles/huybui123/clx4uxulk01q801qx9enx9tdk"
                       mapboxAccessToken="pk.eyJ1IjoiaHV5YnVpMTIzIiwiYSI6ImNsd2MxZm1oZzBobGYyaW1xb3J3M3AybzcifQ.XMOzdgG1jBifx7ztUeR4kw"
-                      onViewportChange={(nextViewport) =>
-                        setViewport(nextViewport)
-                      }
+                      onMouseMove={(viewport) => setViewport(viewport)}
+
                     >
                       <Marker
                         longitude={108.21343231000009}
@@ -519,6 +520,9 @@ const DetailDoctor = () => {
                           alt="marker"
                         />
                       </Marker>
+                      <div style={{ position: 'absolute', right: 10, top: 10 }}>
+                        <NavigationControl />
+                      </div>
                     </ReactMapGL>
                   </div>
                   <div className="contact">
@@ -593,8 +597,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.five > 0
                                 ? (tableOfrate?.five /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"
@@ -623,8 +627,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.four > 0
                                 ? (tableOfrate?.four /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"
@@ -653,8 +657,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.three > 0
                                 ? (tableOfrate?.three /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"
@@ -683,8 +687,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.two > 0
                                 ? (tableOfrate?.two /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"
@@ -713,8 +717,8 @@ const DetailDoctor = () => {
                             percent={
                               tableOfrate?.one > 0
                                 ? (tableOfrate?.one /
-                                    doctorDetail?.numberOfComment) *
-                                  100
+                                  doctorDetail?.numberOfComment) *
+                                100
                                 : 100
                             }
                             size="small"

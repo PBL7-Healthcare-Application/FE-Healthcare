@@ -120,7 +120,7 @@ const ManagementPartner = () => {
     setTypePartner(value !== "All" ? value : null);
     dispatch(
       getAdminPartner({
-        page: page,
+        page: 1,
         idSpecialty: specialty !== null ? specialty : undefined,
         TypePartner: value !== "All" ? value : undefined,
         search: inputSearch !== "" ? inputSearch : undefined,
@@ -131,7 +131,7 @@ const ManagementPartner = () => {
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
     setInputSearch(newValue);
-    debounceInputKey(newValue, specialty, page, typePartner);
+    debounceInputKey(newValue, specialty, 1, typePartner);
   };
   const debounceInputKey = useRef(
     debounce((nextValue, idSpecialty, page, typePartner) => {
@@ -148,7 +148,7 @@ const ManagementPartner = () => {
   const handleClick = () => {
     dispatch(
       getAdminPartner({
-        page: page,
+        page: 1,
         idSpecialty: specialty !== null ? specialty : undefined,
         TypePartner: typePartner !== null ? typePartner : undefined,
         search: inputSearch !== "" ? inputSearch : undefined,

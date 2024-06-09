@@ -73,7 +73,7 @@ const SignIn = () => {
       openNotificationWithIcon("error", api, "", error);
       dispatch(SetError());
     }
-    return () => {};
+    return () => { };
   }, [user, error, navigate, api, dispatch]);
 
   const onFinish = (values) => {
@@ -167,7 +167,7 @@ const SignIn = () => {
           </Form.Item>
           <Form.Item className="login-form-forgot ">
             <Typography className="label">
-              <Link>Forgot password ?</Link>
+              <Link to={"/auth/reset-password"}>Forgot password ?</Link>
             </Typography>
           </Form.Item>
           <Form.Item className="login-form-forgot">

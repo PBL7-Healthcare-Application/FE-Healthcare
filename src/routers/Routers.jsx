@@ -38,6 +38,7 @@ import HealthTool from "../pages/healthTool/HealthTool";
 import BMI from "../pages/healthTool/BMI";
 import BMR from "../pages/healthTool/BMR";
 import RatingDoctor from "../pages/doctor/Rating/Rating";
+import ResetPassword from "../pages/auth/password/ResetPassword";
 
 const routers = createBrowserRouter([
   {
@@ -146,6 +147,11 @@ const routers = createBrowserRouter([
         path: "verify",
         element: <Verification />,
       },
+      {
+        path: "reset-password",
+        element: <ResetPassword />,
+      },
+
     ],
   },
   {

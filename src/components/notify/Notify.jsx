@@ -2,7 +2,7 @@
 import { useSelector } from "react-redux";
 import CardNotify from "./CardNotify";
 import "./Notify.scss";
-import { Image, Space, Typography } from "antd";
+import { Image, Space } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { dbNotify } from "../../helpers/firebase";
 import noNotification from "../../assets/images/remove.png";

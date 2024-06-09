@@ -188,6 +188,7 @@ const Avt = (props) => {
                 <Image
                   src={props?.profile?.avatar}
                   width={70}
+                  height={70}
                   className="avt-popover__img avt-pointer"
                   preview={false}
                   fallback={personDefault}

@@ -4,7 +4,7 @@ import "./Notify.scss";
 import { statusNotify } from "../../helpers/icon";
 import { format } from "timeago.js";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getDetailDoctorAppointment,
   getDoctorProfile,
@@ -15,18 +15,27 @@ import { dbNotify } from "../../helpers/firebase";
 function CardNotify({ item }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { profile } = useSelector((state) => state.doctor);
   const handleRedirect = async () => {
     await updateDoc(doc(dbNotify, "notifications", item.id), {
       isRead: true, // replace with the fields you want to update
     });
     if (
-      item?.title === "New Appointment" ||
-      item?.title === "Cancel Appointment"
+      item?.title === "New Appointment"
     ) {
       if (item?.idDoctor) {
         dispatch(getDetailDoctorAppointment(item?.idAppointment));
         navigate(`/dr.Enclinic/appointment/${item?.idAppointment}`);
       } else {
+        navigate(`/user/appointment`);
+      }
+    }
+    if (item?.title === "Cancel Appointment") {
+      if (item?.idReceiver === profile?.idDoctor) {
+        dispatch(getDetailDoctorAppointment(item?.idAppointment));
+        navigate(`/dr.Enclinic/appointment/${item?.idAppointment}`);
+      }
+      else {
         navigate(`/user/appointment`);
       }
     }
