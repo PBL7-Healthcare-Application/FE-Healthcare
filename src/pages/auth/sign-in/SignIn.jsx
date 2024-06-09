@@ -42,6 +42,8 @@ const SignIn = () => {
     if (user) {
       createAccountFirebase(user.email, user.name);
       if (user.role === "User") {
+        console.log(user);
+
         handleChat(user.email);
         openNotificationWithIcon("success", api, "", "Sign In Success!");
         delay(() => {
@@ -165,7 +167,7 @@ const SignIn = () => {
           </Form.Item>
           <Form.Item className="login-form-forgot ">
             <Typography className="label">
-              <Link>Forgot password ?</Link>
+              <Link to={"/auth/reset-password"}>Forgot password ?</Link>
             </Typography>
           </Form.Item>
           <Form.Item className="login-form-forgot">

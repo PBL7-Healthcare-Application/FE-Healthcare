@@ -87,7 +87,7 @@ const ManagementAppointment = () => {
         date: date !== null ? date : undefined,
         search: inputSearch !== "" ? inputSearch : undefined,
         status: value !== "All" ? value : undefined,
-        page: page,
+        page: 1,
       })
     );
   };
@@ -98,7 +98,7 @@ const ManagementAppointment = () => {
         status: status !== null ? status : undefined,
         search: inputSearch !== "" ? inputSearch : undefined,
         date: stringDate,
-        page: page,
+        page: 1,
       })
     );
   };
@@ -115,7 +115,7 @@ const ManagementAppointment = () => {
           status: status !== null ? status : undefined,
           search: nextValue,
           date: date !== null ? date : undefined,
-          page: page,
+          page: 1,
         })
       );
     }, 500)
@@ -126,7 +126,7 @@ const ManagementAppointment = () => {
         status: status !== null ? status : undefined,
         search: inputSearch !== "" ? inputSearch : undefined,
         date: date !== null ? date : undefined,
-        page: page,
+        page: 1,
       })
     )
 

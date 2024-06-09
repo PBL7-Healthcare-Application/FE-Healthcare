@@ -27,7 +27,7 @@ import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { IoNotifications } from "react-icons/io5";
 import Notify from "../../components/notify/Notify";
 import { orderBy } from "lodash";
-import { setNotify } from "../../stores/Chat/ChatSlice";
+import { setNotify, setNotifyOld } from "../../stores/Chat/ChatSlice";
 import { VscFeedback } from "react-icons/vsc";
 const { Header, Sider, Content } = Layout;
 const DoctorLayout = () => {
@@ -57,7 +57,7 @@ const DoctorLayout = () => {
       dispatch(getDoctorProfile());
       dispatch(getDoctorCalendar());
     }
-    return () => { };
+    return () => {};
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -126,16 +126,31 @@ const DoctorLayout = () => {
         ...doc.data(), // get the data of the document
       }));
       const listFilter = notifyData.filter((item) => {
-        if (item?.idDoctor && item?.title !== "New information needs to be verified") {
+        if (
+          item?.idDoctor &&
+          item?.title !== "New information needs to be verified"
+        ) {
           return item.idDoctor === profile?.idDoctor && !item.isRead;
         }
         if (item?.idReceiver) {
           return item.idReceiver === profile?.idDoctor && !item.isRead;
         }
       });
-      console.log(listFilter);
+      const listFilterOld = notifyData.filter((item) => {
+        // console.log(item);
+        if (
+          item?.idDoctor &&
+          item?.title !== "New information needs to be verified"
+        ) {
+          return item.idDoctor === profile?.idDoctor && item.isRead;
+        }
+        if (item?.idReceiver) {
+          return item.idReceiver === profile?.idDoctor && item.isRead;
+        }
+      });
       setCountNoti(listFilter?.length);
       dispatch(setNotify(listFilter));
+      dispatch(setNotifyOld(listFilterOld));
     });
 
     return () => {
@@ -169,15 +184,16 @@ const DoctorLayout = () => {
               icon: <Image src={examination} preview={false} width={29} />,
               label: "Examination",
             },
-            {
-              key: "/setting",
-              icon: <FaRegSun size={25} color="#b5bad4" />,
-              label: "Setting",
-            },
+
             {
               key: "/rating",
               icon: <VscFeedback size={25} color="#b5bad4" />,
               label: "Rating",
+            },
+            {
+              key: "/setting",
+              icon: <FaRegSun size={25} color="#b5bad4" />,
+              label: "Setting",
             },
           ]}
           onClick={onNavItemClick}

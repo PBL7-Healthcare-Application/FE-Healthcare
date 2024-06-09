@@ -16,7 +16,7 @@ import { TiThList } from "react-icons/ti";
 import { getUserProfile } from "../../stores/user/UserThunk";
 import { IoNotifications } from "react-icons/io5";
 import Notify from "../../components/notify/Notify";
-import { setNotify } from "../../stores/Chat/ChatSlice";
+import { setNotify, setNotifyOld } from "../../stores/Chat/ChatSlice";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { dbNotify } from "../../helpers/firebase";
 import { orderBy } from "lodash";
@@ -65,11 +65,16 @@ const AdminLayout = () => {
         if (item?.idAdmin) {
           return item.idAdmin === profile?.idUser && !item.isRead;
         }
-
+      });
+      const listFilterOld = notifyData.filter((item) => {
+        if (item?.idAdmin) {
+          return item.idAdmin === profile?.idUser && item.isRead;
+        }
       });
       setCountNoti(listFilter?.length);
       dispatch(setNotify(listFilter));
-    })
+      dispatch(setNotifyOld(listFilterOld));
+    });
     return () => {
       unSub();
     };
@@ -80,7 +85,7 @@ const AdminLayout = () => {
       setIsLogin(true);
       dispatch(getUserProfile());
     }
-    return () => { };
+    return () => {};
   }, [token, dispatch]);
 
   useEffect(() => {

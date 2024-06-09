@@ -15,7 +15,7 @@ import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import Notify from "../notify/Notify";
 import { FaFacebookMessenger } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
-import { setNotify } from "../../stores/Chat/ChatSlice";
+import { setNotify, setNotifyOld } from "../../stores/Chat/ChatSlice";
 import { orderBy } from "lodash";
 
 const Avt = (props) => {
@@ -39,7 +39,6 @@ const Avt = (props) => {
     setvisible(!visible);
     navigate("/");
     await handleUpdateStatus(chatUser?.id, false);
-
   };
   useEffect(() => {
     if (chatUser?.id) {
@@ -73,9 +72,17 @@ const Avt = (props) => {
           }
         }
       });
-      console.log(listFilter);
+      const listFilterOld = notifyData.filter((item) => {
+        // console.log(item);
+        if (item?.idReceiver) {
+          if (item.isRead) {
+            return item.idReceiver === profile?.idUser;
+          }
+        }
+      });
       setCountNoti(listFilter?.length);
       dispatch(setNotify(listFilter));
+      dispatch(setNotifyOld(listFilterOld));
     });
 
     return () => {
@@ -181,6 +188,7 @@ const Avt = (props) => {
                 <Image
                   src={props?.profile?.avatar}
                   width={70}
+                  height={70}
                   className="avt-popover__img avt-pointer"
                   preview={false}
                   fallback={personDefault}

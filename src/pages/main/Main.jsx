@@ -22,7 +22,6 @@ export const Main = () => {
   const [name, setName] = useState("");
   const [specialty, setSpecialty] = useState("All specialties");
   const { searchResult } = useSelector((state) => state.search);
-  const listGameItem = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // eslint-disable-next-line react/prop-types, no-unused-vars
@@ -79,10 +78,10 @@ export const Main = () => {
     <>
       <div className="content">
         <div className="left">
-          <Space className="left_title">
-            <Typography className="left_title--first">Top Online</Typography>
+          <Space className="left_title" style={{ marginTop: 40 }}>
+            {/* <Typography className="left_title--first">Top Online</Typography> */}
             <Typography className="left_title--second">
-              Doctors Consultation
+              Doctors Consultation Service
             </Typography>
             <Typography className="left_title--sub">
               for health concerns
@@ -150,28 +149,28 @@ export const Main = () => {
       </div>
       <div className="doctor" style={{ marginBottom: "60px" }}>
         <Typography className="left_title--sub doctor-title">
-          Enclinic provides the health information you require
+          Enclinic gives you the information you need most
         </Typography>
         <div className="card-content">
           <CardContent
             img={content1}
-            title="Based on verified information"
-            content="All articles from Enclinic are written based on medical news, research, and scientific reports from leading educational and healthcare organizations."
+            title="RESEARCHED"
+            content="Enclinic have been thoroughly researched and written based on recent studies, news, and reviews from reputable academic and medical institutions."
           />
           <CardContent
             img={content2}
-            title="Consulted with medical professionals"
-            content="The team of doctors has many years of experience and works at famous hospitals."
+            title="REVIEWED"
+            content="Our panel of doctors and experts from different health and wellness fields professionally review each of the articles on site."
           />
           <CardContent
             img={content3}
-            title="Regularly updated"
-            content="We work with doctors and healthcare experts to continuously update articles to ensure accuracy."
+            title="MONITORED"
+            content="Working with our medical doctors and health professionals, we continually review and update articles to ensure the accuracy and relevance of our content."
           />
           <CardContent
             img={content4}
-            title="Reliable"
-            content="At Enclinic, the healthcare website, we are committed to providing accurate, easily accessible informations, that help readers make the most informed decisions for their own health ."
+            title="TRUSTWORTHY"
+            content="At Enclinic, as the leading digital health platform, commits to writing accurate, relevant, and up-to-date content to help consumers make better health decisions."
           />
         </div>
       </div>

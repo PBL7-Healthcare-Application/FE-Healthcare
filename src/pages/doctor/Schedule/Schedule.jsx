@@ -459,13 +459,6 @@ const Schedule = () => {
                   <div className="Schedule-status">
                     <div
                       className="Schedule-status-color"
-                      style={{ backgroundColor: "#EEBBF6" }}
-                    ></div>
-                    <span className="Schedule-status-text">Video Consultation</span>
-                  </div>
-                  <div className="Schedule-status">
-                    <div
-                      className="Schedule-status-color"
                       style={{ backgroundColor: "#FFA996" }}
                     ></div>
                     <span className="Schedule-status-text">Break time</span>

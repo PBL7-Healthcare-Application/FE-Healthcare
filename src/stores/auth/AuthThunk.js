@@ -4,6 +4,7 @@ import {
   registerUser,
   verifyEmail,
   resendOTP,
+  resetPassword,
 } from "../../api/auth.api";
 
 export const signUpUser = createAsyncThunk(
@@ -49,6 +50,17 @@ export const ResendOTP = createAsyncThunk(
   async (userData, thunkApi) => {
     try {
       const response = await resendOTP(userData);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const ResetPasswordUser = createAsyncThunk(
+  "auth/ResetPassword",
+  async (userData, thunkApi) => {
+    try {
+      const response = await resetPassword(userData);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

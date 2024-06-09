@@ -40,47 +40,47 @@ function calculateIdealWeightRange(height) {
 export const adviceBMI = (bmi, height) => {
     if (bmi < 18.5) {
         return {
-            status: 'You are considered underweight because your BMI is below 18.5',
-            risk: 'Studies indicate that underweight individuals are at higher risk of malnutrition, weakened immune system, infertility, osteoporosis, slow wound healing, and are more likely to experience complications after surgery.',
+            status: 'You are considered underweight if you have a BMI of under 18.5',
+            risk: 'Studies have found that those who are underweight are at greater risk of malnutrition, reduced immunity, infertility, osteoporosis, slow wound healing, and surgical complications.',
             advice: {
-                title: `your ideal weight is in the range of ${calculateIdealWeightRange(height).minWeight} to ${calculateIdealWeightRange(height).maxWeight}`,
-                content: "If you want to gain weight, the first important thing is to determine how many calories you need each day to perform basic bodily functions and daily activities."
+                title: `Your ideal weight range ${calculateIdealWeightRange(height).minWeight} - ${calculateIdealWeightRange(height).maxWeight}`,
+                content: "If you want to gain weight, it’s important to first determine how many calories you need per day to perform basic bodily functions and daily activities."
             }
         };
     } else if (bmi >= 18.5 && bmi <= 24.9) {
         return {
-            status: 'You are considered to have an ideal body weight because your BMI is between 18.5 to 24.9',
-            risk: 'Even individuals with a healthy BMI may still face the risk of developing certain health conditions. Therefore, it\'s important to adopt a healthy lifestyle through proper nutrition, regular physical activity, and routine health check-ups to maintain the best possible health.',
+            status: 'You are considered to have an ideal body weight if you have a BMI that falls between 18.5 to 24.9',
+            risk: 'Even those with a healthy BMI can be at risk for certain health conditions. So it’s important to maintain a healthy lifestyle through proper diet, ample exercise, and regular check-ups to remain in optimal health.',
             advice: {
-                title: `your ideal weight is in the range of ${calculateIdealWeightRange(height).minWeight} to ${calculateIdealWeightRange(height).maxWeight}`,
-                content: "If you want to maintain your body weight, first determine how many calories you need each day to perform basic bodily functions and daily activities.\nChoose foods and drinks that provide a calorie intake equivalent to your daily calorie needs."
+                title: `Your ideal weight range ${calculateIdealWeightRange(height).minWeight} - ${calculateIdealWeightRange(height).maxWeight}`,
+                content: "If you want to maintain your body weight, it’s important to first determine how many calories you need per day to perform basic bodily functions and daily activities.Consume food and drinks which provide an equal amount of calories to your daily calorie requirement."
             }
         };
     } else if (bmi >= 25 && bmi <= 29.9) {
         return {
-            status: 'You are considered overweight because your BMI is is between 25 to 29.9',
-            risk: 'Being overweight can increase the risk of developing type 2 diabetes, high blood pressure, heart disease, stroke, joint inflammation, fatty liver disease, kidney disease, and some cancers.',
+            status: 'You are considered overweight if you have a BMI that falls between 25 to 29.9',
+            risk: 'Being overweight can increase a person’s risk of developing type 2 diabetes, hypertension, heart disease, stroke, osteoarthritis, high cholesterol fatty liver disease, kidney disease and certain types of cancer.',
             advice: {
-                title: `your ideal weight is in the range of ${calculateIdealWeightRange(height).minWeight} to ${calculateIdealWeightRange(height).maxWeight}`,
-                content: "If you want to lose weight, first you need to determine the number of calories you need to consume each day to perform basic bodily functions and daily activities. Then, choose foods and drinks that provide fewer calories than your daily needs."
+                title: `Your ideal weight range ${calculateIdealWeightRange(height).minWeight} - ${calculateIdealWeightRange(height).maxWeight}`,
+                content: "If you want to lose weight, it’s important to first determine how many calories you need per day to perform basic bodily functions and daily activities. Next, consume food and drink with that provide fewer calories than your daily requirement."
             }
         };
     } else if (bmi >= 30 && bmi <= 34.9) {
         return {
-            status: 'You are considered obesity level I because your BMI is between 30 to 34.9',
-            risk: 'Obesity can increase the risk of developing type 2 diabetes, high blood pressure, heart disease, stroke, joint inflammation, fatty liver disease, kidney disease, and some cancers.',
+            status: 'You are considered obese level I if you have a BMI in between 30 to 34.9',
+            risk: 'Obesity can increase a person’s risk of developing type 2 diabetes, hypertension, heart disease, stroke, osteoarthritis, high cholesterol fatty liver disease, kidney disease and certain types of cancer.',
             advice: {
-                title: `your ideal weight is in the range of ${calculateIdealWeightRange(height).minWeight} to ${calculateIdealWeightRange(height).maxWeight}`,
-                content: "If you want to lose weight, first you need to determine how many calories you need each day to perform basic bodily functions and daily activities. Then, eat foods that provide fewer calories than your daily needs."
+                title: `Your ideal weight range ${calculateIdealWeightRange(height).minWeight} to ${calculateIdealWeightRange(height).maxWeight}`,
+                content: "If you want to lose weight, you must first determine how many calories you need per day to perform basic bodily functions and daily activities. Next, consume food and drink with that provide fewer calories than your daily requirement."
             }
         };
     } else if (bmi >= 35) {
         return {
-            status: 'You are considered obesity level II because your BMI is over 35',
-            risk: 'Obesity can increase the risk of developing type 2 diabetes, high blood pressure, heart disease, stroke, joint inflammation, fatty liver disease, kidney disease, and some cancers.',
+            status: 'You are considered obese level II if have a BMI of more than 35',
+            risk: 'Obesity increases a person’s risk of developing type 2 diabetes, hypertension, heart disease, stroke, osteoarthritis, high cholesterol fatty liver disease, kidney disease and certain types of cancer.',
             advice: {
-                title: `your ideal weight is in the range of ${calculateIdealWeightRange(height).minWeight} to ${calculateIdealWeightRange(height).maxWeight}`,
-                content: "If you want to lose weight, first you need to determine how many calories you need each day to perform basic bodily functions and daily activities. Then, eat foods that provide fewer calories than your daily needs."
+                title: `Your ideal weight range ${calculateIdealWeightRange(height).minWeight} - ${calculateIdealWeightRange(height).maxWeight}`,
+                content: "If you want to lose weight, firstly determine how many calories you need per day to perform basic bodily functions and daily activities. Next, consume food and drink with that provide fewer calories than your daily requirement."
             }
         };
     }

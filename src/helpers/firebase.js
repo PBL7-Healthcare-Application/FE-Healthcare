@@ -36,3 +36,20 @@ const notify = initializeApp(notifyConfig, "notify");
 export const authNotify = getAuth(notify);
 export const dbNotify = getFirestore(notify);
 export const storageNotify = getStorage(notify);
+
+const chatbotConfig = {
+  apiKey: "AIzaSyDCis2CjGycG2tpKdzNLT7U3M1e_Rgpmsc",
+  authDomain: "ai-healthcare-chatwithchatbot.firebaseapp.com",
+  projectId: "ai-healthcare-chatwithchatbot",
+  storageBucket: "ai-healthcare-chatwithchatbot.appspot.com",
+  messagingSenderId: "447928152057",
+  appId: "1:447928152057:web:a5fb45389f6d585312d728",
+  measurementId: "G-DHPCT4W6FQ",
+};
+
+// Initialize Firebase
+const chatbot = initializeApp(chatbotConfig, "chatbot");
+
+export const authChatbot = getAuth(chatbot);
+export const dbChatbot = getFirestore(chatbot);
+export const storageChatbot = getStorage(chatbot);

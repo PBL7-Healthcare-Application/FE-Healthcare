@@ -129,7 +129,7 @@ const ManagementUser = () => {
         search: inputSearch !== null ? inputSearch : undefined,
         status: value !== "All" ? value : undefined,
         role: role !== null ? role : undefined,
-        page: page,
+        page: 1,
       })
     );
   };
@@ -140,7 +140,7 @@ const ManagementUser = () => {
         search: inputSearch !== null ? inputSearch : undefined,
         status: status !== null ? status : undefined,
         role: value !== 0 ? value : undefined,
-        page: page,
+        page: 1,
       })
     );
   };
@@ -148,7 +148,7 @@ const ManagementUser = () => {
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
     setInputSearch(newValue);
-    debounceInputKey(newValue, status, role, page);
+    debounceInputKey(newValue, status, role, 1);
   };
   const debounceInputKey = useRef(
     debounce((newValue, status, role, page) => {
@@ -168,7 +168,7 @@ const ManagementUser = () => {
         search: inputSearch,
         status: status !== null ? status : undefined,
         role: role !== null ? role : undefined,
-        page: page,
+        page: 1,
       })
     );
     contentRef.current.scrollIntoView({

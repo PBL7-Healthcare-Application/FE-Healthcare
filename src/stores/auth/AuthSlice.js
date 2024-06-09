@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ResendOTP, signInUser, signUpUser, VerifyEmail } from "./AuthThunk";
+import { ResendOTP, ResetPasswordUser, signInUser, signUpUser, VerifyEmail } from "./AuthThunk";
 import setAccessToken from "../../helpers/setAccessToken";
+
 
 const authSlice = createSlice({
   name: "auth",
@@ -8,6 +9,7 @@ const authSlice = createSlice({
     user: null,
     error: null,
     loading: false,
+    statusCode: null,
   },
   reducers: {
     logOut: (state) => {
@@ -17,6 +19,9 @@ const authSlice = createSlice({
     SetError: (state) => {
       state.error = null;
     },
+    SetStatusCode: (state) => {
+      state.statusCode = null;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -96,9 +101,28 @@ const authSlice = createSlice({
       .addCase(ResendOTP.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail || action.payload;
+      })
+
+      //==============================
+
+      .addCase(ResetPasswordUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(ResetPasswordUser.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+      })
+      .addCase(ResetPasswordUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail || action.payload;
       });
   },
 });
 
-export const { logOut, SetError } = authSlice.actions;
+export const { logOut, SetError, SetStatusCode } = authSlice.actions;
 export default authSlice.reducer;
