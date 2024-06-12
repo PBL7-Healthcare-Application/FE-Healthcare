@@ -85,7 +85,7 @@ const AdminLayout = () => {
       setIsLogin(true);
       dispatch(getUserProfile());
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -111,6 +111,7 @@ const AdminLayout = () => {
 
   return (
     <Layout style={{ backgroundColor: "#fff" }}>
+
       <Sider
         trigger={null}
         collapsible
@@ -149,6 +150,9 @@ const AdminLayout = () => {
           <span className="sidebar__logout__text">Sign Out</span>
         </div>
       </Sider>
+
+
+
       <Layout style={{ backgroundColor: "#f1f5f9" }}>
         <Header className="customSlider__header">
           {isLogin ? (

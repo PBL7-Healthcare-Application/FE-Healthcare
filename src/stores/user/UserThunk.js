@@ -99,7 +99,9 @@ export const regisDoctor = createAsyncThunk(
   "user/regisDoctor",
   async (data, thunkApi) => {
     try {
+      console.log("body", data);
       const body = await bodyPartner(data);
+      console.log("body", body);
       const response = await registerDoctor(body);
       return response;
     } catch (error) {

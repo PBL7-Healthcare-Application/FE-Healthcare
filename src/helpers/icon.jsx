@@ -10,6 +10,7 @@ import star from "../assets/images/star.png";
 import correct from "../assets/images/correct.png";
 import { FaRegBookmark } from "react-icons/fa";
 import { FcApproval } from "react-icons/fc";
+import { LuLoader } from "react-icons/lu";
 export const icon = (status) => {
   switch (status) {
     case 1:
@@ -28,6 +29,12 @@ export const icon = (status) => {
       return (
         <Tag icon={<CheckCircleOutlined />} color="success" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
           Completed
+        </Tag>
+      );
+    case 4:
+      return (
+        <Tag icon={<LuLoader />} color="cyan" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0", alignItems: 'center', gap: 5 }}>
+          Waiting
         </Tag>
       );
     default:
@@ -52,7 +59,7 @@ export const iconCertificate = (status) => {
     case 2:
       return (
         <Tag icon={<CloseCircleOutlined />} color="error" style={{ width: 100, display: 'flex', justifyContent: 'center', padding: "3px 0" }}>
-          rejected
+          Rejected
         </Tag>
       );
     default:
@@ -64,7 +71,7 @@ export const tabRole = (role) => {
     case "User":
       return (
         <Tag color="#ffc53d" style={{ fontWeight: 500 }}>
-          USER
+          PATIENT
         </Tag>
       );
     case "Doctor":
@@ -83,7 +90,7 @@ export const statusAccount = (status) => {
     case true:
       return (
         <Tag color="#f50" style={{ fontWeight: 500 }}>
-          BANED
+          BANNED
         </Tag>
       );
     case false:

@@ -28,6 +28,7 @@ const UserInfor = ({ type, partner }) => {
     verifyCertificate,
     verifyEducation,
     verifyExperience,
+    loading,
   } = useSelector((state) => state.admin);
   const [disable, setDisabled] = useState(false);
   const [api, contextHolder] = notification.useNotification();
@@ -149,11 +150,43 @@ const UserInfor = ({ type, partner }) => {
                 fontWeight: 600,
                 letterSpacing: 0.5,
               }}
+              loading={loading}
               disabled={disable}
               onClick={() => handleApproval()}
             >
               Approval
             </Button>
+            {
+              type === "profile" && (<Button
+                type="primary"
+                className="login-form-button"
+                style={{
+                  marginTop: 10,
+                  color: "rgb(239 68 68)",
+                  fontSize: 15,
+                  backgroundColor: "#ffff",
+                  border: "1px solid rgb(239 68 68)",
+                  fontWeight: 600,
+                  letterSpacing: 0.5,
+                  marginLeft: 20,
+                  opacity: disable ? 0.5 : 1,
+
+                }}
+                loading={loading}
+                disabled={disable}
+
+                onClick={() => {
+                  dispatch(
+                    verifyAdminProfile({
+                      idDoctor: partnerDetail?.idDoctor,
+                      statusVerified: 2,
+                    })
+                  );
+                }}
+              >
+                Reject
+              </Button>)
+            }
           </div>
         )}
       </div>

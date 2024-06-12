@@ -6,7 +6,7 @@ import "./Schedule.scss";
 import { useEffect, useMemo, useState } from "react";
 import { FaRegClock } from "react-icons/fa";
 import { useTable } from "react-table";
-import { Button, Image, Input, Modal, Select, Typography, notification } from "antd";
+import { Button, Checkbox, Image, Input, Modal, Radio, Select, Typography, notification } from "antd";
 import calender from "../../../assets/images/calandar.png";
 import personDefault from "../../../assets/images/personDefault.png";
 import disappointed from "../../../assets/images/disappointed.png";
@@ -25,6 +25,7 @@ import {
   viewBreakTime,
   viewInforSchedule,
   viewInforTimeOff,
+  viewInforTimeOffIsFix,
   viewSchedule,
 } from "../../../helpers/timeBooking";
 import { cancelDoctorAppointment, createDoctorTimeOff, getDoctorCalendar } from "../../../stores/doctor/DoctorThunk";
@@ -32,6 +33,7 @@ import { openNotificationWithIcon } from "../../../components/notification/Custo
 import { delay, set } from "lodash";
 import { setError, setMessage, setStatusCode } from "../../../stores/doctor/DoctorSlice";
 import logo from "../../../assets/images/logo.png";
+import { is } from "date-fns/locale";
 const Schedule = () => {
   const { profile, calendar, statusCode, error, message } = useSelector((state) => state.doctor);
   const dispatch = useDispatch();
@@ -68,7 +70,7 @@ const Schedule = () => {
   const [appointment, setAppointment] = useState(null);
   const [isOpenAppointment, setIsOpenAppointment] = useState(false);
   const [isCancel, setIsCancel] = useState(false);
-
+  const [isFixed, setIsFixed] = useState(false);
   const handleItemClick = (rowIndex, index) => {
     if (viewSchedule(calendar.timeOffs, calendar.appointments, columns[index].date, data[rowIndex].time.toString()) === "examination") {
       return;
@@ -185,6 +187,7 @@ const Schedule = () => {
           endTime: data[item.row].time.split(" - ")[1],
           status: 2,
           reason: "break time",
+          isFixed: false,
         }
       })
       dispatch(createDoctorTimeOff(body));
@@ -209,7 +212,7 @@ const Schedule = () => {
       );
       daysOfWeek.push({
         Header: header,
-        accessor: dayName.slice(0, 3),
+        accessor: dayName,
         date: newDay,
       });
     }
@@ -243,6 +246,7 @@ const Schedule = () => {
         endTime: data[item.row].time.split(" - ")[1],
         status: 1,
         reason: reason,
+        isFixed: isFixed,
       }
     })
     dispatch(createDoctorTimeOff(body));
@@ -253,6 +257,7 @@ const Schedule = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     setReason("");
+    setIsFixed(false);
   };
   const doctorLocal = JSON.parse(localStorage.getItem("doctor"));
 
@@ -271,6 +276,9 @@ const Schedule = () => {
         }}>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', fontSize: 20 }} className="Schedule-title" >Add Reason</div>
         <Input value={reason} onChange={(e) => setReason(e.target.value)} />
+        <Checkbox checked={isFixed} onChange={() => setIsFixed(!isFixed)} style={{ marginTop: 20 }}>
+          For every week
+        </Checkbox>
       </Modal>
       <Modal open={isOpenAppointment} onCancel={() => setIsOpenAppointment(false)} className="modal"
         okButtonProps={{ style: { display: "none" } }}
@@ -569,6 +577,8 @@ const Schedule = () => {
 
                           ${index !== 0 && viewBreakTime(calendar.timeOffs, data[row.index].time.toString())}
                         ${index === 1 && compareTime(data[row.index].time.toString()) ? "disableItem" : ""}
+
+                         ${viewInforTimeOffIsFix(calendar.timeOffs, columns[index], data[row.index].time.toString())?.status}
                           
                     `}
 
@@ -577,6 +587,7 @@ const Schedule = () => {
                                 {cell.render("Cell")}
                                 <label style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer' }} onClick={(e) => handleModal(viewInforSchedule(calendar.appointments, columns[index].date, data[row.index].time.toString()))} >{viewInforSchedule(calendar.appointments, columns[index].date, data[row.index].time.toString())?.namePatient}</label>
                                 {index !== 0 && viewSchedule(calendar.timeOffs, calendar.appointments, columns[index].date, data[row.index].time.toString()) === "busy" && viewInforTimeOff(calendar.timeOffs, columns[index].date, data[row.index].time.toString())}
+                                {viewInforTimeOffIsFix(calendar.timeOffs, columns[index], data[row.index].time.toString())?.item}
                               </td>
                             );
                           })}

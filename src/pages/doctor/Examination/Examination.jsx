@@ -1,16 +1,19 @@
 /* eslint-disable no-unused-vars */
-import { SearchOutlined } from "@ant-design/icons";
+import { DeleteTwoTone, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./Examination.scss";
 import {
   Button,
   DatePicker,
   Divider,
+  Dropdown,
   Form,
   Image,
   Input,
   Modal,
+  Space,
   Table,
   Tabs,
+  Tag,
   Typography,
   notification,
 } from "antd";
@@ -55,6 +58,9 @@ import { useForm } from "antd/es/form/Form";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
 import { setMessage } from "../../../stores/admin/AdminSlice";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import { LuLoader } from "react-icons/lu";
+import { MdOutlineCancel } from "react-icons/md";
 
 const Examination = () => {
   const [api, contextHolder] = notification.useNotification();
@@ -67,11 +73,11 @@ const Examination = () => {
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const [form] = useForm();
-
+  const [isDelete, setIsDelete] = useState(false);
   //=======rescheduled================================
   const [times, setTimes] = useState([]);
   const [chooseTime, setChooseTime] = useState(null);
-  const [reason, setReason] = useState(null);
+
   const [chooseDate, setChooseDate] = useState(null);
 
   const {
@@ -109,6 +115,7 @@ const Examination = () => {
     setTimes(schedule[0]?.times);
     setChooseDate(schedule[0]?.date);
   }, [schedule, dispatch]);
+  
   const columns = [
     {
       title: "Name",
@@ -130,6 +137,34 @@ const Examination = () => {
       title: "Time",
       dataIndex: "time",
       align: "center",
+    },
+    {
+      title: "Action",
+      key: "function",
+      dataIndex: "function",
+      align: "center",
+      className: "function-box",
+      width: "20%",
+      onCell: () => {
+        return {
+          onClick: (e) => {
+            e.stopPropagation();
+          },
+        };
+      },
+      render: (text, record) => (
+        <>
+          <Space >
+            <Tag color="success" style={{ width: 50, display: 'flex', justifyContent: 'center', padding: "3px 0", alignItems: 'center', gap: 1, cursor: 'pointer' }} >
+              Change
+            </Tag>
+            <Tag color="error" style={{ width: 50, display: 'flex', justifyContent: 'center', padding: "3px 0", alignItems: 'center', gap: 2, cursor: 'pointer'}}>
+              Cancel
+            </Tag>
+
+          </Space>
+        </>
+      ),
     },
   ];
 
@@ -178,7 +213,7 @@ const Examination = () => {
         date: chooseDate,
         startTime: chooseTime?.startTime,
         endTime: chooseTime?.endTime,
-        issue: reason,
+        issue: "Book an appointment for the reassessment",
         type: true,
         price: profile?.price,
         address: profile?.address,
@@ -220,7 +255,6 @@ const Examination = () => {
       });
       setChooseTime(null);
       setChooseDate(null);
-      setReason(null);
       setIsScheduled(false);
     }
     if (error !== null) {
@@ -230,7 +264,6 @@ const Examination = () => {
       setUser(null);
       setChooseTime(null);
       setChooseDate(null);
-      setReason(null);
       setIsScheduled(false);
     }
   }, [statusCode, dispatch, api, error]);
@@ -339,13 +372,6 @@ const Examination = () => {
               </div>
             </TabPane>
           </Tabs>
-          <Typography
-            className="detailDr-content__right-appointment--titleType"
-            style={{ marginTop: 20, marginBottom: 12 }}
-          >
-            Issues
-          </Typography>
-          <TextArea maxLength={100} onChange={(e) => setReason(e.target.value)} />
 
           <Button
             className="detailDr-content__right-appointment__button"
@@ -355,6 +381,18 @@ const Examination = () => {
           >
             Book
           </Button>
+        </div>
+      </Modal>
+      <Modal open={isDelete}
+        onCancel={() => setIsDelete(false)}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}>
+        <div className="modalDelete">
+          <span className="setting-font" style={{ color: "#404040", fontSize: 18, fontWeight: 500 }}>Are you sure you want to delete this certificate?</span>
+          <div className="modalDelete-btn">
+            <Button className="modalDelete-btn__Delete" onClick={() => dispatch(doctorDeleteCertificate(iD))}>Delete</Button>
+            <Button className="modalDelete-btn__Cancel" onClick={() => setIsDelete(false)}>Cancel</Button>
+          </div>
         </div>
       </Modal>
       <div className="exam_left">

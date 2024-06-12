@@ -16,7 +16,7 @@ import { EditFilled } from "@ant-design/icons";
 import "./SetUpSchedule.scss";
 import warning from "../../../assets/images/warning.png";
 import TextArea from "antd/es/input/TextArea";
-import { set } from "date-fns";
+
 const SetUpSchedule = () => {
   const { profile, error, statusCode, message, loading } = useSelector((state) => state.doctor);
   const [isDisabled, setIsDisabled] = useState(

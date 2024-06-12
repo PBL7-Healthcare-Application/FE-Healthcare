@@ -9,7 +9,7 @@
   height: 80vh;
 
   &_left {
-    flex: 4;
+    flex: 5;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -68,6 +68,7 @@
         height: 400px;
         margin-top: 20px;
         overflow-y: scroll;
+
         &::-webkit-scrollbar {
           width: 5px; // Độ rộng của thanh cuộn
         }

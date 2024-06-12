@@ -8,14 +8,14 @@ export const bodyPartner = async (values) => {
     idSpecialty: values.idSpecialty,
     nameClinic: values.nameClinic,
     businessLicense: await getImageUpload(
-      values.businessLicense.file.originFileObj
+      values.businessLicense.file
     ),
     certificates: await Promise.all(
       values.certificates.map(async (item) => {
         return {
           name: item.name,
           year: item.year.$y,
-          image: await getImageUpload(item.image.file.originFileObj),
+          image: await getImageUpload(item.image.file),
         };
       })
     ),

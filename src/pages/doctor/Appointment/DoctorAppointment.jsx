@@ -160,6 +160,7 @@ const DoctorAppointment = () => {
               { value: 1, label: "Booked" },
               { value: 3, label: "Completed" },
               { value: 2, label: "Canceled" },
+              { value: 4, label: "Waiting" },
             ]}
           />
         </div>
