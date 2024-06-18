@@ -441,8 +441,8 @@ const Schedule = () => {
         </div>
       </Modal>
       {doctorLocal?.workingTimeEnd &&
-      doctorLocal?.workingTimeStart &&
-      doctorLocal?.durationPerAppointment ? (
+        doctorLocal?.workingTimeStart &&
+        doctorLocal?.durationPerAppointment ? (
         <>
           <span className="Schedule-title">Doctor Calendar</span>
           <div className="Schedule-content">
@@ -472,7 +472,7 @@ const Schedule = () => {
                   disabled={status === ""}
                   onClick={() => handleAction()}
                 >
-                  Action
+                  Save
                 </Button>
               </div>
               <div
@@ -541,18 +541,16 @@ const Schedule = () => {
                 </span>
                 <span className="Schedule-buttonDate">
                   <span
-                    className={`Schedule-today ${
-                      !today ? "Schedule-today-noToday" : ""
-                    }`}
+                    className={`Schedule-today ${!today ? "Schedule-today-noToday" : ""
+                      }`}
                     onClick={handleToday}
                   >
                     Today
                   </span>
                   {
                     <div
-                      className={`Schedule-prev ${
-                        today ? "Schedule-prev__disable" : ""
-                      }`}
+                      className={`Schedule-prev ${today ? "Schedule-prev__disable" : ""
+                        }`}
                       onClick={handlePrevWeek}
                     >
                       <CaretLeftOutlined className="Schedule-buttonDate__icon" />
@@ -581,9 +579,8 @@ const Schedule = () => {
                         <th
                           {...column.getHeaderProps()}
                           key={index}
-                          className={`Schedule-header__text ${
-                            index === 0 ? "border-first" : ""
-                          }  ${index === 7 ? "border-second" : ""}`}
+                          className={`Schedule-header__text ${index === 0 ? "border-first" : ""
+                            }  ${index === 7 ? "border-second" : ""}`}
                         >
                           {column.render("Header")}
                         </th>
@@ -603,59 +600,52 @@ const Schedule = () => {
                               key={index}
                               onClick={() => handleItemClick(row.index, index)}
                               className={`
-                    ${
-                      selectedRow.some((item) => item.row === row.index) &&
-                      index !== 0
-                        ? "selected"
-                        : ""
-                    }
+                    ${selectedRow.some((item) => item.row === row.index) &&
+                                  index !== 0
+                                  ? "selected"
+                                  : ""
+                                }
 
-                        ${
-                          selectedItem.some(
-                            (item) =>
-                              item.row === row.index && item.index === index
-                          )
-                            ? "selectedItem"
-                            : ""
-                        }
-                         ${
-                           row.index === row.cells.length + 1 && index === 0
-                             ? "border-third"
-                             : ""
-                         }
-                          ${
-                            row.index === row.cells.length + 1 && index === 7
-                              ? "border-fourth"
-                              : ""
-                          }
+                        ${selectedItem.some(
+                                  (item) =>
+                                    item.row === row.index && item.index === index
+                                )
+                                  ? "selectedItem"
+                                  : ""
+                                }
+                         ${row.index === row.cells.length + 1 && index === 0
+                                  ? "border-third"
+                                  : ""
+                                }
+                          ${row.index === row.cells.length + 1 && index === 7
+                                  ? "border-fourth"
+                                  : ""
+                                }
                           ${viewSchedule(
-                            calendar.timeOffs,
-                            calendar.appointments,
-                            columns[index].date,
-                            data[row.index].time.toString()
-                          )}
+                                  calendar.timeOffs,
+                                  calendar.appointments,
+                                  columns[index].date,
+                                  data[row.index].time.toString()
+                                )}
 
-                          ${
-                            index !== 0 &&
-                            viewBreakTime(
-                              calendar.timeOffs,
-                              data[row.index].time.toString()
-                            )
-                          }
-                        ${
-                          index === 1 &&
-                          compareTime(data[row.index].time.toString())
-                            ? "disableItem"
-                            : ""
-                        }
+                          ${index !== 0 &&
+                                viewBreakTime(
+                                  calendar.timeOffs,
+                                  data[row.index].time.toString()
+                                )
+                                }
+                        ${index === 1 &&
+                                  compareTime(data[row.index].time.toString())
+                                  ? "disableItem"
+                                  : ""
+                                }
 
-                         ${
-                           viewInforTimeOffIsFix(
-                             calendar.timeOffs,
-                             columns[index],
-                             data[row.index].time.toString()
-                           )?.status
-                         }
+                         ${viewInforTimeOffIsFix(
+                                  calendar.timeOffs,
+                                  columns[index],
+                                  data[row.index].time.toString()
+                                )?.status
+                                }
                           
                     `}
                             >

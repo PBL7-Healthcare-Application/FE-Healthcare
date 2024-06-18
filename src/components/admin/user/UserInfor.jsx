@@ -154,7 +154,7 @@ const UserInfor = ({ type, partner }) => {
               disabled={disable}
               onClick={() => handleApproval()}
             >
-              Approval
+              Approve
             </Button>
             {
               type === "profile" && (<Button

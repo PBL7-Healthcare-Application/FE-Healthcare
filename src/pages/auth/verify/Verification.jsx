@@ -66,7 +66,7 @@ const Verification = () => {
     if (user) {
       createAccountFirebase(user.email, user.name);
       if (user.role === "User") {
-        openNotificationWithIcon("success", api, "", "Sign Up Success!");
+        openNotificationWithIcon("success", api, "", "Sign-up successful!");
         delay(() => {
           localStorage.removeItem("profile");
           if (localStorage.getItem("appointment") !== null) {

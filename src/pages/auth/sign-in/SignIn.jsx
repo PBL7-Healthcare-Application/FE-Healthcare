@@ -45,7 +45,7 @@ const SignIn = () => {
         console.log(user);
 
         handleChat(user.email);
-        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        openNotificationWithIcon("success", api, "", "Sign-in successful!");
         delay(() => {
           if (localStorage.getItem("appointment") !== null) {
             dispatch(getUserProfile());
@@ -58,12 +58,12 @@ const SignIn = () => {
         }, 1500);
       } else if (user.role === "Doctor") {
         handleChat(user.email);
-        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        openNotificationWithIcon("success", api, "", "Sign-in successful!");
         delay(() => {
           navigate("/dr.Enclinic/appointment");
         }, 1500);
       } else if (user.role === "Admin") {
-        openNotificationWithIcon("success", api, "", "Sign In Success!");
+        openNotificationWithIcon("success", api, "", "Sign-in successful!");
         delay(() => {
           navigate("/admin/users");
         }, 1500);

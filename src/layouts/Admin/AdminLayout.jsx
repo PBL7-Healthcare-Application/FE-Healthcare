@@ -72,8 +72,18 @@ const AdminLayout = () => {
         }
       });
       setCountNoti(listFilter?.length);
-      dispatch(setNotify(listFilter));
-      dispatch(setNotifyOld(listFilterOld));
+      dispatch(setNotify(listFilter.map((item) => (
+        {
+          ...item,
+          timestamp: item.timestamp.toDate().toISOString()
+        }
+      ))));
+      dispatch(setNotifyOld(listFilterOld.map((item) => (
+        {
+          ...item,
+          timestamp: item.timestamp.toDate().toISOString()
+        }
+      ))));
     });
     return () => {
       unSub();
