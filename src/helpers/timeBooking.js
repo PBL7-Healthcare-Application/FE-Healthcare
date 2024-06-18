@@ -53,6 +53,23 @@ export const doctorSchedule = (
   const schedule = createTimeBooking(start, end, durationPerAppointment);
   schedule.forEach((time) => {
     timeOff.forEach((off) => {
+      console.log(off);
+      if (
+        // item.date.split("T")[0] === newDate &&
+        off.isFixed &&
+        format(new Date(time.date), "EEEE") ===
+          format(new Date(off.date), "EEEE")
+      ) {
+        for (var i = time.times.length - 1; i >= 0; i--) {
+          if (
+            convertTime(time.times[i].startTime) ===
+              convertTime(off.startTime) &&
+            convertTime(time.times[i].endTime) === convertTime(off.endTime)
+          ) {
+            time.times.splice(i, 1);
+          }
+        }
+      }
       if (compareDate(time.date, off.date)) {
         for (var i = time.times.length - 1; i >= 0; i--) {
           var startTime = convertTime(time.times[i].startTime);
@@ -395,7 +412,8 @@ export const viewInforTimeOffIsFix = (timeOff, day, time) => {
   const item = timeOff.find((item) => {
     if (
       // item.date.split("T")[0] === newDate &&
-      item.isFixed && item.startTime === timeArr[0] &&
+      item.isFixed &&
+      item.startTime === timeArr[0] &&
       item.endTime === timeArr[1]
     ) {
       // console.log('item', item)
@@ -404,18 +422,15 @@ export const viewInforTimeOffIsFix = (timeOff, day, time) => {
   });
 
   if (item) {
-
     if (item.date.split("T")[0] !== newDate) {
-
       var state = format(new Date(item.date), "EEEE");
       if (state === day.accessor) {
-        console.log('item', item)
+        console.log("item", item);
         return {
           item: item.reason,
-          status: "busy"
+          status: "busy",
         };
       }
-
     } else {
       return null;
     }
