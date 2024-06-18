@@ -28,6 +28,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../helpers/firebase";
 import getToken from "../../../helpers/getToken";
+import { changeChat, setChatSelected } from "../../../stores/Chat/ChatSlice";
 
 
 // eslint-disable-next-line react/prop-types
@@ -41,9 +42,9 @@ const CardResult = ({ doctor }) => {
     navigate(`/doctor/${doctor.idDoctor}`);
   };
   const { chatUser } = useSelector((state) => state.chat);
-
+  const { profile } = useSelector((state) => state.profile);
   const token = getToken();
-  console.log(token);
+
 
   const checkExist = async (user) => {
     try {
@@ -53,6 +54,7 @@ const CardResult = ({ doctor }) => {
         const userChatsData = userChatsDoc.data();
         const userChatIds = userChatsData.chats.map((chat) => chat.receiverId);
         if (userChatIds.includes(chatUser.id)) {
+          console.log("userChatsData", userChatsData);
           return false;
         } else {
           return true;
@@ -70,25 +72,25 @@ const CardResult = ({ doctor }) => {
     const userChatsRef = collection(db, "userchats");
 
     try {
-      let user = null;
+      let DoctorChat = null;
       const userRef = collection(db, "users");
-
+      console.log(`huy1`, doctor);
       const q = query(userRef, where("email", "==", doctor.email));
 
       const querySnapShot = await getDocs(q);
 
       if (!querySnapShot.empty) {
-        user = querySnapShot.docs[0].data();
+        DoctorChat = querySnapShot.docs[0].data();
       }
-      console.log(user);
-      const exist = await checkExist(user);
+      console.log(`huy`, DoctorChat);
+      const exist = await checkExist(DoctorChat);
       if (exist) {
         const newChatRef = doc(chatRef);
         await setDoc(newChatRef, {
           createdAt: serverTimestamp(),
           messages: [],
         });
-        await updateDoc(doc(userChatsRef, user.id), {
+        await updateDoc(doc(userChatsRef, DoctorChat.id), {
           chats: arrayUnion({
             chatId: newChatRef.id,
             lastMessage: "",
@@ -100,10 +102,27 @@ const CardResult = ({ doctor }) => {
           chats: arrayUnion({
             chatId: newChatRef.id,
             lastMessage: "",
-            receiverId: user.id,
+            receiverId: DoctorChat.id,
             updatedAt: Date.now(),
           }),
         });
+      } else {
+        var user = null;
+        const queryUser = query(userRef, where("email", "==", profile.email));
+        const querySnapShotUser = await getDocs(queryUser);
+        if (!querySnapShot.empty) {
+          user = querySnapShotUser.docs[0].data();
+          const userChatsRef = doc(db, "userchats", user.id);
+          const userChatsSnapshot = await getDoc(userChatsRef);
+          if (userChatsSnapshot.exists()) {
+            const userChatsData = userChatsSnapshot.data();
+            // userChatsData bây giờ chứa dữ liệu của userChatsRef
+            const userChats = userChatsData?.chats?.filter(item => item.receiverId === DoctorChat.id);
+            dispatch(setChatSelected(userChats[0]?.chatId));
+            dispatch(changeChat({ chatId: userChats[0]?.chatId, user: DoctorChat }));
+          }
+        }
+
       }
       navigate("/chatting");
     } catch (err) {

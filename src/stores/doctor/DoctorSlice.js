@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   cancelDoctorAppointment,
+  changeAppointmentForPatient,
   createDoctorTimeOff,
   doctorAddCertificate,
   doctorAddEducation,
@@ -454,6 +455,24 @@ const doctorSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(doctorReschedule.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+      //=====================================
+      .addCase(changeAppointmentForPatient.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changeAppointmentForPatient.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload.statusCode !== 200) {
+          state.error = action.payload.message;
+          return;
+        }
+        state.statusCode = action.payload.statusCode;
+        state.message = action.payload.message;
+      })
+      .addCase(changeAppointmentForPatient.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
       })

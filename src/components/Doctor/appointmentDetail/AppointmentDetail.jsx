@@ -179,22 +179,27 @@ export const AppointmentDetail = () => {
                             />
                             {icon(appointmentDetail?.status)}
                         </div>
-                        {
-                            appointmentDetail?.status === 1 && (
 
-                                <div className="appointmentDetail-right__buttonView" style={{ marginTop: 50 }}>
+
+                        <div className="appointmentDetail-right__buttonView" style={{ marginTop: 50 }}>
+                            {
+                                appointmentDetail?.status === 4 && (
                                     <Button className="appointmentDetail-right__buttonEx" onClick={() => navigate("/dr.Enclinic/examination", {
                                         state: {
                                             idUser: appointmentDetail?.idUser,
                                         }
                                     })} >Examination</Button>
+                                )
+                            }
+                            {
+                                appointmentDetail?.status !== 2 && appointmentDetail?.status !== 3 && (
                                     <Button className="appointmentDetail-right__button" onClick={() => handleCancel(appointmentDetail?.idAppointment)}>Cancel</Button>
+                                )}
+                        </div>
 
-                                </div>
 
 
-                            )
-                        }
+
 
                     </div>
                     <Modal

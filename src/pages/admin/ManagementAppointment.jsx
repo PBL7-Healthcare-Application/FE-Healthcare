@@ -361,6 +361,7 @@ const ManagementAppointment = () => {
             options={[
               { value: "All", label: "All" },
               { value: 1, label: "Booked" },
+              { value: 4, label: "Waiting" },
               { value: 3, label: "Completed" },
               { value: 2, label: "Canceled" },
             ]}

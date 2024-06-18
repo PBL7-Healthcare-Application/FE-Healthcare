@@ -72,8 +72,18 @@ const AdminLayout = () => {
         }
       });
       setCountNoti(listFilter?.length);
-      dispatch(setNotify(listFilter));
-      dispatch(setNotifyOld(listFilterOld));
+      dispatch(setNotify(listFilter.map((item) => (
+        {
+          ...item,
+          timestamp: item.timestamp.toDate().toISOString()
+        }
+      ))));
+      dispatch(setNotifyOld(listFilterOld.map((item) => (
+        {
+          ...item,
+          timestamp: item.timestamp.toDate().toISOString()
+        }
+      ))));
     });
     return () => {
       unSub();
@@ -85,7 +95,7 @@ const AdminLayout = () => {
       setIsLogin(true);
       dispatch(getUserProfile());
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -111,6 +121,7 @@ const AdminLayout = () => {
 
   return (
     <Layout style={{ backgroundColor: "#fff" }}>
+
       <Sider
         trigger={null}
         collapsible
@@ -149,6 +160,9 @@ const AdminLayout = () => {
           <span className="sidebar__logout__text">Sign Out</span>
         </div>
       </Sider>
+
+
+
       <Layout style={{ backgroundColor: "#f1f5f9" }}>
         <Header className="customSlider__header">
           {isLogin ? (

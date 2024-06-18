@@ -72,7 +72,7 @@ function CardNotify({ item }) {
             className="cardNotify-font"
             style={{ fontSize: 12, fontWeight: 400 }}
           >
-            {format(item?.timestamp.toDate().toISOString())}
+            {format(item?.timestamp)}
           </span>
         </div>
       </div>

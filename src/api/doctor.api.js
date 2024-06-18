@@ -82,7 +82,7 @@ export const createTimeOff = (data) => {
   return http.post(`/Doctor/Calendar/CreateTimeOff`, data);
 };
 export const reschedule = (data) => {
-  return http.post(`/Doctor/Appointment/RescheduleAppointment`, data);
+  return http.post(`/Doctor/Appointment/ScheduleFollowupAppointment`, data);
 };
 export const updateProfile = (data) => {
   return http.put(`/Doctor/Profile/UpdateProfile`, data);
@@ -140,4 +140,7 @@ export const deleteEducation = (id) => {
 }
 export const deleteExperience = (id) => {
   return http.delete(`/Doctor/WorkingProcess/DeleteWorkingProcess/${id}`);
+}
+export const changeAppointment = (data) => {
+  return http.put(`/Doctor/Appointment/UpdateAppointment`, data);
 }

@@ -1,16 +1,19 @@
 /* eslint-disable no-unused-vars */
-import { SearchOutlined } from "@ant-design/icons";
+import { DeleteTwoTone, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./Examination.scss";
 import {
   Button,
   DatePicker,
   Divider,
+  Dropdown,
   Form,
   Image,
   Input,
   Modal,
+  Space,
   Table,
   Tabs,
+  Tag,
   Typography,
   notification,
 } from "antd";
@@ -24,6 +27,8 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  cancelDoctorAppointment,
+  changeAppointmentForPatient,
   doctorCreateMedical,
   doctorGetUserMedical,
   doctorGetlistMedical,
@@ -55,6 +60,12 @@ import { useForm } from "antd/es/form/Form";
 import { openNotificationWithIcon } from "../../../components/notification/CustomNotify";
 import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
 import { setMessage } from "../../../stores/admin/AdminSlice";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import { LuLoader } from "react-icons/lu";
+import { MdOutlineCancel } from "react-icons/md";
+import { cancelAppointment } from "../../../api/doctor.api";
+import { FaPen } from "react-icons/fa";
+import dayjs from "dayjs";
 
 const Examination = () => {
   const [api, contextHolder] = notification.useNotification();
@@ -67,13 +78,20 @@ const Examination = () => {
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const [form] = useForm();
-
+  const [isDelete, setIsDelete] = useState(false);
+  const [isCancel, setIsCancel] = useState(false);
   //=======rescheduled================================
   const [times, setTimes] = useState([]);
   const [chooseTime, setChooseTime] = useState(null);
-  const [reason, setReason] = useState(null);
+  const [cancelArr, setCancelArr] = useState([]);
   const [chooseDate, setChooseDate] = useState(null);
-
+  const [isChange, setIsChange] = useState(false);
+  const [patientRecord, setPatientRecord] = useState({
+    startTime: "",
+    endTime: "",
+    date: "",
+    idAppointment: "",
+  });
   const {
     listMedical,
     profile,
@@ -109,6 +127,7 @@ const Examination = () => {
     setTimes(schedule[0]?.times);
     setChooseDate(schedule[0]?.date);
   }, [schedule, dispatch]);
+
   const columns = [
     {
       title: "Name",
@@ -130,6 +149,45 @@ const Examination = () => {
       title: "Time",
       dataIndex: "time",
       align: "center",
+    },
+    {
+      title: "Action",
+      key: "function",
+      dataIndex: "function",
+      align: "center",
+      className: "function-box",
+      width: "20%",
+      onCell: () => {
+        return {
+          onClick: (e) => {
+            e.stopPropagation();
+          },
+        };
+      },
+      render: (text, record) => (
+        <>
+          <Space>
+            <span
+              style={{
+                fontSize: 14,
+                color: "rgb(51, 114, 254)",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setIsChange(true);
+                setPatientRecord({
+                  startTime: record?.startTime,
+                  endTime: record?.endTime,
+                  date: record?.date,
+                  idAppointment: record?.idAppointment,
+                });
+              }}
+            >
+              Reschedule
+            </span>
+          </Space>
+        </>
+      ),
     },
   ];
 
@@ -153,6 +211,10 @@ const Examination = () => {
   };
   const handlePicker = (date, dateString) => {
     setChooseDate(dateString);
+    setPatientRecord((pre) => ({
+      ...pre,
+      date: dateString,
+    }));
     const timeOff = doctorDetail?.timeOffs.filter((item) => item.status !== 2);
     const timeBreak = doctorDetail?.timeOffs.filter(
       (item) => item.status !== 1
@@ -178,14 +240,14 @@ const Examination = () => {
         date: chooseDate,
         startTime: chooseTime?.startTime,
         endTime: chooseTime?.endTime,
-        issue: reason,
+        issue: "Book an appointment for the reassessment",
         type: true,
         price: profile?.price,
         address: profile?.address,
         nameClinic: profile?.nameClinic,
       })
     );
-  }
+  };
 
   const handleCreateMedical = (values) => {
     dispatch(
@@ -211,6 +273,13 @@ const Examination = () => {
       dispatch(doctorGetlistMedical());
       setIsCreate(false);
       setUser(null);
+      setIsChange(false);
+      setPatientRecord({
+        startTime: "",
+        endTime: "",
+        date: "",
+        idAppointment: "",
+      });
       // setIsList(false);
       form.setFieldsValue({
         height: "",
@@ -220,7 +289,6 @@ const Examination = () => {
       });
       setChooseTime(null);
       setChooseDate(null);
-      setReason(null);
       setIsScheduled(false);
     }
     if (error !== null) {
@@ -230,11 +298,49 @@ const Examination = () => {
       setUser(null);
       setChooseTime(null);
       setChooseDate(null);
-      setReason(null);
       setIsScheduled(false);
+      setIsChange(false);
+      setPatientRecord({
+        startTime: "",
+        endTime: "",
+        date: "",
+        idAppointment: "",
+      });
     }
   }, [statusCode, dispatch, api, error]);
 
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      if (selectedRows.length > 0) {
+        setIsDelete(true);
+        setCancelArr(selectedRows);
+      } else {
+        setIsDelete(false);
+      }
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === "Disabled User",
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+  const handleCancel = () => {
+    try {
+      cancelArr.map((item) => {
+        dispatch(
+          cancelDoctorAppointment({
+            idAppointment: item?.idAppointment,
+            reason: "The patient didn't come",
+          })
+        );
+      });
+      setCancelArr([]);
+      setIsDelete(false);
+      setIsCancel(false);
+    } catch (error) {
+      openNotificationWithIcon("error", api, "", "Cancel Appointments Error");
+    }
+  };
   return (
     <div className="exam">
       <Modal
@@ -339,13 +445,6 @@ const Examination = () => {
               </div>
             </TabPane>
           </Tabs>
-          <Typography
-            className="detailDr-content__right-appointment--titleType"
-            style={{ marginTop: 20, marginBottom: 12 }}
-          >
-            Issues
-          </Typography>
-          <TextArea maxLength={100} onChange={(e) => setReason(e.target.value)} />
 
           <Button
             className="detailDr-content__right-appointment__button"
@@ -357,12 +456,166 @@ const Examination = () => {
           </Button>
         </div>
       </Modal>
+      <Modal
+        open={isCancel}
+        onCancel={() => setIsCancel(false)}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
+      >
+        <div className="modalDelete">
+          <span
+            className="setting-font"
+            style={{ color: "#404040", fontSize: 18, fontWeight: 500 }}
+          >
+            Are you sure you want to cancel appointments?
+          </span>
+          <div className="modalDelete-btn">
+            <Button className="modalDelete-btn__Delete" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        open={isChange}
+        onCancel={() => {
+          setIsChange(false);
+        }}
+        okButtonProps={{
+          style: { display: "none" },
+        }}
+        cancelButtonProps={{
+          style: { display: "none" },
+        }}
+        width={400}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div
+          className="detailDr-content__right-appointment"
+          style={{ width: 300, marginTop: 30 }}
+        >
+          <Typography
+            className="detailDr-content__right-appointment--titleType"
+            style={{ marginTop: 16, marginBottom: 12 }}
+          >
+            Availability
+          </Typography>
+          <DatePicker
+            style={{ width: "100%", height: 40, marginBottom: 10 }}
+            disabledDate={disabledDate}
+            onChange={handlePicker}
+            value={dayjs(patientRecord.date)}
+          />
+          <Tabs size="middle" className="t-tabs-nav-list">
+            <TabPane tab="Morning" key="1" className="t-tabs-tab">
+              <div className="detailDr-content__right-appointment__time">
+                {countTime(times, "m") > 0 ? (
+                  times.map((item, index) => {
+                    if (convertTime(item?.endTime) <= 13) {
+                      return (
+                        <CardTime
+                          isBooking={item?.isBooking}
+                          startTime={item?.startTime}
+                          endTime={item?.endTime}
+                          key={index}
+                          hadleClick={(value) => {
+                            setPatientRecord((pre) => ({
+                              ...pre,
+                              startTime: value.startTime,
+                              endTime: value.endTime,
+                            }));
+                            dispatch(setIsTimeSelected(value));
+                          }}
+                        />
+                      );
+                    }
+                  })
+                ) : (
+                  <NotAvailable />
+                )}
+              </div>
+            </TabPane>
+            <TabPane tab="Afternoon" key="2" className="t-tabs-tab">
+              <div className="detailDr-content__right-appointment__time">
+                {countTime(times, "a") > 0 ? (
+                  times.map((item, index) => {
+                    if (
+                      convertTime(item?.startTime) >= 13 &&
+                      convertTime(item?.endTime) <= 18
+                    ) {
+                      return (
+                        <CardTime
+                          isBooking={item?.isBooking}
+                          startTime={item?.startTime}
+                          endTime={item?.endTime}
+                          key={index}
+                          hadleClick={(value) => {
+                            setPatientRecord((pre) => ({
+                              ...pre,
+                              startTime: value.startTime,
+                              endTime: value.endTime,
+                            }));
+                            dispatch(setIsTimeSelected(value));
+                          }}
+                        />
+                      );
+                    }
+                  })
+                ) : (
+                  <NotAvailable />
+                )}
+              </div>
+            </TabPane>
+            <TabPane tab="Evening" key="3" className="t-tabs-tab">
+              <div className="detailDr-content__right-appointment__time">
+                {countTime(times, "e") > 0 ? (
+                  times.map((item, index) => {
+                    console.log(item);
+                    if (convertTime(item?.startTime) >= 18) {
+                      return (
+                        <CardTime
+                          isBooking={item?.isBooking}
+                          startTime={item?.startTime}
+                          endTime={item?.endTime}
+                          key={index}
+                          hadleClick={(value) => {
+                            setPatientRecord((pre) => ({
+                              ...pre,
+                              startTime: value.startTime,
+                              endTime: value.endTime,
+                            }));
+                            dispatch(setIsTimeSelected(value));
+                          }}
+                        />
+                      );
+                    }
+                  })
+                ) : (
+                  <NotAvailable />
+                )}
+              </div>
+            </TabPane>
+          </Tabs>
+
+          <Button
+            className="detailDr-content__right-appointment__button"
+            onClick={() => dispatch(changeAppointmentForPatient(patientRecord))}
+            loading={loading}
+          >
+            Reschedule
+          </Button>
+        </div>
+      </Modal>
       <div className="exam_left">
-        <div className="exam_left-search">
+        <div className="exam_left-search" style={{ flexDirection: "row" }}>
           <div
             className="search-box-content__third"
             style={{
-              width: 500,
+              width: "80%",
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
@@ -387,6 +640,20 @@ const Examination = () => {
               Search
             </Button>
           </div>
+          {isDelete && (
+            <Button
+              className="Schedule-content__left-button"
+              style={{
+                height: 43,
+                backgroundColor: "#fff",
+                color: "#ef4444",
+                border: "1px solid #ef4444",
+              }}
+              onClick={() => setIsCancel(true)}
+            >
+              Cancel
+            </Button>
+          )}
         </div>
         <div className="exam_left-content exam_left-search">
           {!isList ? (
@@ -406,6 +673,10 @@ const Examination = () => {
                 </Typography>
               </div>
               <Table
+                rowSelection={{
+                  type: "checkbox",
+                  ...rowSelection,
+                }}
                 pagination={false}
                 columns={columns}
                 dataSource={listMedical.map((item, index) => ({
@@ -415,6 +686,7 @@ const Examination = () => {
                   phone: item.phoneNumber,
                   date: item.date.split("T")[0],
                   time: `${item.startTime} - ${item.endTime}`,
+                  key: item?.idAppointment,
                 }))}
                 onRow={(record, rowIndex) => {
                   return {
@@ -477,7 +749,7 @@ const Examination = () => {
                   style={{ width: "120px" }}
                   onClick={() => setIsScheduled(true)}
                 >
-                  Reschedule
+                  Re-examine
                 </Button>
                 {!isCreate && (
                   <Button

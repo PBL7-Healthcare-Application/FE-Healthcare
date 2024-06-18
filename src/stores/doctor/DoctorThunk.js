@@ -5,6 +5,7 @@ import {
   addExperience,
   addMedical,
   cancelAppointment,
+  changeAppointment,
   createTimeOff,
   deleteCertificate,
   deleteEducation,
@@ -294,6 +295,17 @@ export const doctorReschedule = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await reschedule(data);
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const changeAppointmentForPatient = createAsyncThunk(
+  "doctor/changeAppointmentForPatient",
+  async (data, thunkApi) => {
+    try {
+      const response = await changeAppointment(data);
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

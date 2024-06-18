@@ -15,6 +15,7 @@ const ListUser = () => {
   const { chatUser } = useSelector((state) => state.chat);
 
   const handleSelect = async (chat) => {
+    console.log(`tesst`, chat);
     dispatch(setChatSelected(chat.chatId));
     const userChats = chats.map((item) => {
       const { user, ...rest } = item;

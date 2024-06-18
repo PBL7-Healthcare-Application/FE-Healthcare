@@ -57,7 +57,7 @@ const DoctorLayout = () => {
       dispatch(getDoctorProfile());
       dispatch(getDoctorCalendar());
     }
-    return () => {};
+    return () => { };
   }, [token, dispatch]);
 
   useEffect(() => {
@@ -149,8 +149,18 @@ const DoctorLayout = () => {
         }
       });
       setCountNoti(listFilter?.length);
-      dispatch(setNotify(listFilter));
-      dispatch(setNotifyOld(listFilterOld));
+      dispatch(setNotify(listFilter.map((item) => (
+        {
+          ...item,
+          timestamp: item.timestamp?.toDate().toISOString()
+        }
+      ))));
+      dispatch(setNotifyOld(listFilterOld.map((item) => (
+        {
+          ...item,
+          timestamp: item.timestamp?.toDate().toISOString()
+        }
+      ))));
     });
 
     return () => {

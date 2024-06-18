@@ -68,31 +68,31 @@ const ManagementPartner = () => {
       align: "center",
       width: "15%",
     },
-    {
-      title: "Action",
-      key: "function",
-      dataIndex: "function",
-      align: "center",
-      className: "function-box",
-      width: "10%",
-      onCell: () => {
-        return {
-          onClick: (e) => {
-            e.stopPropagation();
-          },
-        };
-      },
-      render: () => (
-        <>
-          <Space size={"middle"}>
-            <DeleteTwoTone
-              twoToneColor="#EB1B36"
-              className="function-box__delete"
-            />
-          </Space>
-        </>
-      ),
-    },
+    // {
+    //   title: "Action",
+    //   key: "function",
+    //   dataIndex: "function",
+    //   align: "center",
+    //   className: "function-box",
+    //   width: "10%",
+    //   onCell: () => {
+    //     return {
+    //       onClick: (e) => {
+    //         e.stopPropagation();
+    //       },
+    //     };
+    //   },
+    //   render: () => (
+    //     <>
+    //       <Space size={"middle"}>
+    //         <DeleteTwoTone
+    //           twoToneColor="#EB1B36"
+    //           className="function-box__delete"
+    //         />
+    //       </Space>
+    //     </>
+    //   ),
+    // },
   ];
 
   const getSpecialties = async () => {

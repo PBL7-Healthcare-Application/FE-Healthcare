@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 const createTimeBooking = (start, end, durationPerAppointment) => {
   var current = new Date();
   var schedule = [];
@@ -381,5 +383,43 @@ export const compareTime = (time) => {
     return true;
   } else {
     return false;
+  }
+};
+
+export const viewInforTimeOffIsFix = (timeOff, day, time) => {
+  let newDate = null;
+  if (day.date) {
+    newDate = day.date.split("T")[0];
+  }
+  const timeArr = time.split(" - ");
+  const item = timeOff.find((item) => {
+    if (
+      // item.date.split("T")[0] === newDate &&
+      item.isFixed && item.startTime === timeArr[0] &&
+      item.endTime === timeArr[1]
+    ) {
+      // console.log('item', item)
+      return item;
+    }
+  });
+
+  if (item) {
+
+    if (item.date.split("T")[0] !== newDate) {
+
+      var state = format(new Date(item.date), "EEEE");
+      if (state === day.accessor) {
+        console.log('item', item)
+        return {
+          item: item.reason,
+          status: "busy"
+        };
+      }
+
+    } else {
+      return null;
+    }
+  } else {
+    return null;
   }
 };

@@ -333,7 +333,7 @@ const ManagementUser = () => {
             onChange={handleRoleChange}
             options={[
               { value: 0, label: "All" },
-              { value: 1, label: "User" },
+              { value: 1, label: "Patient" },
               { value: 2, label: "Doctor" },
             ]}
           />
@@ -358,7 +358,7 @@ const ManagementUser = () => {
           dataSource={listUser.map((item, index) => ({
             id: item?.idUser,
             key: index,
-            name: item?.email,
+            name: item?.name,
             created: item?.createdDate ? item?.createdDate.split("T")[0] : "--",
             role: tabRole(item?.role),
             status: (
