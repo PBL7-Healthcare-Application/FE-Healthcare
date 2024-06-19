@@ -16,6 +16,7 @@ import { openNotificationWithIcon } from "../../../components/notification/Custo
 import doctorDefault from "../../../assets/images/doctor.jpeg";
 import personDefault from "../../../assets/images/personDefault.png";
 import { setError, setStatusCode } from "../../../stores/user/UserSlice";
+import NotFound from "../../../components/cardAppointment/NotFound";
 const Appointment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -85,7 +86,7 @@ const Appointment = () => {
   return (
     <div className="appointment-main">
       {contextHolder}
-      {closeInfor && (
+      {closeInfor && appointment && (
         <div
           className="appointment-content appointment-noti appointment-font"
           style={{ marginBottom: 40, position: "relative" }}
@@ -152,244 +153,257 @@ const Appointment = () => {
           />
         </div>
       )}
-      <div className="appointment-content">
-        <div className="appointment-left appointment-box">
-          <div>
-            <Typography className="appointment-left__title">
-              Information
-            </Typography>
-            <div className="appointment-left__infor">
-              <div className="appointment-left__infor--box">
-                <Image
-                  src={user?.avatar}
-                  width={60}
-                  className="appointment-left__infor--img"
-                  preview={false}
-                  fallback={personDefault}
-                />
-                <div className="appointment-left__infor--left">
+      {console.log("Appointment", appointment)}
+      {appointment ? (
+        <div className="appointment-content">
+          <div className="appointment-left appointment-box">
+            <div>
+              <Typography className="appointment-left__title">
+                Information
+              </Typography>
+              <div className="appointment-left__infor">
+                <div className="appointment-left__infor--box">
+                  <Image
+                    src={user?.avatar}
+                    width={60}
+                    className="appointment-left__infor--img"
+                    preview={false}
+                    fallback={personDefault}
+                  />
+                  <div className="appointment-left__infor--left">
+                    <Typography
+                      className="appointment-font"
+                      style={{ fontSize: 16, fontWeight: 600 }}
+                    >
+                      {user?.name}
+                    </Typography>
+                  </div>
+                </div>
+
+                <Divider style={{ margin: "15px 0" }} />
+
+                <div className="appointment-left__infor--phone">
+                  <MailOutlined style={{ fontSize: 19, color: "#6c81a0" }} />
                   <Typography
                     className="appointment-font"
-                    style={{ fontSize: 16, fontWeight: 600 }}
+                    style={{ fontSize: 16, fontWeight: 400, color: "#6c81a0" }}
                   >
-                    {user?.name}
+                    {user?.email}
                   </Typography>
                 </div>
               </div>
-
-              <Divider style={{ margin: "15px 0" }} />
-
-              <div className="appointment-left__infor--phone">
-                <MailOutlined style={{ fontSize: 19, color: "#6c81a0" }} />
-                <Typography
-                  className="appointment-font"
-                  style={{ fontSize: 16, fontWeight: 400, color: "#6c81a0" }}
-                >
-                  {user?.email}
-                </Typography>
-              </div>
             </div>
-          </div>
-          <div style={{ marginTop: 16 }}>
-            <Typography className="appointment-left__title">
-              Survey questions
-            </Typography>
-            <TextArea
-              placeholder="Enter your issue ..."
-              autoSize={{
-                minRows: 2,
-                maxRows: 6,
-              }}
-              onChange={(e) => {
-                setIsMess(false);
-                setInputIssue(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.keyCode === 32 && inputIssue.length === 0) {
-                  e.preventDefault();
-                }
-              }}
-              className="textArea"
-              required
-              style={{ marginBottom: 10 }}
-            />
-            {isMess && (
-              <span style={{ color: "red" }}>Please enter your issues</span>
-            )}
-          </div>
-        </div>
-        <div className="appointment-right" style={{ border: 0 }}>
-          <div className="appointment-box">
-            <Typography className="appointment-left__title">
-              Your appointment
-            </Typography>
-            <div className="appointment-left__infor--box">
-              <Image
-                src={appointment?.doctor.avatar}
-                width={90}
-                className="appointment-left__infor--img"
-                fallback={doctorDefault}
-              />
-              <div
-                className="appointment-left__infor--left"
-                style={{ justifyContent: "flex-start" }}
-              >
-                <Typography
-                  className="appointment-font"
-                  style={{ fontSize: 20, fontWeight: 500, letterSpacing: 0.4 }}
-                >
-                  {appointment?.doctor.name}
-                </Typography>
-                <Typography
-                  className="appointment-font"
-                  style={{ fontSize: 15, fontWeight: 400, color: "#6c81a0" }}
-                >
-                  {appointment?.doctor.medicalSpecialty}
-                </Typography>
-              </div>
-            </div>
-            <div style={{ marginTop: 20 }}>
-              <Typography
-                className="appointment-font"
-                style={{ fontSize: 16, fontWeight: 500, color: "#6c81a0" }}
-              >
-                Information
+            <div style={{ marginTop: 16 }}>
+              <Typography className="appointment-left__title">
+                Survey questions
               </Typography>
-              <div className="appointment-right__box">
-                <div className="appointment-right__content">
-                  {/* <ScheduleOutlined className="appointment-right__content-icon" /> */}
-                  <Image
-                    src={calender}
-                    width={28}
-                    className="appointment-right__content-icon"
-                    preview={false}
-                  />
-                  <div>
-                    <Typography
-                      className="appointment-font"
-                      style={{
-                        fontSize: 16,
-                        fontWeight: 600,
-                        letterSpacing: 0.4,
-                      }}
-                    >
-                      {appointment?.appointment.startTime} -{" "}
-                      {appointment?.appointment.endTime}
-                    </Typography>
-                    <Typography
-                      className="appointment-font"
-                      style={{
-                        fontSize: 15,
-                        fontWeight: 400,
-                        color: "#6c81a0",
-                      }}
-                    >
-                      {formatDate(appointment?.appointment.date)}
-                    </Typography>
-                  </div>
-                </div>
-                <div className="appointment-right__content">
-                  <Image
-                    src={location}
-                    width={28}
-                    className="appointment-right__content-icon"
-                    preview={false}
-                  />
-                  <div>
-                    <Typography
-                      className="appointment-font"
-                      style={{
-                        fontSize: 16,
-                        fontWeight: 600,
-                        letterSpacing: 0.4,
-                      }}
-                    >
-                      {appointment?.doctor.nameClinic}
-                    </Typography>
-                    <Typography
-                      className="appointment-font"
-                      style={{
-                        fontSize: 15,
-                        fontWeight: 400,
-                        color: "#6c81a0",
-                      }}
-                    >
-                      {appointment?.doctor.address
-                        ? appointment?.doctor.address
-                        : "--"}
-                    </Typography>
-                  </div>
-                </div>
-                <div className="appointment-right__content">
-                  <Image
-                    src={dolar}
-                    width={28}
-                    className="appointment-right__content-icon"
-                    preview={false}
-                  />
-                  <div>
-                    <Typography
-                      className="appointment-font"
-                      style={{
-                        fontSize: 16,
-                        fontWeight: 600,
-                        letterSpacing: 0.4,
-                        color: "#D84023",
-                      }}
-                    >
-                      VND {appointment?.doctor.price.toLocaleString("vi-VN")}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
+              <TextArea
+                placeholder="Enter your issue ..."
+                autoSize={{
+                  minRows: 2,
+                  maxRows: 6,
+                }}
+                onChange={(e) => {
+                  setIsMess(false);
+                  setInputIssue(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 32 && inputIssue.length === 0) {
+                    e.preventDefault();
+                  }
+                }}
+                className="textArea"
+                required
+                style={{ marginBottom: 10 }}
+              />
+              {isMess && (
+                <span style={{ color: "red" }}>Please enter your issues</span>
+              )}
             </div>
           </div>
-
-          {/* Phuong thuc thanh toan */}
-          <div className="appointment-box" style={{ marginTop: 30 }}>
-            <Typography className="appointment-left__title">
-              Payment
-            </Typography>
-            <div
-              className="appointment-right__box appointment-right__payment"
-              style={{ border: "1px solid rgb(45, 135, 243)" }}
-            >
-              <div className="appointment-right__payment-left">
+          <div className="appointment-right" style={{ border: 0 }}>
+            <div className="appointment-box">
+              <Typography className="appointment-left__title">
+                Your appointment
+              </Typography>
+              <div className="appointment-left__infor--box">
                 <Image
-                  src={wallet}
-                  width={28}
-                  className="appointment-right__content-icon"
+                  src={appointment?.doctor.avatar}
+                  width={90}
+                  className="appointment-left__infor--img"
+                  fallback={doctorDefault}
                 />
+                <div
+                  className="appointment-left__infor--left"
+                  style={{ justifyContent: "flex-start" }}
+                >
+                  <Typography
+                    className="appointment-font"
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 500,
+                      letterSpacing: 0.4,
+                    }}
+                  >
+                    {appointment?.doctor.name}
+                  </Typography>
+                  <Typography
+                    className="appointment-font"
+                    style={{ fontSize: 15, fontWeight: 400, color: "#6c81a0" }}
+                  >
+                    {appointment?.doctor.medicalSpecialty}
+                  </Typography>
+                </div>
+              </div>
+              <div style={{ marginTop: 20 }}>
                 <Typography
                   className="appointment-font"
-                  style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.4 }}
+                  style={{ fontSize: 16, fontWeight: 500, color: "#6c81a0" }}
                 >
-                  Cash Payment
+                  Information
                 </Typography>
+                <div className="appointment-right__box">
+                  <div className="appointment-right__content">
+                    {/* <ScheduleOutlined className="appointment-right__content-icon" /> */}
+                    <Image
+                      src={calender}
+                      width={28}
+                      className="appointment-right__content-icon"
+                      preview={false}
+                    />
+                    <div>
+                      <Typography
+                        className="appointment-font"
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 600,
+                          letterSpacing: 0.4,
+                        }}
+                      >
+                        {appointment?.appointment.startTime} -{" "}
+                        {appointment?.appointment.endTime}
+                      </Typography>
+                      <Typography
+                        className="appointment-font"
+                        style={{
+                          fontSize: 15,
+                          fontWeight: 400,
+                          color: "#6c81a0",
+                        }}
+                      >
+                        {formatDate(appointment?.appointment.date)}
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className="appointment-right__content">
+                    <Image
+                      src={location}
+                      width={28}
+                      className="appointment-right__content-icon"
+                      preview={false}
+                    />
+                    <div>
+                      <Typography
+                        className="appointment-font"
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 600,
+                          letterSpacing: 0.4,
+                        }}
+                      >
+                        {appointment?.doctor.nameClinic}
+                      </Typography>
+                      <Typography
+                        className="appointment-font"
+                        style={{
+                          fontSize: 15,
+                          fontWeight: 400,
+                          color: "#6c81a0",
+                        }}
+                      >
+                        {appointment?.doctor.address
+                          ? appointment?.doctor.address
+                          : "--"}
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className="appointment-right__content">
+                    <Image
+                      src={dolar}
+                      width={28}
+                      className="appointment-right__content-icon"
+                      preview={false}
+                    />
+                    <div>
+                      <Typography
+                        className="appointment-font"
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 600,
+                          letterSpacing: 0.4,
+                          color: "#D84023",
+                        }}
+                      >
+                        VND {appointment?.doctor.price.toLocaleString("vi-VN")}
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <Radio checked />
             </div>
 
-            <div
-              style={{
-                marginTop: 20,
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Button
-                className="appointment-right__button"
-                onClick={() => handleBooking()}
-                loading={loading}
-                disabled={!inputIssue}
+            {/* Phuong thuc thanh toan */}
+            <div className="appointment-box" style={{ marginTop: 30 }}>
+              <Typography className="appointment-left__title">
+                Payment
+              </Typography>
+              <div
+                className="appointment-right__box appointment-right__payment"
+                style={{ border: "1px solid rgb(45, 135, 243)" }}
               >
-                Confirm
-              </Button>
+                <div className="appointment-right__payment-left">
+                  <Image
+                    src={wallet}
+                    width={28}
+                    className="appointment-right__content-icon"
+                  />
+                  <Typography
+                    className="appointment-font"
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 600,
+                      letterSpacing: 0.4,
+                    }}
+                  >
+                    Cash Payment
+                  </Typography>
+                </div>
+                <Radio checked />
+              </div>
+
+              <div
+                style={{
+                  marginTop: 20,
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Button
+                  className="appointment-right__button"
+                  onClick={() => handleBooking()}
+                  loading={loading}
+                  disabled={!inputIssue}
+                >
+                  Confirm
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <NotFound content={"You don't have any appointment"} />
+      )}
     </div>
   );
 };
