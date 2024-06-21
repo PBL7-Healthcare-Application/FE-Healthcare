@@ -451,6 +451,11 @@ const doctorSlice = createSlice({
           state.error = action.payload.message;
           return;
         }
+        if (action.payload.message === "Successfully rescheduled appointment!") {
+          state.statusCode = 300;
+          state.message = action.payload.message;
+          return
+        }
         state.statusCode = action.payload.statusCode;
         state.message = action.payload.message;
       })

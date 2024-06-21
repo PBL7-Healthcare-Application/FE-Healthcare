@@ -81,7 +81,7 @@ const DetailDoctor = () => {
   }
   useEffect(() => {
     if (doctorDetail === null) {
-      dispatch(setIsSelected(0));
+      // dispatch(setIsSelected(0));
       const id = location?.pathname?.split("/");
       dispatch(getDoctorDetail(id[id.length - 1]));
       // console.log("doctorDetail", doctorDetail);
@@ -185,56 +185,58 @@ const DetailDoctor = () => {
   return (
     <div className="detailDr-main" id="detail">
       {contextHolder}
-      {loading ? (
-        <div
-          style={{ width: "100%", display: "flex", justifyContent: "center" }}
-        >
-          <div style={{ width: 1107 }}>
-            <CustomSkeleton />
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="detailDr-content">
-            <div className="detailDr-content__left">
-              <div className="detailDr-content__left-profile">
-                <Image
-                  src={doctorDetail?.avatar}
-                  width={150}
-                  style={{ borderRadius: 6 }}
-                  preview={false}
-                  fallback={doctorDefault}
-                />
-                <div className="detailDr-content__left-profile--infor">
-                  <div>
-                    <Typography className="detailDr-content__left-profile--infor__name">
-                      {doctorDetail?.name}
-                    </Typography>
-                    <Typography className="detailDr-content__left-profile--infor__specialty">
-                      {doctorDetail?.medicalSpecialty}
-                    </Typography>
-                  </div>
-                  {doctorDetail?.rateAverage && (
-                    <div>
-                      <Space
-                        className="result-third__rate-item"
-                        style={{
-                          backgroundColor: "rgb(226 232 240)",
-                          marginTop: 3,
-                        }}
-                      >
-                        <StarFilled className="result-third__rate-icon" />
-                        <Typography className="result-third__rate-text">
-                          {parseFloat(doctorDetail?.rateAverage).toFixed(1)}/5
-                        </Typography>
-                      </Space>
-                    </div>
-                  )}
-                </div>
+
+
+      <div className="detailDr-content">
+        <div className="detailDr-content__left">
+          <div className="detailDr-content__left-profile">
+            <Image
+              src={doctorDetail?.avatar}
+              width={150}
+              style={{ borderRadius: 6 }}
+              preview={false}
+              fallback={doctorDefault}
+            />
+            <div className="detailDr-content__left-profile--infor">
+              <div>
+                <Typography className="detailDr-content__left-profile--infor__name">
+                  {doctorDetail?.name}
+                </Typography>
+                <Typography className="detailDr-content__left-profile--infor__specialty">
+                  {doctorDetail?.medicalSpecialty}
+                </Typography>
               </div>
-              <div style={{ marginTop: 20 }}>
-                <Tabs onChange={(key) => handleTab(key)}>
-                  <TabPane tab="Information" key="1">
+              {doctorDetail?.rateAverage && (
+                <div>
+                  <Space
+                    className="result-third__rate-item"
+                    style={{
+                      backgroundColor: "rgb(226 232 240)",
+                      marginTop: 3,
+                    }}
+                  >
+                    <StarFilled className="result-third__rate-icon" />
+                    <Typography className="result-third__rate-text">
+                      {parseFloat(doctorDetail?.rateAverage).toFixed(1)}/5
+                    </Typography>
+                  </Space>
+                </div>
+              )}
+            </div>
+          </div>
+          <div style={{ marginTop: 20 }}>
+            <Tabs onChange={(key) => handleTab(key)}>
+              <TabPane tab="Information" key="1">
+                {loading ? (
+                  <div
+                    style={{ width: "100%", display: "flex", justifyContent: "center" }}
+                  >
+                    <div style={{ width: 1107 }}>
+                      <CustomSkeleton />
+                    </div>
+                  </div>
+                ) : (
+                  <>
                     <div className="detailDr-content__left-information__profile">
                       <div className="detailDr-divider"></div>
                       <Typography className="detailDr-content__left-information__profile-title">
@@ -575,238 +577,222 @@ const DetailDoctor = () => {
                         </div>
                       </div>
                     </div>
-                  </TabPane>
-                  {doctorDetail?.rateAverage && (
-                    <TabPane tab="Review" key="2">
-                      <div className="detailDr-content__left-information__profile rate">
-                        <div className="rate__box">
-                          <div className="rate__box__child">
-                            <span className="rate__text rate__totalPoint">
-                              {parseFloat(doctorDetail?.rateAverage).toFixed(1)}
-                              <span className="rate__text rate__scale-point">
-                                /5
-                              </span>
-                            </span>
-                            <span
-                              className="rate__text rate__review"
-                              style={{ width: "100%" }}
-                            >
-                              {doctorDetail?.numberOfComment} reviews
-                            </span>
-                          </div>
-                          <div>
-                            <Rate value={doctorDetail?.rateAverage} />
-                          </div>
-                        </div>
-                        <div
+                  </>
+                )}
+              </TabPane>
+              {doctorDetail?.rateAverage && (
+                <TabPane tab="Review" key="2">
+                  <div className="detailDr-content__left-information__profile rate">
+                    <div className="rate__box">
+                      <div className="rate__box__child">
+                        <span className="rate__text rate__totalPoint">
+                          {parseFloat(doctorDetail?.rateAverage).toFixed(1)}
+                          <span className="rate__text rate__scale-point">
+                            /5
+                          </span>
+                        </span>
+                        <span
+                          className="rate__text rate__review"
+                          style={{ width: "100%" }}
+                        >
+                          {doctorDetail?.numberOfComment} reviews
+                        </span>
+                      </div>
+                      <div>
+                        <Rate value={doctorDetail?.rateAverage} />
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        width: "100%",
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
                           style={{
-                            width: "100%",
-                            flex: 1,
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 10,
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
                           }}
                         >
-                          <div className="rate__item">
-                            <span
-                              className="rate__text rate__review"
-                              style={{
-                                fontSize: 14,
-                                fontWeight: 400,
-                                marginTop: 17,
-                              }}
-                            >
-                              5 star
-                            </span>
-                            <div style={{ width: "100%" }}>
-                              <Progress
-                                percent={
-                                  tableOfrate?.five > 0
-                                    ? (tableOfrate?.five /
-                                        doctorDetail?.numberOfComment) *
-                                      100
-                                    : 100
-                                }
-                                size="small"
-                                showInfo={false}
-                                strokeColor={
-                                  tableOfrate?.five > 0
-                                    ? "rgb(255, 181, 33)"
-                                    : "#fef9c3"
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="rate__item">
-                            <span
-                              className="rate__text rate__review"
-                              style={{
-                                fontSize: 14,
-                                fontWeight: 400,
-                                marginTop: 17,
-                              }}
-                            >
-                              4 star
-                            </span>
-                            <div style={{ width: "100%" }}>
-                              <Progress
-                                percent={
-                                  tableOfrate?.four > 0
-                                    ? (tableOfrate?.four /
-                                        doctorDetail?.numberOfComment) *
-                                      100
-                                    : 100
-                                }
-                                size="small"
-                                showInfo={false}
-                                strokeColor={
-                                  tableOfrate?.four > 0
-                                    ? "rgb(255, 181, 33)"
-                                    : "#fef9c3"
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="rate__item">
-                            <span
-                              className="rate__text rate__review"
-                              style={{
-                                fontSize: 14,
-                                fontWeight: 400,
-                                marginTop: 17,
-                              }}
-                            >
-                              3 star
-                            </span>
-                            <div style={{ width: "100%" }}>
-                              <Progress
-                                percent={
-                                  tableOfrate?.three > 0
-                                    ? (tableOfrate?.three /
-                                        doctorDetail?.numberOfComment) *
-                                      100
-                                    : 100
-                                }
-                                size="small"
-                                showInfo={false}
-                                strokeColor={
-                                  tableOfrate?.three > 0
-                                    ? "rgb(255, 181, 33)"
-                                    : "#fef9c3"
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="rate__item">
-                            <span
-                              className="rate__text rate__review"
-                              style={{
-                                fontSize: 14,
-                                fontWeight: 400,
-                                marginTop: 17,
-                              }}
-                            >
-                              2 star
-                            </span>
-                            <div style={{ width: "100%" }}>
-                              <Progress
-                                percent={
-                                  tableOfrate?.two > 0
-                                    ? (tableOfrate?.two /
-                                        doctorDetail?.numberOfComment) *
-                                      100
-                                    : 100
-                                }
-                                size="small"
-                                showInfo={false}
-                                strokeColor={
-                                  tableOfrate?.two > 0
-                                    ? "rgb(255, 181, 33)"
-                                    : "#fef9c3"
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="rate__item">
-                            <span
-                              className="rate__text rate__review"
-                              style={{
-                                fontSize: 14,
-                                fontWeight: 400,
-                                marginTop: 17,
-                              }}
-                            >
-                              1 star
-                            </span>
-                            <div style={{ width: "100%" }}>
-                              <Progress
-                                percent={
-                                  tableOfrate?.one > 0
-                                    ? (tableOfrate?.one /
-                                        doctorDetail?.numberOfComment) *
-                                      100
-                                    : 100
-                                }
-                                size="small"
-                                showInfo={false}
-                                strokeColor={
-                                  tableOfrate?.one > 0
-                                    ? "rgb(255, 181, 33)"
-                                    : "#fef9c3"
-                                }
-                              />
-                            </div>
-                          </div>
+                          5 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.five > 0
+                                ? (tableOfrate?.five /
+                                  doctorDetail?.numberOfComment) *
+                                100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.five > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
                         </div>
                       </div>
-                      <div
-                        className="detailDr-content__left-information__profile"
-                        style={{ marginTop: 50 }}
-                      >
-                        {listRate.map((item, index) => (
-                          <Rating key={index} item={item} />
-                        ))}
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          4 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.four > 0
+                                ? (tableOfrate?.four /
+                                  doctorDetail?.numberOfComment) *
+                                100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.four > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
                       </div>
-                    </TabPane>
-                  )}
-                </Tabs>
-              </div>
-            </div>
-            <div className="detailDr-content__right">
-              <div className="detailDr-content__right-appointment">
-                <Typography className="detailDr-content__right-appointment--titleType">
-                  Type of appointment
-                </Typography>
-
-                <Radio.Group
-                  style={{ width: "100%" }}
-                  value={chooseType}
-                  onChange={(e) => setChooseType(e.target.value)}
-                >
-                  <div className="detailDr-content__right-appointment--box">
-                    <div className="detailDr-content__right-appointment--box__type">
-                      <div className="detailDr-content__right-appointment--box__type-item">
-                        <Radio value={1} />
-                        <Typography className="detailDr-content__right-appointment--box__type-label">
-                          Clinic Visit
-                        </Typography>
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          3 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.three > 0
+                                ? (tableOfrate?.three /
+                                  doctorDetail?.numberOfComment) *
+                                100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.three > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
                       </div>
-                      <Typography
-                        className="detailDr-content__right-appointment--box__type-label"
-                        style={{
-                          marginLeft: 25,
-                          fontWeight: 500,
-                          color: "#185FA0",
-                        }}
-                      >
-                        VND {doctorDetail?.price}
-                      </Typography>
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          2 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.two > 0
+                                ? (tableOfrate?.two /
+                                  doctorDetail?.numberOfComment) *
+                                100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.two > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="rate__item">
+                        <span
+                          className="rate__text rate__review"
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 400,
+                            marginTop: 17,
+                          }}
+                        >
+                          1 star
+                        </span>
+                        <div style={{ width: "100%" }}>
+                          <Progress
+                            percent={
+                              tableOfrate?.one > 0
+                                ? (tableOfrate?.one /
+                                  doctorDetail?.numberOfComment) *
+                                100
+                                : 100
+                            }
+                            size="small"
+                            showInfo={false}
+                            strokeColor={
+                              tableOfrate?.one > 0
+                                ? "rgb(255, 181, 33)"
+                                : "#fef9c3"
+                            }
+                          />
+                        </div>
+                      </div>
                     </div>
-                    {/* <div className="detailDr-content__right-appointment--box__type">
+                  </div>
+                  <div
+                    className="detailDr-content__left-information__profile"
+                    style={{ marginTop: 50 }}
+                  >
+                    {listRate.map((item, index) => (
+                      <Rating key={index} item={item} />
+                    ))}
+                  </div>
+                </TabPane>
+              )}
+            </Tabs>
+          </div>
+        </div>
+        <div className="detailDr-content__right">
+          <div className="detailDr-content__right-appointment">
+            <Typography className="detailDr-content__right-appointment--titleType">
+              Type of appointment
+            </Typography>
+
+            <Radio.Group
+              style={{ width: "100%" }}
+              value={chooseType}
+              onChange={(e) => setChooseType(e.target.value)}
+            >
+              <div className="detailDr-content__right-appointment--box">
+                <div className="detailDr-content__right-appointment--box__type">
                   <div className="detailDr-content__right-appointment--box__type-item">
-                    <Radio value={2} />
+                    <Radio value={1} />
                     <Typography className="detailDr-content__right-appointment--box__type-label">
-                      Video Consult
+                      Clinic Visit
                     </Typography>
                   </div>
                   <Typography
@@ -817,128 +803,128 @@ const DetailDoctor = () => {
                       color: "#185FA0",
                     }}
                   >
-                    Free
+                    VND {doctorDetail?.price.toLocaleString('vi-VN')}
                   </Typography>
-                </div> */}
-                  </div>
-                </Radio.Group>
-
-                <Typography
-                  className="detailDr-content__right-appointment--titleType"
-                  style={{ marginTop: 16, marginBottom: 12 }}
-                >
-                  Availability
-                </Typography>
-                <div style={{ width: 315, marginBottom: 8 }}>
-                  <div className="slider-container">
-                    <Slider {...settings}>
-                      {schedule.map((item, index) => {
-                        const dateArr = item?.date.toString().split(" ");
-
-                        return (
-                          <div className="item" key={index}>
-                            <CardDay
-                              dateOfWeek={dateArr[0]}
-                              date={dateArr[2]}
-                              month={monthNameToNumber(dateArr[1])}
-                              available={
-                                item?.count
-                                  ? item.times.length - item?.count
-                                  : item.times.length
-                              }
-                              item={item}
-                              index={index}
-                              handleClick={(value, item) =>
-                                handleCardClick(value, item)
-                              }
-                            />
-                          </div>
-                        );
-                      })}
-                    </Slider>
-                  </div>
                 </div>
-                <Tabs size="middle" className="t-tabs-nav-list">
-                  <TabPane tab="Morning" key="1" className="t-tabs-tab">
-                    <div className="detailDr-content__right-appointment__time">
-                      {countTime(times, "m") > 0 ? (
-                        times.map((item, index) => {
-                          if (convertTime(item?.endTime) <= 13) {
-                            return (
-                              <CardTime
-                                isBooking={item?.isBooking}
-                                startTime={item?.startTime}
-                                endTime={item?.endTime}
-                                key={index}
-                                hadleClick={(value) => handleTimeClick(value)}
-                              />
-                            );
-                          }
-                        })
-                      ) : (
-                        <NotAvailable />
-                      )}
-                    </div>
-                  </TabPane>
-                  <TabPane tab="Afternoon" key="2" className="t-tabs-tab">
-                    <div className="detailDr-content__right-appointment__time">
-                      {countTime(times, "a") > 0 ? (
-                        times.map((item, index) => {
-                          if (
-                            convertTime(item?.startTime) >= 13 &&
-                            convertTime(item?.endTime) <= 18
-                          ) {
-                            return (
-                              <CardTime
-                                isBooking={item?.isBooking}
-                                startTime={item?.startTime}
-                                endTime={item?.endTime}
-                                key={index}
-                                hadleClick={(value) => handleTimeClick(value)}
-                              />
-                            );
-                          }
-                        })
-                      ) : (
-                        <NotAvailable />
-                      )}
-                    </div>
-                  </TabPane>
-                  <TabPane tab="Evening" key="3" className="t-tabs-tab">
-                    <div className="detailDr-content__right-appointment__time">
-                      {countTime(times, "e") > 0 ? (
-                        times.map((item, index) => {
-                          if (convertTime(item?.startTime) >= 18) {
-                            return (
-                              <CardTime
-                                isBooking={item?.isBooking}
-                                startTime={item?.startTime}
-                                endTime={item?.endTime}
-                                key={index}
-                                hadleClick={(value) => handleTimeClick(value)}
-                              />
-                            );
-                          }
-                        })
-                      ) : (
-                        <NotAvailable />
-                      )}
-                    </div>
-                  </TabPane>
-                </Tabs>
+              </div>
+            </Radio.Group>
 
-                <Button
-                  className="detailDr-content__right-appointment__button"
-                  onClick={() => handleBooking()}
-                  disabled={!chooseTime}
-                >
-                  Book
-                </Button>
+            <Typography
+              className="detailDr-content__right-appointment--titleType"
+              style={{ marginTop: 16, marginBottom: 12 }}
+            >
+              Availability
+            </Typography>
+            <div style={{ width: 315, marginBottom: 8 }}>
+              <div className="slider-container">
+                <Slider {...settings}>
+                  {schedule.map((item, index) => {
+                    const dateArr = item?.date.toString().split(" ");
+
+                    return (
+                      <div className="item" key={index}>
+                        <CardDay
+                          dateOfWeek={dateArr[0]}
+                          date={dateArr[2]}
+                          month={monthNameToNumber(dateArr[1])}
+                          available={
+                            item?.count
+                              ? item.times.length - item?.count
+                              : item.times.length
+                          }
+                          item={item}
+                          index={index}
+                          handleClick={(value, item) =>
+                            handleCardClick(value, item)
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+                </Slider>
               </div>
             </div>
+            <Tabs size="middle" className="t-tabs-nav-list">
+              <TabPane tab="Morning" key="1" className="t-tabs-tab">
+                <div className="detailDr-content__right-appointment__time">
+                  {countTime(times, "m") > 0 ? (
+                    times.map((item, index) => {
+                      if (convertTime(item?.endTime) <= 13) {
+                        return (
+                          <CardTime
+                            isBooking={item?.isBooking}
+                            startTime={item?.startTime}
+                            endTime={item?.endTime}
+                            key={index}
+                            hadleClick={(value) => handleTimeClick(value)}
+                          />
+                        );
+                      }
+                    })
+                  ) : (
+                    <NotAvailable />
+                  )}
+                </div>
+              </TabPane>
+              <TabPane tab="Afternoon" key="2" className="t-tabs-tab">
+                <div className="detailDr-content__right-appointment__time">
+                  {countTime(times, "a") > 0 ? (
+                    times.map((item, index) => {
+                      if (
+                        convertTime(item?.startTime) >= 13 &&
+                        convertTime(item?.endTime) <= 18
+                      ) {
+                        return (
+                          <CardTime
+                            isBooking={item?.isBooking}
+                            startTime={item?.startTime}
+                            endTime={item?.endTime}
+                            key={index}
+                            hadleClick={(value) => handleTimeClick(value)}
+                          />
+                        );
+                      }
+                    })
+                  ) : (
+                    <NotAvailable />
+                  )}
+                </div>
+              </TabPane>
+              <TabPane tab="Evening" key="3" className="t-tabs-tab">
+                <div className="detailDr-content__right-appointment__time">
+                  {countTime(times, "e") > 0 ? (
+                    times.map((item, index) => {
+                      if (convertTime(item?.startTime) >= 18) {
+                        return (
+                          <CardTime
+                            isBooking={item?.isBooking}
+                            startTime={item?.startTime}
+                            endTime={item?.endTime}
+                            key={index}
+                            hadleClick={(value) => handleTimeClick(value)}
+                          />
+                        );
+                      }
+                    })
+                  ) : (
+                    <NotAvailable />
+                  )}
+                </div>
+              </TabPane>
+            </Tabs>
+
+            <Button
+              className="detailDr-content__right-appointment__button"
+              onClick={() => handleBooking()}
+              disabled={!chooseTime}
+            >
+              Book
+            </Button>
           </div>
-        </>
-      )}
+        </div>
+      </div>
+
+
     </div>
   );
 };

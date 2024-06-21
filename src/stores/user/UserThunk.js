@@ -7,6 +7,7 @@ import {
   disableAccount,
   getAppointment,
   getMedicalHistory,
+  getPartner,
   getProfile,
   registerDoctor,
   updateProfile,
@@ -127,6 +128,17 @@ export const userGetMedical = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await getMedicalHistory();
+      return response;
+    } catch (error) {
+      throw thunkApi.rejectWithValue(error);
+    }
+  }
+);
+export const userGetPartner = createAsyncThunk(
+  "user/userGetPartner",
+  async (data, thunkApi) => {
+    try {
+      const response = await getPartner();
       return response;
     } catch (error) {
       throw thunkApi.rejectWithValue(error);

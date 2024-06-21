@@ -41,8 +41,9 @@ import {
 } from "../../helpers/resHelper";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { regisDoctor } from "../../stores/user/UserThunk";
+import { regisDoctor, userGetPartner } from "../../stores/user/UserThunk";
 import { setError, setStatusCode } from "../../stores/user/UserSlice";
+import { getPartner } from "../../api/user.api";
 
 const Partner = () => {
   const [isEducation, setIsEducation] = useState(false);
@@ -54,7 +55,7 @@ const Partner = () => {
   const [trainingProcesses] = useState([{}]);
   const [workingProcesses] = useState([{}]);
   const [login, setLogin] = useState(false);
-  const { statusCode, error, loading } = useSelector((state) => state.profile);
+  const { statusCode, error, loading, partner } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -119,7 +120,34 @@ const Partner = () => {
       }
     }
   }, [form]);
+  useEffect(() => {
+    if (login) {
+      dispatch(userGetPartner())
+    }
+  }, [login]);
+  useEffect(() => {
+    console.log("partner", login);
 
+    if (partner !== null) {
+      form.setFieldsValue({
+        idSpecialty: partner.idSpecialty,
+        nameClinic: partner.nameClinic,
+        businessLicense: partner.businessLicense,
+        certificates: customResCertificates(partner.certificates),
+        workingProcesses: customResExperiences(partner.workingProcesses),
+        trainingProcesses: customResTrainings(partner.trainingProcesses),
+      })
+    }
+    else {
+      form.resetFields();
+      form.setFieldsValue({
+        certificates,
+        workingProcesses,
+        trainingProcesses,
+      });
+    }
+
+  }, [partner, login])
   useEffect(() => {
     if (statusCode === 200) {
       dispatch(setStatusCode(null));
@@ -455,20 +483,28 @@ const Partner = () => {
                         </Form.Item>
                       </Form.Item>
 
-                      <Form.Item
-                        name="businessLicense"
-                        label="Upload Business License"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Business License is required",
-                          },
-                        ]}
-                      >
-                        <Upload {...propsUpload}>
-                          <Button icon={<UploadOutlined />}>Click to upload</Button>
-                        </Upload>
-                      </Form.Item>
+                      {
+                        partner !== null ? (<div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                          <span>Business License</span>
+                          <div style={{ flex: 1 }}><Image src={partner?.businessLicense} width={100} /></div>
+
+                        </div>) : (
+                          <Form.Item
+                            name="businessLicense"
+                            label="Upload Business License"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Business License is required",
+                              },
+                            ]}
+                          >
+                            <Upload {...propsUpload} listType="picture">
+                              <Button icon={<UploadOutlined />}>Click to upload</Button>
+                            </Upload>
+                          </Form.Item>
+                        )
+                      }
                     </Form.Item>
                     {/* ===== */}
                     <Typography
@@ -486,12 +522,12 @@ const Partner = () => {
                               flexDirection: "column",
                             }}
                           >
-                            {fields.map((field) => (
+                            {fields.map((field, index) => (
                               <Card
                                 size="small"
                                 key={field.key}
                                 extra={
-                                  <CloseOutlined
+                                  partner === null && <CloseOutlined
                                     onClick={() => {
                                       remove(field.name);
                                     }}
@@ -540,27 +576,37 @@ const Partner = () => {
                                     />
                                   </Form.Item>
                                 </Form.Item>
-                                <Form.Item
-                                  name={[field.name, "image"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: "Image Certificate is required",
-                                    },
-                                  ]}
-                                >
-                                  <Upload {...propsUpload}>
-                                    <Button icon={<UploadOutlined />}>
-                                      Click to upload
-                                    </Button>
-                                  </Upload>
-                                </Form.Item>
+                                {
+                                  partner !== null ? (<div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                    <span>Image</span>
+                                    <div style={{ flex: 1 }}><Image src={partner?.certificates[index].image} width={100} /></div></div>) : (
+                                    <Form.Item
+                                      name={[field.name, "image"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Image Certificate is required",
+                                        },
+                                      ]}
+                                    >
+                                      <Upload {...propsUpload} listType="picture">
+                                        <Button icon={<UploadOutlined />}>
+                                          Click to upload
+                                        </Button>
+                                      </Upload>
+                                    </Form.Item>
+                                  )
+                                }
                               </Card>
                             ))}
 
-                            <Button type="dashed" onClick={() => add()} block>
-                              + Add Item
-                            </Button>
+                            {
+                              partner === null && (
+                                <Button type="dashed" onClick={() => add()} block>
+                                  + Add Item
+                                </Button>
+                              )
+                            }
                           </div>
                         )}
                       </Form.List>
@@ -593,6 +639,7 @@ const Partner = () => {
                                   size="small"
                                   key={field.key}
                                   extra={
+                                    partner === null &&
                                     <CloseOutlined
                                       onClick={() => {
                                         remove(field.name);
@@ -687,9 +734,10 @@ const Partner = () => {
                                 </Card>
                               ))}
 
-                              <Button type="dashed" onClick={() => add()} block>
-                                + Add Item
-                              </Button>
+                              {
+                                partner === null && (<Button type="dashed" onClick={() => add()} block>
+                                  + Add Item
+                                </Button>)}
                             </div>
                           )}
                         </Form.List>
@@ -723,6 +771,7 @@ const Partner = () => {
                                   size="small"
                                   key={field.key}
                                   extra={
+                                    partner === null &&
                                     <CloseOutlined
                                       onClick={() => {
                                         remove(field.name);
@@ -817,9 +866,13 @@ const Partner = () => {
                                 </Card>
                               ))}
 
-                              <Button type="dashed" onClick={() => add()} block>
-                                + Add Item
-                              </Button>
+                              {
+                                partner === null && (
+                                  <Button type="dashed" onClick={() => add()} block>
+                                    + Add Item
+                                  </Button>
+                                )
+                              }
                             </div>
                           )}
                         </Form.List>
@@ -867,7 +920,7 @@ const Partner = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
