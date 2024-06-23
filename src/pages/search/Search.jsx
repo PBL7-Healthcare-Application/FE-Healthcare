@@ -31,7 +31,7 @@ const Search = () => {
   const [rate, setRate] = useState(0);
   const [years, setYears] = useState(0);
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000000);
+  const [maxPrice, setMaxPrice] = useState(5000000);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const contentRef = useRef(null);
@@ -41,7 +41,7 @@ const Search = () => {
     setRate(0);
     setYears(0);
     setMinPrice(0);
-    setMaxPrice(1000000);
+    setMaxPrice(5000000);
     setInputValue("");
     setRate(0);
     setFilterAvailable("");
@@ -464,7 +464,7 @@ const Search = () => {
                     </Typography>
                     <div style={{ position: "relative" }}>
                       <input
-                        value={maxPrice.toLocaleString("vi-VN")}
+                        value={maxPrice}
                         className="search-result__filter__experience--input"
                         style={{ width: "100%", paddingLeft: 10 }}
                         onChange={(e) => setMaxPrice(e.target.value)}

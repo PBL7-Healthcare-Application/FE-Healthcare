@@ -55,10 +55,12 @@ function BMI() {
                         </Radio.Group>
                     </div> */}
                     <div className="bmi-item" style={{ gap: 5 }}>
-                        <span className="health-font" style={{ fontSize: 20, color: '#1D93E3', fontWeight: 500 }}>Height</span>
+                        <span className="health-font" style={{ fontSize: 20, color: '#1D93E3', fontWeight: 500 }}>Height
+                            <span className="health-font " style={{ fontSize: 18, fontWeight: 500, color: '#1D93E3' }}>{" "}(cm)</span>
+                        </span>
                         <div>
-                            <span className="health-font" style={{ fontWeight: 600, fontSize: 30 }}>{height}</span>
-                            <span className="health-font" style={{ fontSize: 18, fontWeight: 500, color: '#1D93E3' }}>{" "}cm</span>
+                            <input className="health-font health-input" style={{ fontWeight: 600, fontSize: 30, width: 70 }} value={height} onChange={(e) => setHeight(e.target.value)} />
+                            {/* <span className="health-font" style={{ fontSize: 18, fontWeight: 500, color: '#1D93E3' }}>{" "}cm</span> */}
                         </div>
                         <div style={{ width: '100%', padding: "0 20px" }}>
                             <Slider
@@ -72,10 +74,12 @@ function BMI() {
                         </div>
                     </div>
                     <div className="bmi-item" style={{ gap: 5 }}>
-                        <span className="health-font" style={{ fontSize: 20, color: '#1D93E3', fontWeight: 500 }}>Weight</span>
+                        <span className="health-font" style={{ fontSize: 20, color: '#1D93E3', fontWeight: 500 }}>Weight
+                            <span className="health-font" style={{ fontSize: 18, fontWeight: 500, color: '#1D93E3' }}>{" "}(kg)</span>
+                        </span>
                         <div>
-                            <span className="health-font" style={{ fontWeight: 600, fontSize: 30 }}>{weight}</span>
-                            <span className="health-font" style={{ fontSize: 18, fontWeight: 500, color: '#1D93E3' }}>{" "}kg</span>
+                            <input className="health-font health-input" style={{ fontWeight: 600, fontSize: 30, width: 70 }} value={weight} onChange={(e) => setWeight(e.target.value)} />
+
                         </div>
                         <div style={{ width: '100%', padding: "0 20px" }}>
                             <Slider
@@ -90,7 +94,7 @@ function BMI() {
                     </div>
                 </div>
                 <div className="bmi-action">
-                    <Button className="bmi-button" disabled={height <= 0 && weight <= 0} onClick={caculateBMI}>Caculate</Button>
+                    <Button className="bmi-button" disabled={parseInt(height) <= 0 && parseInt(weight) <= 0} onClick={caculateBMI}>Caculate</Button>
                     <Button className="bmi-button__reset" onClick={() => {
                         // setGender(null);
                         setHeight(0);

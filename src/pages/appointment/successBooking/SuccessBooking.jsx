@@ -141,7 +141,7 @@ const SuccessBooking = () => {
                       color: "#D84023",
                     }}
                   >
-                    VND {appointment?.price.toLocaleString('vi-VN')}
+                    VND {appointment?.price && appointment?.price.toLocaleString('vi-VN')}
                   </Typography>
                 </div>
               </div>

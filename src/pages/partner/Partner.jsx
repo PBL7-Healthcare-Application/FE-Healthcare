@@ -137,6 +137,12 @@ const Partner = () => {
         workingProcesses: customResExperiences(partner.workingProcesses),
         trainingProcesses: customResTrainings(partner.trainingProcesses),
       })
+      if (partner.trainingProcesses.length > 0) {
+        setIsEducation(true);
+      }
+      if (partner.workingProcesses.length > 0) {
+        setIsExperience(true);
+      }
     }
     else {
       form.resetFields();
@@ -887,13 +893,17 @@ const Partner = () => {
                         justifyContent: "flex-end",
                       }}
                     >
-                      <Button
-                        htmlType="submit"
-                        className="partner-button"
-                        loading={loading}
-                      >
-                        Submit
-                      </Button>
+                      {
+                        partner === null && (
+                          <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="login-form-button"
+                          >
+                            Register
+                          </Button>
+                        )
+                      }
                     </Form.Item>
                   </Form>
                 ) : (

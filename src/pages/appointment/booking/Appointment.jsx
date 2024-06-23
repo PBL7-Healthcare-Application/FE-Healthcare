@@ -344,7 +344,7 @@ const Appointment = () => {
                           color: "#D84023",
                         }}
                       >
-                        VND {appointment?.doctor.price.toLocaleString("vi-VN")}
+                        VND {appointment?.doctor.price && appointment?.doctor.price.toLocaleString("vi-VN")}
                       </Typography>
                     </div>
                   </div>

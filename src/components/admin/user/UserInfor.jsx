@@ -117,6 +117,7 @@ const UserInfor = ({ type, partner }) => {
       <Image
         src={partnerDetail?.avatar}
         width={120}
+        height={120}
         className="profile-header__img"
         fallback={personDefault}
         preview={false}
@@ -172,7 +173,7 @@ const UserInfor = ({ type, partner }) => {
                   opacity: disable ? 0.5 : 1,
 
                 }}
-                loading={loading}
+
                 disabled={disable}
 
                 onClick={() => {
