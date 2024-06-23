@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { setConsent } from "firebase/analytics";
 import { userCreateRating } from "../../stores/user/UserThunk";
+import { MdCancel } from "react-icons/md";
 
 const CardAppointment = ({ appointment, type, onCancel }) => {
   const [isRate, setIsRate] = useState(false)
@@ -280,27 +281,6 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
         </div>
         <div className="cardAppointment--item">
           <Image
-            src={dolar}
-            width={23}
-            className="appointment-right__content-icon"
-            preview={false}
-          />
-          <div>
-            <Typography
-              className="appointment-font"
-              style={{
-                fontSize: 14,
-                fontWeight: 600,
-                letterSpacing: 0.4,
-              }}
-            >
-              VND {appointment?.price.toLocaleString("vi-VN")}
-            </Typography>
-          </div>
-        </div>
-
-        <div className="cardAppointment--item">
-          <Image
             src={problem}
             width={20}
             className="appointment-right__content-icon"
@@ -320,6 +300,48 @@ const CardAppointment = ({ appointment, type, onCancel }) => {
             </Typography>
           </div>
         </div>
+        <div className="cardAppointment--item">
+          <Image
+            src={dolar}
+            width={23}
+            className="appointment-right__content-icon"
+            preview={false}
+          />
+          <div>
+            <Typography
+              className="appointment-font"
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                letterSpacing: 0.4,
+              }}
+            >
+              VND {appointment?.price && appointment?.price.toLocaleString("vi-VN")}
+            </Typography>
+          </div>
+        </div>
+
+
+        {
+          appointment?.reason && (
+            <div className="cardAppointment--item">
+              <MdCancel size={24} color="#626D7C" />
+              <div>
+                <Typography
+                  className="appointment-font"
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 400,
+                    letterSpacing: 0.4,
+                    color: "#6c81a0",
+                  }}
+                >
+                  {appointment?.reason}
+                </Typography>
+              </div>
+            </div>
+          )
+        }
       </div>
       <div className="cardAppointment--buttonArea">
         <div className="cardAppointment--buttonArea__button">

@@ -137,6 +137,7 @@ const CardResult = ({ doctor }) => {
           className="result-first__img"
           preview={false}
           fallback={doctorDefault}
+          width={150}
         />
         <Space className="result-first__title">
           <Typography className="result-first__title-text">

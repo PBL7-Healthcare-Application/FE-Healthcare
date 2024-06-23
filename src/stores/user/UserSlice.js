@@ -10,6 +10,7 @@ import {
   updateUserProfile,
   userCreateRating,
   userGetMedical,
+  userGetPartner,
 } from "./UserThunk";
 
 const profileSlice = createSlice({
@@ -21,7 +22,8 @@ const profileSlice = createSlice({
     statusCode: null,
     error: null,
     ListAppointments: [],
-    MedicalHistory: []
+    MedicalHistory: [],
+    partner: null,
   },
   reducers: {
     setStatusCode: (state, action) => {
@@ -191,6 +193,20 @@ const profileSlice = createSlice({
         state.MedicalHistory = action.payload.data;
       })
       .addCase(userGetMedical.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.detail;
+      })
+
+      //=====================================
+      .addCase(userGetPartner.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userGetPartner.fulfilled, (state, action) => {
+        state.loading = false;
+        state.partner = action.payload.data;
+      })
+      .addCase(userGetPartner.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.detail;
       })

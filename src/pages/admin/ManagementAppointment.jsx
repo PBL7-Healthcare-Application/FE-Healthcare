@@ -34,6 +34,7 @@ import { da } from "date-fns/locale/da";
 import { getAppointmentDetail } from "../../api/admin.api";
 import { formatDate } from "../../helpers/timeBooking";
 import { se } from "date-fns/locale";
+import { MdCancel } from "react-icons/md";
 const ManagementAppointment = () => {
   const { paging, listAppointment } = useSelector((state) => state.admin);
   const [page, setPage] = useState(paging?.currentPage);
@@ -280,10 +281,30 @@ const ManagementAppointment = () => {
                       color: "#D84023",
                     }}
                   >
-                    VND {detail?.price.toLocaleString("vi-VN")}
+                    VND {detail?.price && detail?.price.toLocaleString("vi-VN")}
                   </Typography>
                 </div>
               </div>
+              {
+                detail?.reason && (
+                  <div className="appointment-right__content">
+                    <MdCancel size={28} color="#626D7C" />
+                    <div>
+                      <Typography
+                        className="appointment-font"
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 400,
+                          letterSpacing: 0.4,
+                          color: "#6c81a0",
+                        }}
+                      >
+                        {detail?.reason}
+                      </Typography>
+                    </div>
+                  </div>
+                )
+              }
             </div>
           </div>
 

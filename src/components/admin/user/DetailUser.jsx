@@ -18,7 +18,7 @@ import PartnerProfile from "./PartnerProfile";
 import CertificateAdmin from "../partners/CertificateAdmin";
 import ExperienceAdmin from "../partners/ExperienceAdmin";
 import EducationAdmin from "../partners/EducationAdmin";
-import { FaCheck, FaRegCheckCircle } from "react-icons/fa";
+import { FaCheck, FaExclamation, FaRegCheckCircle } from "react-icons/fa";
 
 const DetailUser = ({ partner }) => {
   const { TabPane } = Tabs;
@@ -75,7 +75,7 @@ const DetailUser = ({ partner }) => {
                 <span style={{ display: 'flex', justifyContent: 'center' }}>
                   Certification{" "}
                   <span>({partnerDetail?.certificates?.length})</span>
-                  {partner === "partner" && !partnerDetail.isVerifiedInfoCertificate && <span style={{ marginLeft: 2 }}><FaRegCheckCircle color="#4ade80" size={20} /></span>}
+                  {partner === "partner" && !partnerDetail.isVerifiedInfoCertificate && <span style={{ marginLeft: 2 }}><FaExclamation color="#ef4444" size={18} /></span>}
                 </span>
               }
             >
@@ -91,7 +91,7 @@ const DetailUser = ({ partner }) => {
                 <span style={{ display: 'flex', justifyContent: 'center' }}>
                   Experience{" "}
                   <span>({partnerDetail?.workingProcess?.length})</span>
-                  {partner === "partner" && !partnerDetail.isVerifiedInfoWorkingProcess && <span style={{ marginLeft: 2 }}><FaRegCheckCircle color="#4ade80" size={20} /></span>}
+                  {partner === "partner" && !partnerDetail.isVerifiedInfoWorkingProcess && <span style={{ marginLeft: 2 }}><FaExclamation color="#ef4444" size={18} /></span>}
                 </span>
               }
             >
@@ -107,7 +107,7 @@ const DetailUser = ({ partner }) => {
                 <span style={{ display: 'flex', justifyContent: 'center' }}>
                   Education{" "}
                   <span>({partnerDetail?.trainingProcess?.length})</span>
-                  {partner === "partner" && !partnerDetail.isVerifiedInfoTrainingProcess && <span style={{ marginLeft: 2 }}><FaRegCheckCircle color="#4ade80" size={20} /></span>}
+                  {partner === "partner" && !partnerDetail.isVerifiedInfoTrainingProcess && <span style={{ marginLeft: 2 }}><FaExclamation color="#ef4444" size={18} /></span>}
                 </span>
               }
             >

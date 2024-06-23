@@ -17,6 +17,7 @@ import { cancelDoctorAppointment } from "../../../stores/doctor/DoctorThunk";
 import { openNotificationWithIcon } from "../../notification/CustomNotify";
 import { delay } from "lodash";
 import { setError, setStatusCode } from "../../../stores/doctor/DoctorSlice";
+import { MdCancel } from "react-icons/md";
 
 export const AppointmentDetail = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -170,6 +171,26 @@ export const AppointmentDetail = () => {
                                 </Typography>
                             </div>
                         </div>
+                        {
+                            appointmentDetail?.reason && (
+                                <div className="cardAppointment--item">
+                                    <MdCancel size={25} color="#626D7C" />
+                                    <div>
+                                        <Typography
+                                            className="appointment-font"
+                                            style={{
+                                                fontSize: 14,
+                                                fontWeight: 400,
+                                                letterSpacing: 0.4,
+                                                color: "#6c81a0",
+                                            }}
+                                        >
+                                            {appointmentDetail?.reason}
+                                        </Typography>
+                                    </div>
+                                </div>
+                            )
+                        }
                         <div className="cardAppointment--item">
                             <Image
                                 src={""}

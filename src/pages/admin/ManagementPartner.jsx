@@ -58,7 +58,7 @@ const ManagementPartner = () => {
       align: "center",
     },
     {
-      title: "Created Date",
+      title: "CreatedAt",
       dataIndex: "created",
       align: "center",
     },
@@ -242,7 +242,7 @@ const ManagementPartner = () => {
             key: index + 1,
             doctor: item.name,
             specialty: item.medicalSpecialty,
-            created: item.created ? item.created : "N/A",
+            created: item.createdDate ? item.createdDate.split("T")[0] : "N/A",
             status: (
               <div
                 style={{

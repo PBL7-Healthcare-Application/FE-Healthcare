@@ -55,9 +55,9 @@ export const CardDoctor = ({ item }) => {
       </Space>
       <Space className="cardDoctor_item">
         <EnvironmentOutlined className="cardDoctor_icon" />
-        <Typography className="cardDoctor_item-text">
+        <Typography.Paragraph className="cardDoctor_item-text" ellipsis={{ rows: 2 }} style={{ marginBottom: 0 }}>
           {item?.address}
-        </Typography>
+        </Typography.Paragraph>
       </Space>
       <Button className="cardDoctor_button cardDoctor_item-text" onClick={() => {
         dispatch(getDoctorDetail(item?.idDoctor));

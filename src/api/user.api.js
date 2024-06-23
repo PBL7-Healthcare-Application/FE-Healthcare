@@ -37,3 +37,6 @@ export const getRating = (id, page = 1) => {
 export const getMedicalHistory = () => {
   return http.get("/User/MedicalRecord/GetMedicalRecord");
 }
+export const getPartner = () => {
+  return http.get("/User/Partner/Register");
+}

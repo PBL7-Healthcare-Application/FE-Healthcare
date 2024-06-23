@@ -60,7 +60,7 @@ const ManagementUser = () => {
     },
 
     {
-      title: "Created Date",
+      title: "CreatedAt",
       dataIndex: "created",
       align: "center",
     },
@@ -347,7 +347,7 @@ const ManagementUser = () => {
             options={[
               { value: "All", label: "All" },
               { value: false, label: "Active" },
-              { value: true, label: "Baned" },
+              { value: true, label: "Banned" },
             ]}
           />
         </div>
@@ -359,7 +359,7 @@ const ManagementUser = () => {
             id: item?.idUser,
             key: index,
             name: item?.name,
-            created: item?.createdDate ? item?.createdDate.split("T")[0] : "--",
+            created: item?.createdAt ? item?.createdAt.split("T")[0] : "--",
             role: tabRole(item?.role),
             status: (
               <div

@@ -62,7 +62,15 @@ const SetUpSchedule = () => {
 
   };
   useEffect(() => {
-    if (statusCode === 200) {
+    console.log("status", statusCode);
+    if (statusCode === 409) {
+      setIsConflict(true);
+      dispatch(setStatusCode(null));
+      console.log("conflict", "huy");
+      dispatch(getDoctorProfile());
+
+    }
+    else if (statusCode === 200) {
       openNotificationWithIcon(
         "success",
         api,
@@ -78,10 +86,7 @@ const SetUpSchedule = () => {
         // navigate("/dr.Enclinic/calendar");
       }, 1500);
     }
-    if (statusCode === 409) {
-      dispatch(getDoctorProfile());
-      setIsConflict(true);
-    }
+
     if (error !== null) {
       openNotificationWithIcon(
         "error",
@@ -96,7 +101,7 @@ const SetUpSchedule = () => {
         setIsConflict(false);
       }, 1500);
     }
-  }, [statusCode, api, error, dispatch, navigate]);
+  }, [statusCode, error]);
 
   useEffect(() => {
     form.setFieldsValue({
