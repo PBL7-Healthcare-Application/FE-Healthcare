@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { DeleteTwoTone, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./Examination.scss";
+import back from "../../../assets/images/back.png";
 import {
   Button,
   DatePicker,
@@ -716,10 +717,24 @@ const Examination = () => {
             </>
           ) : (
             <>
+              <div onClick={() => {
+                setIsList(false);
+                form.setFieldsValue({
+                  height: "",
+                  weight: "",
+                  temperature: "",
+                  disease: "",
+                });
+                setIsCreate(false);
+                setUser(null);
+              }}>
+                <Image src={back} preview={false} className="appointmentDetail-icon" />
+              </div>
               <div className="exam_left-content__infor">
                 <Image
                   fallback={person}
                   width={110}
+                  height={100}
                   style={{ borderRadius: "50%" }}
                   preview={false}
                   src={userMedical?.infoUser?.avatarUser}

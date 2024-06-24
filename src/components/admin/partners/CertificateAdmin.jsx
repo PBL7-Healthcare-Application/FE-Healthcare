@@ -11,16 +11,35 @@ import { FaUnlockAlt } from "react-icons/fa";
 import { BiSolidLock } from "react-icons/bi";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import { verifyAdminCertificate } from "../../../stores/admin/AdminThunk";
 const CertificateAdmin = ({ partner }) => {
   const { partnerDetail } = useSelector((state) => state.admin);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [key, setKey] = useState(0);
   const dispatch = useDispatch();
-  const handleVerify = (value, record) => {
+  const handleAproval = (record) => {
     dispatch(
-      addVerifyCertificate({
-        idCertificate: record?.id,
-        statusVerified: value,
+      verifyAdminCertificate({
+        idDoctor: partnerDetail?.idDoctor,
+        certificates: [
+          {
+            idCertificate: record?.id,
+            statusVerified: 1,
+          }
+        ]
+      })
+    );
+  };
+  const handleReject = (record) => {
+    dispatch(
+      verifyAdminCertificate({
+        idDoctor: partnerDetail?.idDoctor,
+        certificates: [
+          {
+            idCertificate: record?.id,
+            statusVerified: 2,
+          }
+        ]
       })
     );
   };
@@ -77,29 +96,27 @@ const CertificateAdmin = ({ partner }) => {
         <>
           <Space size={"middle"} align="center" direction="horizontal">
 
-            <IoMdCheckmarkCircleOutline
-              className="function-box__delete"
-              size={28}
-              style={{ cursor: "pointer", color: "#87d068" }}
-              color="#ff4d4f"
-            // onClick={() => {
-            //   setIsDisabled(!isDisabled);
-            //   setEmail(record.email);
-            //   setIsLock(record.isLocked);
-            // }}
-            />
+            {
+              record.verify === 0 && (
+                <>
+                  <IoMdCheckmarkCircleOutline
+                    className="function-box__delete"
+                    size={28}
+                    style={{ cursor: "pointer", color: "#87d068" }}
+                    color="#ff4d4f"
+                    onClick={() => handleAproval(record)}
+                  />
 
-            <IoCloseCircleOutline
-              className="function-box__delete"
-              size={30}
-              style={{ cursor: "pointer" }}
-              color="#ff4d4f"
-            // onClick={() => {
-            //   setIsDisabled(!isDisabled);
-            //   setEmail(record.email);
-            //   setIsLock(record.isLocked);
-            // }}
-            />
+                  <IoCloseCircleOutline
+                    className="function-box__delete"
+                    size={30}
+                    style={{ cursor: "pointer" }}
+                    color="#ff4d4f"
+                    onClick={() => handleReject(record)}
+                  />
+                </>
+              )
+            }
 
           </Space>
         </>

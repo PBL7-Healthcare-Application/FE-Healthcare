@@ -1,20 +1,40 @@
 /* eslint-disable react/prop-types */
-import { Modal, Select, Space, Table } from "antd";
+import { Modal, Space, Table } from "antd";
 import { iconCertificate } from "../../../helpers/icon";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { addVerifyExperience } from "../../../stores/admin/AdminSlice";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { IoCloseCircleOutline } from "react-icons/io5";
+import { verifyAdminExperience } from "../../../stores/admin/AdminThunk";
 
 const ExperienceAdmin = ({ partner }) => {
   const { partnerDetail } = useSelector((state) => state.admin);
   const [isAdd, setIsAdd] = useState(false);
 
   const dispatch = useDispatch();
-  const handleVerify = (value, record) => {
+  const handleAproval = (record) => {
     dispatch(
-      addVerifyExperience({
-        idWorkingProcess: record?.id,
-        statusVerified: value,
+      verifyAdminExperience({
+        idDoctor: partnerDetail?.idDoctor,
+        workingProcesses: [
+          {
+            idWorkingProcess: record?.id,
+            statusVerified: 1,
+          }
+        ]
+      })
+    );
+  };
+  const handleReject = (record) => {
+    dispatch(
+      verifyAdminExperience({
+        idDoctor: partnerDetail?.idDoctor,
+        workingProcesses: [
+          {
+            idWorkingProcess: record?.id,
+            statusVerified: 2,
+          }
+        ]
       })
     );
   };
@@ -71,18 +91,32 @@ const ExperienceAdmin = ({ partner }) => {
         };
       },
       render: (text, record) => (
-        <Space size={"middle"}>
-          <Select
-            // disabled={record.verify === 1 ? true : false}
-            onChange={(value) => handleVerify(value, record)}
-            placeholder="--Select--"
-            style={{ height: 32, color: "#6c81a0" }}
-            //   onChange={handleTypePartnerChange}
-            options={[
-              { value: 1, label: "Approved" },
-              { value: 2, label: "Reject" },
-            ]}
-          />
+        <Space size={"middle"} align="center" direction="horizontal">
+
+          {
+            record.verify === 0 && (
+              <>
+                <IoMdCheckmarkCircleOutline
+                  className="function-box__delete"
+                  size={28}
+                  style={{ cursor: "pointer", color: "#87d068" }}
+                  color="#ff4d4f"
+                  onClick={() => handleAproval(record)}
+
+                />
+
+                <IoCloseCircleOutline
+                  className="function-box__delete"
+                  size={30}
+                  style={{ cursor: "pointer" }}
+                  color="#ff4d4f"
+                  onClick={() => handleReject(record)}
+
+                />
+              </>
+            )
+          }
+
         </Space>
       ),
     });
