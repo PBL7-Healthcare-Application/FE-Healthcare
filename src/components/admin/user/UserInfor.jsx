@@ -4,9 +4,6 @@ import { Button, Image, notification } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAdminPartnerDetail,
-  verifyAdminCertificate,
-  verifyAdminEducation,
-  verifyAdminExperience,
   verifyAdminProfile,
 } from "../../../stores/admin/AdminThunk";
 import { useEffect, useState } from "react";
@@ -25,9 +22,6 @@ const UserInfor = ({ type, partner }) => {
     message,
     statusCode,
     error,
-    verifyCertificate,
-    verifyEducation,
-    verifyExperience,
     loading,
   } = useSelector((state) => state.admin);
   const [disable, setDisabled] = useState(false);
@@ -58,28 +52,13 @@ const UserInfor = ({ type, partner }) => {
       );
     }
     if (type === "certificate") {
-      dispatch(
-        verifyAdminCertificate({
-          idDoctor: partnerDetail?.idDoctor,
-          certificates: verifyCertificate,
-        })
-      );
+      //
     }
     if (type === "education") {
-      dispatch(
-        verifyAdminEducation({
-          idDoctor: partnerDetail?.idDoctor,
-          trainingProcesses: verifyEducation,
-        })
-      );
+      //
     }
     if (type === "experience") {
-      dispatch(
-        verifyAdminExperience({
-          idDoctor: partnerDetail?.idDoctor,
-          workingProcesses: verifyExperience,
-        })
-      );
+      //
     }
   };
   useEffect(() => {
@@ -139,7 +118,7 @@ const UserInfor = ({ type, partner }) => {
             {partnerDetail?.email}
           </span>
         </div>
-        {partner === "partner" && (
+        {partner === "partner" && type === "profile" && (
           <div className="profile-edit">
             <Button
               type="primary"

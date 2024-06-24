@@ -19,7 +19,7 @@ import {
   Tag,
   Typography,
 } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
@@ -33,9 +33,10 @@ const ManagementPartner = () => {
   const { partner, paging } = useSelector((state) => state.admin);
   const [inputSearch, setInputSearch] = useState("");
   const [specialty, setSpecialty] = useState(null);
-  const [typePartner, setTypePartner] = useState(null);
+  const [typePartner, setTypePartner] = useState(1);
   const [page, setPage] = useState(paging?.currentPage);
   const [specialties, setSpecialties] = useState([]);
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const contentRef = useRef(null);
@@ -168,6 +169,20 @@ const ManagementPartner = () => {
     getSpecialties();
 
   }, [])
+  useEffect(() => {
+    console.log(location?.state?.key)
+    if (location?.state?.key === "verify") {
+      setTypePartner(2)
+      dispatch(
+        getAdminPartner({
+          page: 1,
+          idSpecialty: specialty !== null ? specialty : undefined,
+          TypePartner: 2,
+          search: inputSearch !== "" ? inputSearch : undefined,
+        })
+      )
+    }
+  }, [location?.state?.key])
   return (
     <div className="DoctorAppointment">
       <div
@@ -223,6 +238,7 @@ const ManagementPartner = () => {
         <div className="DoctorAppointment-select">
           <span className="DoctorAppointment-text">Type</span>
           <Select
+            value={typePartner}
             defaultValue={"New Partner"}
             style={{ width: 150, height: 42, color: "#6c81a0" }}
             onChange={handleTypePartnerChange}
