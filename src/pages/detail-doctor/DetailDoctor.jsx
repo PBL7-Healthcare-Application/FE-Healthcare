@@ -159,8 +159,8 @@ const DetailDoctor = () => {
   const [viewport, setViewport] = useState({
     width: "100%",
     height: "100%",
-    latitude: doctorDetail?.latitude,
-    longitude: doctorDetail?.longtitude,
+    latitude: doctorDetail?.latitude ?? 16.07471103000006,
+    longitude: doctorDetail?.longtitude ?? 108.22431477800006,
     zoom: 16,
   });
 
@@ -536,8 +536,8 @@ const DetailDoctor = () => {
                           onMouseMove={(viewport) => setViewport(viewport)}
                         >
                           <Marker
-                            longitude={doctorDetail?.longtitude}
-                            latitude={doctorDetail?.latitude}
+                            longitude={doctorDetail?.longtitude ?? 108.22431477800006}
+                            latitude={doctorDetail?.latitude ?? 16.07471103000006}
                           >
                             <img
                               width={20}

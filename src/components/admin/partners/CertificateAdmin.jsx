@@ -7,6 +7,10 @@ import { useState } from "react";
 import { addVerifyCertificate } from "../../../stores/admin/AdminSlice";
 import certificateImg from "../../../assets/images/certificate.png";
 import calandar from "../../../assets/images/calandar.png";
+import { FaUnlockAlt } from "react-icons/fa";
+import { BiSolidLock } from "react-icons/bi";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { IoCloseCircleOutline } from "react-icons/io5";
 const CertificateAdmin = ({ partner }) => {
   const { partnerDetail } = useSelector((state) => state.admin);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,18 +75,32 @@ const CertificateAdmin = ({ partner }) => {
 
       render: (text, record) => (
         <>
-          <Space size={"middle"}>
-            <Select
-              // disabled={record.verify === 1 ? true : false}
-              onChange={(value) => handleVerify(value, record)}
-              placeholder="--Select--"
-              style={{ height: 32, color: "#6c81a0" }}
-              //   onChange={handleTypePartnerChange}
-              options={[
-                { value: 1, label: "Approved" },
-                { value: 2, label: "Reject" },
-              ]}
+          <Space size={"middle"} align="center" direction="horizontal">
+
+            <IoMdCheckmarkCircleOutline
+              className="function-box__delete"
+              size={28}
+              style={{ cursor: "pointer", color: "#87d068" }}
+              color="#ff4d4f"
+            // onClick={() => {
+            //   setIsDisabled(!isDisabled);
+            //   setEmail(record.email);
+            //   setIsLock(record.isLocked);
+            // }}
             />
+
+            <IoCloseCircleOutline
+              className="function-box__delete"
+              size={30}
+              style={{ cursor: "pointer" }}
+              color="#ff4d4f"
+            // onClick={() => {
+            //   setIsDisabled(!isDisabled);
+            //   setEmail(record.email);
+            //   setIsLock(record.isLocked);
+            // }}
+            />
+
           </Space>
         </>
       ),

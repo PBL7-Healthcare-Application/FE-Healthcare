@@ -1,6 +1,6 @@
 import Typography from "antd/es/typography/Typography";
 import "./Search.scss";
-import Specialty from "../../components/specialty/Specialty";
+import "../../components/specialty/Specialty.scss";
 import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -11,6 +11,8 @@ import {
   Space,
   Rate,
   Pagination,
+  Select,
+  Image,
 } from "antd";
 import CardResult from "../../components/Doctor/cardResult/CardResult";
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +22,7 @@ import { debounce } from "lodash";
 import { getSearchResult } from "../../stores/search-doctor/SearchThunk";
 import { useNavigate } from "react-router-dom";
 import { setIdSpecialty } from "../../stores/search-doctor/SearchSlice";
+import { getAllSpecialty } from "../../api/doctor.api";
 const Search = () => {
   const { searchResult, loading, keyword, id_Specialty, paging } = useSelector(
     (state) => state.search
@@ -27,6 +30,8 @@ const Search = () => {
   const [page, setPage] = useState(paging?.currentPage);
   const [inputValue, setInputValue] = useState(keyword);
   const [specialty, setSpecialty] = useState(id_Specialty);
+  const [specialties, setSpecialties] = useState([]);
+  const selectRef = useRef();
   const [filterAvailable, setFilterAvailable] = useState("");
   const [rate, setRate] = useState(0);
   const [years, setYears] = useState(0);
@@ -54,12 +59,53 @@ const Search = () => {
       })
     );
   };
+  const getSpecialties = async () => {
+    try {
 
+      const response = await getAllSpecialty();
+      setSpecialties(
+        [{
+          idSpecialty: 0,
+          name: "All specialties",
+          image: "https://res.cloudinary.com/dbtam9pnc/image/upload/v1713669571/Doctor/cfpvhhgnhbagpcwhwsxl.png"
+        }, ...response.data]
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const Item = ({ img, name }) => (
+    <Space className="select-item">
+      <Image src={img} width={30} preview={false} />
+      <Typography className="select-name">{name}</Typography>
+
+    </Space>
+  )
+  useEffect(() => {
+    getSpecialties();
+  }, []);
+  useEffect(() => {
+    setSpecialty(id_Specialty)
+  }, [id_Specialty])
   const onYearChange = (newValue) => {
     setYears(newValue);
   };
   const handleChange = (value) => {
     setSpecialty(value);
+    dispatch(
+      getSearchResult({
+        keyword: inputValue,
+        IdSpecialty: value === "All specialties" || value === 0
+          ? undefined
+          : value,
+        exp: years !== 0 ? years : undefined,
+        minPrice: minPrice !== 0 ? minPrice : undefined,
+        maxPrice: maxPrice,
+        sortBy: "exp_desc",
+        filterAvailable: filterAvailable,
+        rate: rate !== 0 ? rate : undefined,
+      })
+    );
   };
   const handleChangeInput = (e) => {
     const newValue = e.target.value;
@@ -165,7 +211,26 @@ const Search = () => {
           <div className="search-divider"></div>
           <div className="search-box-content__second">
             <Typography className="search-label">Specialty</Typography>
-            <Specialty onChange={handleChange} />
+            <Select
+              ref={selectRef}
+              className="my-select"
+              // showSearch
+              placement="bottomLeft"
+              placeholder="All specialties"
+              optionFilterProp="children"
+              dropdownStyle={{ width: 230 }}
+              onChange={handleChange}
+              optionLabelProp="label2"
+              value={specialty}
+              options={specialties.map((item) => ({
+                value: item.idSpecialty,
+                label2: item.name,
+                label: (
+                  <Item img={item?.image} name={item.name} />
+                ),
+              }))}
+
+            />
           </div>
           <div className="search-divider"></div>
           <div className="search-box-content__third" ref={contentRef}>

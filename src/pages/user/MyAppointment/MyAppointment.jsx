@@ -154,7 +154,7 @@ const MyAppointment = () => {
                   );
                 })
               ) : (
-                <NotFound />
+                <NotFound content={"You don't have any appointments "} />
               )}
             </div>
           </TabPane>
@@ -167,7 +167,20 @@ const MyAppointment = () => {
                   );
                 })
               ) : (
-                <NotFound />
+                <NotFound content={"You don't have any appointments "} />
+              )}
+            </div>
+          </TabPane>
+          <TabPane tab="Waiting" key={4}>
+            <div className="myAppointment">
+              {ListAppointments !== null ? (
+                ListAppointments.map((item, index) => {
+                  return (
+                    <CardAppointment key={index} appointment={item} type={3} />
+                  );
+                })
+              ) : (
+                <NotFound content={"You don't have any appointments "} />
               )}
             </div>
           </TabPane>

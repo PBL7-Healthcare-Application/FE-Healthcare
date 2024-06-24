@@ -47,7 +47,7 @@ function CardNotify({ item }) {
       navigate(`/admin/partners`);
     }
     if (item?.title === "New information needs to be verified") {
-      navigate(`/admin/partners`);
+      navigate(`/admin/partners`, { state: { key: "verify" } });
     }
     if (item?.title === "New Rating") {
       navigate(`/dr.Enclinic/rating`);
